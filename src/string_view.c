@@ -1,6 +1,7 @@
+#include "string_view.h"
+
 #include <stdio.h>
 #include <string.h>
-#include <string_view.h>
 
 StringView cstr_sv
 (

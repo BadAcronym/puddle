@@ -23,8 +23,9 @@ const char *sv_cstr
 
 StringView sv_substr
 (
-    size_t start_pos,
-    size_t end_pos
+    StringView *sv,
+    size_t     start_pos,
+    size_t     end_pos
 ){
     // TODO:
 }

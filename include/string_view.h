@@ -13,7 +13,8 @@
 #define SV_DIFFERENT      3L
 
 // macros for printf() formatting and printing.
-// TODO: #define
+#define PRI_SV "%.*s"
+#define ARG_SV(sv) (int)(sv).size, (sv).data
 
 // length-based string.
 // data is not guaranteed to be null-terminated.
@@ -43,8 +44,9 @@ extern const char *sv_cstr
 // start_pos & end_pos are both positions in the original string.
 extern StringView sv_substr
 (
-    size_t start_pos,
-    size_t end_pos
+    StringView *sv,
+    size_t     start_pos,
+    size_t     end_pos
 );
 
 // will trim count characters from: SV_LEFT, SV_RIGHT or SV_BOTH.

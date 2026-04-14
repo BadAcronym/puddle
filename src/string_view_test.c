@@ -9,6 +9,8 @@ int main
     StringView test        = cstr_sv("Hello, World!");
     StringView substr      = sv_substr(&test, 7, test.size);
     StringView substr_test = cstr_sv("World!");
+    StringView sub_test_0  = cstr_sv("W");
+    StringView sub_test_1  = sv_substr(&test, 7, 7);
     StringView test_left   = cstr_sv("lo, World!");
     StringView test_right  = cstr_sv("lo, Worl");
     StringView test_both   = cstr_sv(" W");
@@ -30,6 +32,17 @@ int main
     {
         fprintf(stderr, "\033[31;1;1mERROR: sv_substr FAILED.\033[0m\n");
         fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"", ARG_SV(substr_test), ARG_SV(substr));
+        fprintf(stderr, "\n%zu vs %zu", substr_test.size, substr.size);
+        fprintf(stderr, "\nerror code: %hhu", result);
+        return result;
+    }
+
+    result = sv_comp(&sub_test_0, &sub_test_1);
+    if(result != SV_SAME)
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_substr FAILED on a single character.\033[0m\n");
+        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"", ARG_SV(sub_test_0), ARG_SV(sub_test_1));
+        fprintf(stderr, "\n%zu vs %zu", sub_test_0.size, sub_test_1.size);
         fprintf(stderr, "\nerror code: %hhu", result);
         return result;
     }
@@ -64,6 +77,6 @@ int main
         return result;
     }
 
-    printf("\n");
+    printf("\033[32;1;1m\nSUCCESS: all unit tests passed.\033[0m\n");
     return 0;
 }

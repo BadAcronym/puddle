@@ -61,10 +61,10 @@ extern void sv_trim
 );
 
 // will return:
-// SV_SAME if the stringviews have the same content.
-// SV_ISSUBSTR_FIRST, if the first sv is contained fully in the right sv, but the right sv is larger.
-// SV_ISSUBSTR_SECOND, analogous to -FIRST, but vice-versa.
-// SV_DIFFERENT, if they are different stringviews.
+// 0: SV_SAME if the stringviews have the same content.
+// 1: SV_ISSUBSTR_FIRST, if the first sv is contained fully in the right sv, but the right sv is larger.
+// 2: SV_ISSUBSTR_SECOND, analogous to -FIRST, but vice-versa.
+// 3: SV_DIFFERENT, if they are different stringviews.
 extern uint8_t sv_comp
 (
     StringView *first,

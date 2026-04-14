@@ -32,7 +32,41 @@ StringView sv_substr
     size_t     start_pos,
     size_t     end_pos
 ){
-    // TODO:
+    if(start_pos > end_pos)
+    {
+        fprintf(stderr, "\033[31;3;1mERROR: end_pos cannot be smaller than start_pos.\033[0m\n");
+        return(StringView)
+        {
+            .data = 0,
+            .size = 0
+        };
+    }
+
+    if(start_pos > sv->size)
+    {
+        fprintf(stderr, "\033[31;3;1mERROR: start_pos cannot be larger than sv->size.\033[0m\n");
+        return(StringView)
+        {
+            .data = 0,
+            .size = 0
+        };
+    }
+
+    if(end_pos > sv->size)
+    {
+        end_pos = sv->size;
+    }
+
+    StringView result;
+    result.data = sv->data + start_pos;
+    result.size = sv->size - start_pos - (sv->size - end_pos);
+
+    if(start_pos == end_pos)
+    {
+        result.size = 1;
+    }
+
+    return result;
 }
 
 void sv_trim
@@ -81,12 +115,6 @@ extern uint8_t sv_comp
     {
         return SV_DIFFERENT;
     }
-
-    // second->size == 3
-    // i = 2
-    // sec
-    // sec
-    //   ^
 
     size_t i = 0;
     for(; i < first->size; ++i)

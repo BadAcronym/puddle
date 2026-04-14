@@ -1,10 +1,16 @@
+#include <stdio.h>
+#include <string.h>
 #include <string_view.h>
 
 StringView cstr_sv
 (
     const char *cstr
 ){
-    // TODO:
+    return(StringView)
+    {
+        .data = cstr,
+        .size = strlen(cstr)
+    };
 }
 
 const char *sv_cstr
@@ -28,27 +34,39 @@ void sv_trim
     size_t     count,
     uint8_t    direction
 ){
+    if(direction > SV_BOTH)
+    {
+        fprintf(stderr, "\033[31;3;1mERROR: unknown direction.\033[0m\n");
+        return;
+    }
+
     if(direction == SV_LEFT || direction == SV_BOTH)
     {
-        for(size_t i = count; i > 0; --i)
+        size_t i = count;
+        if(i > sv->size)
         {
-            if(sv->size == 0)
-            {
-                return;
-            }
-            ++sv->data;
-            --sv->size;
+            i = sv->size;
         }
+        sv->size -= i;
+        sv->data += i;
     }
     if(direction == SV_RIGHT || direction == SV_BOTH)
     {
-        for(size_t i = count; i > 0; --i)
+        size_t i = count;
+        if(i > sv->size)
         {
-            if(sv->size == 0)
-            {
-                return;
-            }
-            --sv->size;
+            i = sv->size;
         }
+        sv->size -= i;
     }
+}
+
+extern uint8_t sv_comp
+(
+    StringView *first,
+    StringView *second
+){
+    // TODO: compare strings
+
+    return SV_DIFFERENT;
 }

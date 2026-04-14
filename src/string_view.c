@@ -1,6 +1,7 @@
 #include "string_view.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 StringView cstr_sv
@@ -16,9 +17,13 @@ StringView cstr_sv
 
 const char *sv_cstr
 (
-    const char *sv
+    StringView *sv
 ){
-    // TODO:
+    char *result = malloc(sv->size + 1);
+    memcpy(result, sv->data, sv->size);
+    result[sv->size] = '\0';
+
+    return result;
 }
 
 StringView sv_substr
@@ -68,7 +73,37 @@ extern uint8_t sv_comp
     StringView *first,
     StringView *second
 ){
-    // TODO: compare strings
+    if(first->size == 0 && second->size == 0)
+    {
+        return SV_SAME;
+    }
+    else if(first->size == 0 || second->size == 0)
+    {
+        return SV_DIFFERENT;
+    }
 
-    return SV_DIFFERENT;
+    // second->size == 3
+    // i = 2
+    // sec
+    // sec
+    //   ^
+
+    size_t i = 0;
+    for(; i < first->size; ++i)
+    {
+        if(first->data[i] != second->data[i])
+        {
+            return SV_DIFFERENT;
+        }
+        if(i + 1 == second->size && i + 1 < first->size)
+        {
+            return SV_ISSUBSTR_RIGHT;
+        }
+    }
+
+    if(i == second->size)
+    {
+        return SV_SAME;
+    }
+    return SV_ISSUBSTR_LEFT;
 }

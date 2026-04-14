@@ -35,9 +35,10 @@ extern StringView cstr_sv
 
 // safe access for anything requiring a null-terminated cstring,
 // because we can't be sure that the stringview is going to be null-terminated.
+// is going to allocate a new char * and give it to you.
 extern const char *sv_cstr
 (
-    const char *sv
+    StringView *sv
 );
 
 // will return the trimmed substring as a new stringview.

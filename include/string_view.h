@@ -35,7 +35,7 @@ extern StringView cstr_sv
 
 // safe access for anything requiring a null-terminated cstring,
 // because we can't be sure that the stringview is going to be null-terminated.
-// is going to allocate a new char * and give it to you.
+// will use malloc() to give you a new const char *.
 extern const char *sv_cstr
 (
     StringView *sv

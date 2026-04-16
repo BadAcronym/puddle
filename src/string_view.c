@@ -125,7 +125,7 @@ extern uint8_t sv_comp
         }
         if(i + 1 == second->size && i + 1 < first->size)
         {
-            return SV_ISSUBSTR_RIGHT;
+            return SV_LONGER_FIRST;
         }
     }
 
@@ -133,5 +133,14 @@ extern uint8_t sv_comp
     {
         return SV_SAME;
     }
-    return SV_ISSUBSTR_LEFT;
+    return SV_LONGER_SECOND;
+}
+
+extern uint8_t sv_is_substr
+(
+    StringView *first,
+    StringView *second
+){
+    // TODO: substr testing :P
+    return SV_DIFFERENT;
 }

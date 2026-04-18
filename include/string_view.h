@@ -1,5 +1,5 @@
-#ifndef STRING_VIEW_H
-#define STRING_VIEW_H
+#ifndef STRING_VIEW_DECL
+#define STRING_VIEW_DECL
 
 #include <stddef.h>
 #include <stdint.h>
@@ -38,6 +38,75 @@ StringView;
 
 // will create a stringview from a cstring.
 // will use strlen() to figure out the length of the string.
+extern StringView cstr_sv
+(
+    const char *cstr
+);
+
+// safe access for anything requiring a null-terminated cstring,
+// because we can't be sure that the stringview is going to be null-terminated.
+// will use malloc() to give you a new const char *.
+extern const char *sv_cstr
+(
+    StringView *sv
+);
+
+// will return the trimmed substring as a new stringview.
+// start_pos & end_pos are both positions in the original string.
+extern StringView sv_substr
+(
+    StringView *sv,
+    size_t     start_pos,
+    size_t     end_pos
+);
+
+// will trim count characters from: SV_LEFT, SV_RIGHT or SV_BOTH.
+// in the case of both, it will first trim count from the left,
+// then try to trim count from the right.
+extern void sv_trim
+(
+    StringView *sv,
+    size_t     count,
+    uint8_t    direction
+);
+
+// will return:
+// 0: `SV_SAME` if the stringviews have the same content and are the same length.
+// 2: `SV_LONGER_FIRST`, if the second sv is contained fully in the first,
+// but the first sv is longer.
+// 1: `SV_LONGER_SECOND`, analogous to `SV_LONGER_FIRST`, but vice-versa.
+// 3: `SV_DIFFERENT`, if they are different stringviews.
+// NOTE: will return `true` for strings "test" and "test2",
+// but `false` for strings "test" and "2test". For true substring testing, use
+// sv_is_substr instead.
+extern uint8_t sv_comp
+(
+    StringView *first,
+    StringView *second
+);
+
+// TODO: will return:
+// 3: `SV_DIFFERENT`, if they are different stringviews.
+// 4: `SV_SUBSTR_FIRST`, if the first stringview is contained entirely in the second
+// 5: `SV_SUBSTR_SECOND`, analogous to `SV_SUBSTR_FIRST`, but vice-versa.
+extern uint8_t sv_is_substr
+(
+    StringView *first,
+    StringView *second
+);
+
+// concatenates `first` and `second` into `result` one after the other.
+// `first`  + `second` = `result`.
+// "Hello " + "World"  = "Hello World".
+extern void sv_concat
+(
+    StringView *first,
+    StringView *second,
+    StringView *result
+);
+#endif
+
+#ifdef STRING_VIEW_IMPL
 StringView cstr_sv
 (
     const char *cstr
@@ -49,9 +118,6 @@ StringView cstr_sv
     };
 }
 
-// safe access for anything requiring a null-terminated cstring,
-// because we can't be sure that the stringview is going to be null-terminated.
-// will use malloc() to give you a new const char *.
 const char *sv_cstr
 (
     StringView *sv
@@ -63,8 +129,6 @@ const char *sv_cstr
     return result;
 }
 
-// will return the trimmed substring as a new stringview.
-// start_pos & end_pos are both positions in the original string.
 StringView sv_substr
 (
     StringView *sv,
@@ -108,9 +172,6 @@ StringView sv_substr
     return result;
 }
 
-// will trim count characters from: SV_LEFT, SV_RIGHT or SV_BOTH.
-// in the case of both, it will first trim count from the left,
-// then try to trim count from the right.
 void sv_trim
 (
     StringView *sv,
@@ -144,15 +205,6 @@ void sv_trim
     }
 }
 
-// will return:
-// 0: `SV_SAME` if the stringviews have the same content and are the same length.
-// 2: `SV_LONGER_FIRST`, if the second sv is contained fully in the first,
-// but the first sv is longer.
-// 1: `SV_LONGER_SECOND`, analogous to `SV_LONGER_FIRST`, but vice-versa.
-// 3: `SV_DIFFERENT`, if they are different stringviews.
-// NOTE: will return `true` for strings "test" and "test2",
-// but `false` for strings "test" and "2test". For true substring testing, use
-// sv_is_substr instead.
 uint8_t sv_comp
 (
     StringView *first,
@@ -187,10 +239,6 @@ uint8_t sv_comp
     return SV_LONGER_SECOND;
 }
 
-// TODO: will return:
-// 3: `SV_DIFFERENT`, if they are different stringviews.
-// 4: `SV_SUBSTR_FIRST`, if the first stringview is contained entirely in the second
-// 5: `SV_SUBSTR_SECOND`, analogous to `SV_SUBSTR_FIRST`, but vice-versa.
 uint8_t sv_is_substr
 (
     StringView *first,
@@ -200,9 +248,6 @@ uint8_t sv_is_substr
     return SV_DIFFERENT;
 }
 
-// concatenates `first` and `second` into `result` one after the other.
-// `first`  + `second` = `result`.
-// "Hello " + "World"  = "Hello World".
 void sv_concat
 (
     StringView *first,

@@ -60,9 +60,9 @@ extern StringView sv_substr
     size_t     end_pos
 );
 
-// will trim count characters from: SV_LEFT, SV_RIGHT or SV_BOTH.
-// in the case of both, it will first trim count from the left,
-// then try to trim count from the right.
+// will trim count characters from: `SV_LEFT`, `SV_RIGHT` or `SV_BOTH`.
+// in the case of both, it will first trim `count` from the left,
+// then try to trim `count` from the right.
 extern void sv_trim
 (
     StringView *sv,

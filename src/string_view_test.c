@@ -17,6 +17,9 @@ int main
     StringView conv_src    = cstr_sv("The quick brown fox jumps over the lazy dog.");
     const char *conv_test  = sv_cstr(&conv_src);
     StringView conv_test2  = cstr_sv(conv_test);
+    StringView concat_1    = cstr_sv("Test ");
+    StringView concat_2    = cstr_sv("concat !");
+    StringView concat_r    = cstr_sv("Test concat !");
 
     uint8_t result = sv_comp(&conv_src, &conv_test2);
     if(result != SV_SAME)
@@ -73,6 +76,17 @@ int main
     {
         fprintf(stderr, "\033[31;1;1mERROR: sv_trim FAILED unit test with SV_BOTH.\033[0m\n");
         fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"", ARG_SV(test_both), ARG_SV(test));
+        fprintf(stderr, "\nerror code: %hhu", result);
+        return result;
+    }
+
+    StringView test_concat;
+    sv_concat(&concat_1, &concat_2, &test_concat);
+    result = sv_comp(&concat_r, &test_concat);
+    if(result != SV_SAME)
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_concat FAILED unit test with SV_BOTH.\033[0m\n");
+        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"", ARG_SV(concat_r), ARG_SV(test_concat));
         fprintf(stderr, "\nerror code: %hhu", result);
         return result;
     }

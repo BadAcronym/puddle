@@ -21,6 +21,8 @@
 #define SV_DIFFERENT       5L
 
 // macros for printf() formatting and printing.
+// use like this, with result & expected both stringviews:
+// fprintf(stderr, "expected: " PRI_SV " got: " PRI_SV ", ARG_SV(expected), ARG_SV(result));
 #define PRI_SV "%.*s"
 #define ARG_SV(sv) (int)(sv).size, (sv).data
 

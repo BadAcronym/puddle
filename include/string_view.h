@@ -1,3 +1,6 @@
+#ifndef STRING_VIEW_H
+#define STRING_VIEW_H
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -194,3 +197,5 @@ extern uint8_t sv_is_substr
     // TODO: substr testing :P
     return SV_DIFFERENT;
 }
+
+#endif

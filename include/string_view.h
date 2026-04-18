@@ -36,7 +36,7 @@ StringView;
 
 // will create a stringview from a cstring.
 // will use strlen() to figure out the length of the string.
-extern StringView cstr_sv
+StringView cstr_sv
 (
     const char *cstr
 ){
@@ -50,7 +50,7 @@ extern StringView cstr_sv
 // safe access for anything requiring a null-terminated cstring,
 // because we can't be sure that the stringview is going to be null-terminated.
 // will use malloc() to give you a new const char *.
-extern const char *sv_cstr
+const char *sv_cstr
 (
     StringView *sv
 ){
@@ -63,7 +63,7 @@ extern const char *sv_cstr
 
 // will return the trimmed substring as a new stringview.
 // start_pos & end_pos are both positions in the original string.
-extern StringView sv_substr
+StringView sv_substr
 (
     StringView *sv,
     size_t     start_pos,
@@ -109,7 +109,7 @@ extern StringView sv_substr
 // will trim count characters from: SV_LEFT, SV_RIGHT or SV_BOTH.
 // in the case of both, it will first trim count from the left,
 // then try to trim count from the right.
-extern void sv_trim
+void sv_trim
 (
     StringView *sv,
     size_t     count,
@@ -151,7 +151,7 @@ extern void sv_trim
 // NOTE: will return `true` for strings "test" and "test2",
 // but `false` for strings "test" and "2test". For true substring testing, use
 // sv_is_substr instead.
-extern uint8_t sv_comp
+uint8_t sv_comp
 (
     StringView *first,
     StringView *second
@@ -189,13 +189,28 @@ extern uint8_t sv_comp
 // 3: `SV_DIFFERENT`, if they are different stringviews.
 // 4: `SV_SUBSTR_FIRST`, if the first stringview is contained entirely in the second
 // 5: `SV_SUBSTR_SECOND`, analogous to `SV_SUBSTR_FIRST`, but vice-versa.
-extern uint8_t sv_is_substr
+uint8_t sv_is_substr
 (
     StringView *first,
     StringView *second
 ){
     // TODO: substr testing :P
     return SV_DIFFERENT;
+}
+
+// concatenates `first` and `second` into `result` one after the other.
+// `first`  + `second` = `result`.
+// "Hello " + "World"  = "Hello World".
+void sv_concat
+(
+    StringView *first,
+    StringView *second,
+    StringView *result
+){
+    result->size = first->size + second->size;
+    result->data = malloc(first->size + second->size);
+    memcpy((void*)result->data, (void*)first->data, first->size);
+    memcpy((void*)(result->data + first->size), (void*)second->data, second->size);
 }
 
 #endif

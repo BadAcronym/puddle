@@ -1,5 +1,8 @@
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 // sv_trim directions
 #define SV_LEFT  0L
@@ -33,7 +36,13 @@ StringView;
 extern StringView cstr_sv
 (
     const char *cstr
-);
+){
+    return(StringView)
+    {
+        .data = cstr,
+        .size = strlen(cstr)
+    };
+}
 
 // safe access for anything requiring a null-terminated cstring,
 // because we can't be sure that the stringview is going to be null-terminated.
@@ -41,7 +50,13 @@ extern StringView cstr_sv
 extern const char *sv_cstr
 (
     StringView *sv
-);
+){
+    char *result = malloc(sv->size + 1);
+    memcpy(result, sv->data, sv->size);
+    result[sv->size] = '\0';
+
+    return result;
+}
 
 // will return the trimmed substring as a new stringview.
 // start_pos & end_pos are both positions in the original string.
@@ -50,7 +65,43 @@ extern StringView sv_substr
     StringView *sv,
     size_t     start_pos,
     size_t     end_pos
-);
+){
+    if(start_pos > end_pos)
+    {
+        fprintf(stderr, "\033[31;3;1mERROR: end_pos cannot be smaller than start_pos.\033[0m\n");
+        return(StringView)
+        {
+            .data = 0,
+            .size = 0
+        };
+    }
+
+    if(start_pos > sv->size)
+    {
+        fprintf(stderr, "\033[31;3;1mERROR: start_pos cannot be larger than sv->size.\033[0m\n");
+        return(StringView)
+        {
+            .data = 0,
+            .size = 0
+        };
+    }
+
+    if(end_pos > sv->size)
+    {
+        end_pos = sv->size;
+    }
+
+    StringView result;
+    result.data = sv->data + start_pos;
+    result.size = sv->size - start_pos - (sv->size - end_pos);
+
+    if(start_pos == end_pos)
+    {
+        result.size = 1;
+    }
+
+    return result;
+}
 
 // will trim count characters from: SV_LEFT, SV_RIGHT or SV_BOTH.
 // in the case of both, it will first trim count from the left,
@@ -60,7 +111,33 @@ extern void sv_trim
     StringView *sv,
     size_t     count,
     uint8_t    direction
-);
+){
+    if(direction > SV_BOTH)
+    {
+        fprintf(stderr, "\033[31;3;1mERROR: unknown direction.\033[0m\n");
+        return;
+    }
+
+    if(direction == SV_LEFT || direction == SV_BOTH)
+    {
+        size_t i = count;
+        if(i > sv->size)
+        {
+            i = sv->size;
+        }
+        sv->size -= i;
+        sv->data += i;
+    }
+    if(direction == SV_RIGHT || direction == SV_BOTH)
+    {
+        size_t i = count;
+        if(i > sv->size)
+        {
+            i = sv->size;
+        }
+        sv->size -= i;
+    }
+}
 
 // will return:
 // 0: `SV_SAME` if the stringviews have the same content and are the same length.
@@ -75,7 +152,35 @@ extern uint8_t sv_comp
 (
     StringView *first,
     StringView *second
-);
+){
+    if(first->size == 0 && second->size == 0)
+    {
+        return SV_SAME;
+    }
+    else if(first->size == 0 || second->size == 0)
+    {
+        return SV_DIFFERENT;
+    }
+
+    size_t i = 0;
+    for(; i < first->size; ++i)
+    {
+        if(first->data[i] != second->data[i])
+        {
+            return SV_DIFFERENT;
+        }
+        if(i + 1 == second->size && i + 1 < first->size)
+        {
+            return SV_LONGER_FIRST;
+        }
+    }
+
+    if(i == second->size)
+    {
+        return SV_SAME;
+    }
+    return SV_LONGER_SECOND;
+}
 
 // TODO: will return:
 // 3: `SV_DIFFERENT`, if they are different stringviews.
@@ -85,4 +190,7 @@ extern uint8_t sv_is_substr
 (
     StringView *first,
     StringView *second
-);
+){
+    // TODO: substr testing :P
+    return SV_DIFFERENT;
+}

@@ -105,6 +105,15 @@ extern void sv_concat
     StringView *second,
     StringView *result
 );
+
+// will add a single character to the desired stringview.
+// side can be `SV_LEFT`, `SV_RIGHT` or `SV_BOTH`.
+extern void sv_add_char
+(
+    StringView *sv,
+    char       c,
+    uint8_t    side
+);
 #endif
 
 #ifdef STRING_VIEW_IMPL
@@ -249,16 +258,68 @@ uint8_t sv_is_substr
     return SV_DIFFERENT;
 }
 
+// URGENT: test sv_concat with pointer aliases
 void sv_concat
 (
     StringView *first,
     StringView *second,
     StringView *result
 ){
+    if(!first->data || !second->data)
+    {
+        fprintf(stderr, "\033[31mERROR: bad stringview data pointer!\033[0m");
+        return;
+    }
+
+    const char *first_data  = sv_cstr(first);
+    const char *second_data = sv_cstr(second);
+
+    if(result->data)
+    {
+        free((void*)result->data);
+    }
+
     result->size = first->size + second->size;
     result->data = malloc(first->size + second->size);
-    memcpy((void*)result->data, (void*)first->data, first->size);
-    memcpy((void*)(result->data + first->size), (void*)second->data, second->size);
+    memcpy((void*)result->data, (void*)first_data, first->size);
+    memcpy((void*)(result->data + first->size), (void*)second_data, second->size);
+}
+
+void sv_add_char
+(
+    StringView *sv,
+    char       c,
+    uint8_t    side
+){
+    char *data = 0;
+
+    if(side == SV_RIGHT)
+    {
+        data = malloc(sv->size + 1);
+        memcpy(data, sv->data, sv->size);
+        data[sv->size] = c;
+    }
+    else if(side == SV_LEFT)
+    {
+        data = malloc(sv->size + 1);
+        memcpy(data + 1, sv->data, sv->size);
+        data[0] = c;
+    }
+    else if(side == SV_BOTH)
+    {
+        data = malloc(sv->size + 2);
+        memcpy(data + 1, sv->data, sv->size);
+        data[0] = c;
+        data[sv->size + 1] = c;
+    }
+
+    if(sv->data)
+    {
+        free((void*)sv->data);
+    }
+
+    sv->size++;
+    sv->data = data;
 }
 
 #endif

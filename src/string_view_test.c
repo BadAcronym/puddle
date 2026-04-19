@@ -31,6 +31,7 @@ int main
         fprintf(stderr, "\nerror code: %hhu", result);
         return result;
     }
+    free((void*)conv_test);
 
     result = sv_comp(&substr, &substr_test);
     if(result != SV_SAME)
@@ -91,8 +92,8 @@ int main
         return result;
     }
 
-    StringView test_concat;
-    sv_concat(&concat_1, &concat_2, &test_concat);
+    const char *concatenated = sv_concat(&concat_1, &concat_2);
+    StringView test_concat = cstr_sv(concatenated);
     result = sv_comp(&concat_r, &test_concat);
     if(result != SV_SAME)
     {
@@ -103,6 +104,7 @@ int main
         fprintf(stderr, "\nerror code: %hhu", result);
         return result;
     }
+    free((void*)concatenated);
 
     printf("\033[32;1;1m\nSUCCESS: all unit tests passed.\033[0m\n");
     return 0;

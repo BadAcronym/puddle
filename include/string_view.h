@@ -96,19 +96,18 @@ extern uint8_t sv_is_substr
     StringView *second
 );
 
-// concatenates `first` and `second` into `result` one after the other.
+// concatenates `first` and `second` one after the other.
 // `first`  + `second` = `result`.
 // "Hello " + "World"  = "Hello World".
-extern void sv_concat
+extern const char *sv_concat
 (
     StringView *first,
-    StringView *second,
-    StringView *result
+    StringView *second
 );
 
 // will add a single character to the desired stringview at the desired location(s).
 // side can be `SV_LEFT`, `SV_RIGHT` or `SV_BOTH`.
-extern void sv_add_char
+extern const char *sv_add_char
 (
     StringView *sv,
     char       c,
@@ -121,10 +120,15 @@ StringView cstr_sv
 (
     const char *cstr
 ){
+    uint32_t i = 0;
+    for(; cstr[i] != '\0'; ++i)
+    {
+    }
+
     return(StringView)
     {
         .data = cstr,
-        .size = strlen(cstr)
+        .size = i
     };
 }
 
@@ -259,38 +263,49 @@ uint8_t sv_is_substr
 }
 
 // URGENT: test sv_concat with pointer aliases
-void sv_concat
+const char *sv_concat
 (
     StringView *first,
-    StringView *second,
-    StringView *result
+    StringView *second
 ){
+    if(!first || !second)
+    {
+        fprintf(stderr, "\033[31mERROR: bad sv input.\033[0m\n");
+        return 0;
+    }
+
     if(!first->data || !second->data)
     {
-        fprintf(stderr, "\033[31mERROR: bad stringview data pointer!\033[0m");
-        return;
+        fprintf(stderr, "\033[31mERROR: bad stringview data pointer.\033[0m\n");
+        return 0;
     }
 
     const char *first_data  = sv_cstr(first);
     const char *second_data = sv_cstr(second);
 
-    if(result->data)
-    {
-        free((void*)result->data);
-    }
+    char *result = malloc(first->size + second->size + 1);
+    memcpy((void*)result, (void*)first_data, first->size);
+    memcpy((void*)(result + first->size), (void*)second_data, second->size);
+    result[first->size + second->size] = '\0';
 
-    result->size = first->size + second->size;
-    result->data = malloc(first->size + second->size);
-    memcpy((void*)result->data, (void*)first_data, first->size);
-    memcpy((void*)(result->data + first->size), (void*)second_data, second->size);
+    free((void*)first_data);
+    free((void*)second_data);
+
+    return result;
 }
 
-void sv_add_char
+const char *sv_add_char
 (
     StringView *sv,
     char       c,
     uint8_t    side
 ){
+    if(!sv->data)
+    {
+        sv->data = "";
+        sv->size = 0;
+    }
+
     char *data = 0;
 
     if(side == SV_RIGHT)
@@ -313,13 +328,7 @@ void sv_add_char
         data[sv->size + 1] = c;
     }
 
-    if(sv->data)
-    {
-        free((void*)sv->data);
-    }
-
-    sv->size++;
-    sv->data = data;
+    return data;
 }
 
 #endif

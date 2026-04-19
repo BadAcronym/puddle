@@ -106,7 +106,7 @@ extern void sv_concat
     StringView *result
 );
 
-// will add a single character to the desired stringview.
+// will add a single character to the desired stringview at the desired location(s).
 // side can be `SV_LEFT`, `SV_RIGHT` or `SV_BOTH`.
 extern void sv_add_char
 (

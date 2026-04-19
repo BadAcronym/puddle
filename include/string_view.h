@@ -300,32 +300,26 @@ const char *sv_add_char
     char       c,
     uint8_t    side
 ){
-    if(!sv->data)
-    {
-        sv->data = "";
-        sv->size = 0;
-    }
-
-    char *data = 0;
+    char *data = malloc(sv->size + 3);
 
     if(side == SV_RIGHT)
     {
-        data = malloc(sv->size + 1);
         memcpy(data, sv->data, sv->size);
-        data[sv->size] = c;
+        data[sv->size]     = c;
+        data[sv->size + 1] = '\0';
     }
     else if(side == SV_LEFT)
     {
-        data = malloc(sv->size + 1);
         memcpy(data + 1, sv->data, sv->size);
         data[0] = c;
+        data[sv->size + 1] = '\0';
     }
     else if(side == SV_BOTH)
     {
-        data = malloc(sv->size + 2);
         memcpy(data + 1, sv->data, sv->size);
         data[0] = c;
         data[sv->size + 1] = c;
+        data[sv->size + 2] = '\0';
     }
 
     return data;

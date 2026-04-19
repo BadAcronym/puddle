@@ -106,6 +106,37 @@ int main
     }
     free((void*)concatenated);
 
+    StringView test_base     = cstr_sv("Hello, World!");
+    const char *added_right  = sv_add_char(&test_base, 'a', SV_RIGHT);
+    StringView test_addright = cstr_sv("Hello, World!a");
+    StringView addright_sv   = cstr_sv(added_right);
+    result = sv_comp(&addright_sv, &test_addright);
+    if(result != SV_SAME)
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_add_char FAILED test with SV_RIGHT."
+                "\033[0m\n");
+        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
+                ARG_SV(test_addright), ARG_SV(addright_sv));
+        fprintf(stderr, "\nerror code: %hhu", result);
+        return result;
+    }
+    free((void*)added_right);
+
+    const char *added_left  = sv_add_char(&test_base, 'a', SV_LEFT);
+    StringView test_addleft = cstr_sv("aHello, World!");
+    StringView addleft_sv   = cstr_sv(added_left);
+    result = sv_comp(&addleft_sv, &test_addleft);
+    if(result != SV_SAME)
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_add_char FAILED test with SV_LEFT."
+                "\033[0m\n");
+        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
+                ARG_SV(test_addleft), ARG_SV(addleft_sv));
+        fprintf(stderr, "\nerror code: %hhu", result);
+        return result;
+    }
+    free((void*)added_left);
+
     printf("\033[32;1;1m\nSUCCESS: all unit tests passed.\033[0m\n");
     return 0;
 }

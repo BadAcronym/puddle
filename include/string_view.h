@@ -74,7 +74,8 @@ extern void sv_trim
 // 0: `SV_SAME` if the stringviews have the same content and are the same length.
 // 2: `SV_LONGER_FIRST`, if the second sv is contained fully in the first,
 // but the first sv is longer.
-// 1: `SV_LONGER_SECOND`, analogous to `SV_LONGER_FIRST`, but vice-versa.
+// 1: `SV_LONGER_SECOND`, if the first sv is contained fully in the second,
+// but the second sv is longer.
 // 3: `SV_DIFFERENT`, if they are different stringviews.
 // NOTE: will return `true` for strings "test" and "test2",
 // but `false` for strings "test" and "2test". For true substring testing, use

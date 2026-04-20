@@ -36,9 +36,16 @@ typedef struct sv
 }
 StringView;
 
-// will create a stringview from a cstring.
-// will use strlen() to figure out the length of the string.
+// will create a stringview from a cstring, by passing the pointer given
+// as its data and counting its length.
 extern StringView cstr_sv
+(
+    const char *cstr
+);
+
+// will create a stringview, but will not just pass a pointer. Will actually
+// copy its contents and allocate to a new pointer.
+StringView cstr_sv_new
 (
     const char *cstr
 );
@@ -128,6 +135,25 @@ StringView cstr_sv
     return(StringView)
     {
         .data = cstr,
+        .size = i
+    };
+}
+
+StringView cstr_sv_new
+(
+    const char *cstr
+){
+    uint32_t i = 0;
+    for(; cstr[i] != '\0'; ++i)
+    {
+    }
+
+    char *buf = malloc(i + 1);
+    memcpy((void*)buf, cstr, i + 1);
+
+    return(StringView)
+    {
+        .data = buf,
         .size = i
     };
 }

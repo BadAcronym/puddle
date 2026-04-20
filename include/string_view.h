@@ -149,7 +149,8 @@ StringView cstr_sv_new
     }
 
     char *buf = malloc(i + 1);
-    memcpy((void*)buf, cstr, i + 1);
+    memcpy((void*)buf, cstr, i);
+    buf[i + 1] = '\0';
 
     return(StringView)
     {

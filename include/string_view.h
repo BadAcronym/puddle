@@ -150,7 +150,7 @@ StringView puddle_cstr_sv_cpy
     {
     }
 
-    char *buf = malloc(i + 1);
+    char *buf = malloc(i + 2);
     memcpy((void*)buf, cstr, i);
     buf[i + 1] = '\0';
 

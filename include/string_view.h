@@ -28,7 +28,18 @@
 
 // length-based string.
 // data is not guaranteed to be null-terminated.
-// use sv_cstr() if you require access to a cstring.
+// use puddle_sv_cstr() if you require access to a cstring.
+// tip: just cast to `StringView` if you require using puddle's sv functions.
+typedef struct s
+{
+    char   *data;
+    size_t size;
+}
+String;
+
+// length-based string view (const pointer).
+// data is not guaranteed to be null-terminated.
+// use puddle_sv_cstr() if you require access to a cstring.
 typedef struct sv
 {
     const char *data;
@@ -38,14 +49,14 @@ StringView;
 
 // will create a stringview from a cstring, by passing the pointer given
 // as its data and counting its length.
-extern StringView cstr_sv
+extern StringView puddle_cstr_sv
 (
     const char *cstr
 );
 
 // will create a stringview, but will not just pass a pointer. Will actually
 // copy its contents and allocate to a new pointer.
-StringView cstr_sv_cpy
+StringView puddle_cstr_sv_cpy
 (
     const char *cstr
 );
@@ -53,14 +64,14 @@ StringView cstr_sv_cpy
 // safe access for anything requiring a null-terminated cstring,
 // because we can't be sure that the stringview is going to be null-terminated.
 // will use malloc() to give you a new const char *.
-extern const char *sv_cstr
+extern const char *puddle_sv_cstr
 (
     StringView *sv
 );
 
 // will return the trimmed substring as a new stringview.
 // start_pos & end_pos are both positions in the original string.
-extern StringView sv_substr
+extern StringView puddle_sv_substr
 (
     StringView *sv,
     size_t     start_pos,
@@ -70,7 +81,7 @@ extern StringView sv_substr
 // will trim count characters from: `SV_LEFT`, `SV_RIGHT` or `SV_BOTH`.
 // in the case of both, it will first trim `count` from the left,
 // then try to trim `count` from the right.
-extern void sv_trim
+extern void puddle_sv_trim
 (
     StringView *sv,
     size_t     count,
@@ -87,7 +98,7 @@ extern void sv_trim
 // NOTE: will return `true` for strings "test" and "test2",
 // but `false` for strings "test" and "2test". For true substring testing, use
 // sv_is_substr instead.
-extern uint8_t sv_comp
+extern uint8_t puddle_sv_comp
 (
     StringView *first,
     StringView *second
@@ -97,7 +108,7 @@ extern uint8_t sv_comp
 // 3: `SV_DIFFERENT`, if they are different stringviews.
 // 4: `SV_SUBSTR_FIRST`, if the first stringview is contained entirely in the second
 // 5: `SV_SUBSTR_SECOND`, analogous to `SV_SUBSTR_FIRST`, but vice-versa.
-extern uint8_t sv_is_substr
+extern uint8_t puddle_sv_is_substr
 (
     StringView *first,
     StringView *second
@@ -106,7 +117,7 @@ extern uint8_t sv_is_substr
 // concatenates `first` and `second` one after the other.
 // `first`  + `second` = `result`.
 // "Hello " + "World"  = "Hello World".
-extern const char *sv_concat
+extern const char *puddle_sv_concat
 (
     StringView *first,
     StringView *second
@@ -114,7 +125,7 @@ extern const char *sv_concat
 #endif
 
 #ifdef STRING_VIEW_IMPL
-StringView cstr_sv
+StringView puddle_cstr_sv
 (
     const char *cstr
 ){
@@ -130,7 +141,7 @@ StringView cstr_sv
     };
 }
 
-StringView cstr_sv_cpy
+StringView puddle_cstr_sv_cpy
 (
     const char *cstr
 ){
@@ -150,7 +161,7 @@ StringView cstr_sv_cpy
     };
 }
 
-const char *sv_cstr
+const char *puddle_sv_cstr
 (
     StringView *sv
 ){
@@ -161,7 +172,7 @@ const char *sv_cstr
     return result;
 }
 
-StringView sv_substr
+StringView puddle_sv_substr
 (
     StringView *sv,
     size_t     start_pos,
@@ -206,7 +217,7 @@ StringView sv_substr
     return result;
 }
 
-void sv_trim
+void puddle_sv_trim
 (
     StringView *sv,
     size_t     count,
@@ -239,7 +250,7 @@ void sv_trim
     }
 }
 
-uint8_t sv_comp
+uint8_t puddle_sv_comp
 (
     StringView *first,
     StringView *second
@@ -273,7 +284,7 @@ uint8_t sv_comp
     return SV_LONGER_SECOND;
 }
 
-uint8_t sv_is_substr
+uint8_t puddle_sv_is_substr
 (
     StringView *first,
     StringView *second
@@ -283,7 +294,7 @@ uint8_t sv_is_substr
 }
 
 // URGENT: test sv_concat with pointer aliases
-const char *sv_concat
+const char *puddle_sv_concat
 (
     StringView *first,
     StringView *second
@@ -300,8 +311,8 @@ const char *sv_concat
         return 0;
     }
 
-    const char *first_data  = sv_cstr(first);
-    const char *second_data = sv_cstr(second);
+    const char *first_data  = puddle_sv_cstr(first);
+    const char *second_data = puddle_sv_cstr(second);
 
     char *result = malloc(first->size + second->size + 1);
     memcpy((void*)result, (void*)first_data, first->size);

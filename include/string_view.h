@@ -45,7 +45,7 @@ extern StringView cstr_sv
 
 // will create a stringview, but will not just pass a pointer. Will actually
 // copy its contents and allocate to a new pointer.
-StringView cstr_sv_new
+StringView cstr_sv_cpy
 (
     const char *cstr
 );
@@ -111,15 +111,6 @@ extern const char *sv_concat
     StringView *first,
     StringView *second
 );
-
-// will add a single character to the desired stringview at the desired location(s).
-// side can be `SV_LEFT`, `SV_RIGHT` or `SV_BOTH`.
-extern const char *sv_add_char
-(
-    StringView *sv,
-    char       c,
-    uint8_t    side
-);
 #endif
 
 #ifdef STRING_VIEW_IMPL
@@ -139,7 +130,7 @@ StringView cstr_sv
     };
 }
 
-StringView cstr_sv_new
+StringView cstr_sv_cpy
 (
     const char *cstr
 ){
@@ -178,7 +169,8 @@ StringView sv_substr
 ){
     if(start_pos > end_pos)
     {
-        fprintf(stderr, "\033[31;3;1mERROR: end_pos cannot be smaller than start_pos.\033[0m\n");
+        fprintf(stderr, "\033[31;3;1mERROR: end_pos cannot be smaller than start_pos."
+                "\033[0m\n");
         return(StringView)
         {
             .data = 0,
@@ -188,7 +180,8 @@ StringView sv_substr
 
     if(start_pos > sv->size)
     {
-        fprintf(stderr, "\033[31;3;1mERROR: start_pos cannot be larger than sv->size.\033[0m\n");
+        fprintf(stderr, "\033[31;3;1mERROR: start_pos cannot be larger than sv->size."
+                "\033[0m\n");
         return(StringView)
         {
             .data = 0,
@@ -319,37 +312,6 @@ const char *sv_concat
     free((void*)second_data);
 
     return result;
-}
-
-const char *sv_add_char
-(
-    StringView *sv,
-    char       c,
-    uint8_t    side
-){
-    char *data = malloc(sv->size + 3);
-
-    if(side == SV_RIGHT)
-    {
-        memcpy(data, sv->data, sv->size);
-        data[sv->size]     = c;
-        data[sv->size + 1] = '\0';
-    }
-    else if(side == SV_LEFT)
-    {
-        memcpy(data + 1, sv->data, sv->size);
-        data[0] = c;
-        data[sv->size + 1] = '\0';
-    }
-    else if(side == SV_BOTH)
-    {
-        memcpy(data + 1, sv->data, sv->size);
-        data[0] = c;
-        data[sv->size + 1] = c;
-        data[sv->size + 2] = '\0';
-    }
-
-    return data;
 }
 
 #endif

@@ -47,6 +47,20 @@ typedef struct sv
 }
 StringView;
 
+// will create a string from a cstring, by passing the pointer given
+// as its data and counting its length.
+extern String puddle_cstr_s
+(
+    char *cstr
+);
+
+// will create a string, but will not just pass a pointer. Will actually
+// copy its contents and allocate to a new pointer.
+String puddle_cstr_scpy
+(
+    char *cstr
+);
+
 // will create a stringview from a cstring, by passing the pointer given
 // as its data and counting its length.
 extern StringView puddle_cstr_sv
@@ -125,6 +139,42 @@ extern const char *puddle_sv_concat
 #endif
 
 #ifdef STRING_VIEW_IMPL
+String puddle_cstr_s
+(
+    char *cstr
+){
+    uint32_t i = 0;
+    for(; cstr[i] != '\0'; ++i)
+    {
+    }
+
+    return(String)
+    {
+        .data = cstr,
+        .size = i
+    };
+}
+
+String puddle_cstr_scpy
+(
+    char *cstr
+){
+    uint32_t i = 0;
+    for(; cstr[i] != '\0'; ++i)
+    {
+    }
+
+    char *buf = malloc(i + 2);
+    memcpy((void*)buf, cstr, i);
+    buf[i + 1] = '\0';
+
+    return(String)
+    {
+        .data = buf,
+        .size = i
+    };
+}
+
 StringView puddle_cstr_sv
 (
     const char *cstr

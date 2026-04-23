@@ -7,22 +7,22 @@
 #include <stdlib.h>
 #include <string.h>
 
-// sv_trim directions
 #define SV_LEFT  0L
 #define SV_RIGHT 1L
 #define SV_BOTH  2L
 
-// sv_comp results
-#define SV_SAME            0L
-#define SV_LONGER_FIRST    1L
-#define SV_LONGER_SECOND   2L
-#define SV_SUBSTR_FIRST    3L
-#define SV_SUBSTR_SECOND   4L
-#define SV_DIFFERENT       5L
+#define SV_DIFFERENT     0L
+#define SV_SAME          1L
+
+#define SV_LONGER_FIRST  2L
+#define SV_LONGER_SECOND 3L
+
+#define SV_SUBSTR_FIRST  2L
+#define SV_SUBSTR_SECOND 3L
 
 // macros for printf() formatting and printing.
 // use like this, with result & expected both stringviews:
-// fprintf(stderr, "expected: " PRI_SV " got: " PRI_SV ", ARG_SV(expected), ARG_SV(result));
+// fprintf(stderr, "expected: "PRI_SV" got: "PRI_SV", ARG_SV(expected), ARG_SV(result));
 #define PRI_SV "%.*s"
 #define ARG_SV(sv) (int)(sv).size, (sv).data
 
@@ -103,25 +103,16 @@ extern void puddle_sv_trim
 );
 
 // will return:
-// 0: `SV_SAME` if the stringviews have the same content and are the same length.
+// 0: `SV_DIFFERENT`, if they are different stringviews.
+// 1: `SV_SAME`, if the stringviews have the same content and are the same length.
 // 2: `SV_LONGER_FIRST`, if the second sv is contained fully in the first,
 // but the first sv is longer.
-// 1: `SV_LONGER_SECOND`, if the first sv is contained fully in the second,
-// but the second sv is longer.
-// 3: `SV_DIFFERENT`, if they are different stringviews.
-// NOTE: will return `true` for strings "test" and "test2",
-// but `false` for strings "test" and "2test". For true substring testing, use
-// sv_is_substr instead.
 extern uint8_t puddle_sv_comp
 (
     StringView *first,
     StringView *second
 );
 
-// TODO: will return:
-// 3: `SV_DIFFERENT`, if they are different stringviews.
-// 4: `SV_SUBSTR_FIRST`, if the first stringview is contained entirely in the second
-// 5: `SV_SUBSTR_SECOND`, analogous to `SV_SUBSTR_FIRST`, but vice-versa.
 extern uint8_t puddle_sv_is_substr
 (
     StringView *first,

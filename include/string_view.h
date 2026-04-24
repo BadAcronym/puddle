@@ -291,6 +291,8 @@ void puddle_sv_trim
     }
 }
 
+// CURRENT: probably rename to puddle_sv_same and remove longer functionality!
+// update docs after!
 uint8_t puddle_sv_comp
 (
     StringView *first,
@@ -330,7 +332,7 @@ uint8_t puddle_sv_is_substr
     StringView *first,
     StringView *second
 ){
-    // TODO: substr testing :P
+    // URGENT: substr testing :P
     return SV_DIFFERENT;
 }
 

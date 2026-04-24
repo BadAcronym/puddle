@@ -27,7 +27,7 @@ int main
         fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_cstr FAILED.\033[0m\n");
         fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"", ARG_SV(conv_src),
                 ARG_SV(conv_test2));
-        return -1;
+        return 1;
     }
     free((void*)conv_test);
 
@@ -37,7 +37,7 @@ int main
         fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
                 ARG_SV(substr_test), ARG_SV(substr));
         fprintf(stderr, "\n%zu vs %zu", substr_test.size, substr.size);
-        return -1;
+        return 2;
     }
 
     if(!puddle_sv_same(sub_test_0, sub_test_1))
@@ -47,7 +47,7 @@ int main
         fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"", ARG_SV(sub_test_0),
                 ARG_SV(sub_test_1));
         fprintf(stderr, "\n%zu vs %zu", sub_test_0.size, sub_test_1.size);
-        return -1;
+        return 3;
     }
 
     puddle_sv_trim(&test, 3, SV_LEFT);
@@ -57,7 +57,7 @@ int main
                 "with SV_LEFT.\033[0m\n");
         fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"", ARG_SV(test_left),
                 ARG_SV(test));
-        return -1;
+        return 4;
     }
 
     puddle_sv_trim(&test, 2, SV_RIGHT);
@@ -67,7 +67,7 @@ int main
                 "with SV_RIGHT.\033[0m\n");
         fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"", ARG_SV(test_right),
                 ARG_SV(test));
-        return -1;
+        return 5;
     }
 
     puddle_sv_trim(&test, 3, SV_BOTH);
@@ -77,7 +77,7 @@ int main
                 "with SV_BOTH.\033[0m\n");
         fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"", ARG_SV(test_both),
                 ARG_SV(test));
-        return -1;
+        return 6;
     }
 
     const char *concatenated = puddle_sv_concat(concat_1, concat_2);
@@ -88,7 +88,7 @@ int main
                 "with SV_BOTH.\033[0m\n");
         fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"", ARG_SV(concat_r),
                 ARG_SV(test_concat));
-        return -1;
+        return 7;
     }
     free((void*)concatenated);
 
@@ -102,25 +102,86 @@ int main
     {
         fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_is_substr FAILED unit test "
                 "with SV_DIFFERENT.\033[0m\n");
-        return -1;
+        return 8;
     }
-    else if(!puddle_sv_is_substr(small1, bigStr))
+    if(!puddle_sv_is_substr(small1, bigStr))
     {
         fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_is_substr FAILED unit test "
                 "with SV_IS_SUBSTR no 1.\033[0m\n");
-        return -1;
+        return 9;
     }
-    else if(!puddle_sv_is_substr(small2, bigStr))
+    if(!puddle_sv_is_substr(small2, bigStr))
     {
         fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_is_substr FAILED unit test "
                 "with SV_IS_SUBSTR no 2.\033[0m\n");
-        return -1;
+        return 10;
     }
-    else if(!puddle_sv_is_substr(small3, bigStr))
+    if(!puddle_sv_is_substr(small3, bigStr))
     {
         fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_is_substr FAILED unit test "
                 "with SV_IS_SUBSTR no 3.\033[0m\n");
-        return -1;
+        return 11;
+    }
+
+    if(puddle_sv_find(small0, bigStr))
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_find FAILED unit test with "
+                "non-findable pattern.\033[0m\n");
+        return 12;
+    }
+
+    const char *found = puddle_sv_find(small1, bigStr);
+    if(!found)
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_find FAILED to find substring."
+                "\033[0m\n");
+        return 13;
+    }
+    if(found < bigStr.data || found > bigStr.data + bigStr.size - small1.size)
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_find FAILED by returning an "
+                "invalid pointer. \033[0m\n");
+        fprintf(stderr, "StringView sv valid range: %p - %p.\nReturned pointer was: %p."
+                "\nThat's %li away from the start and %li away from the end.",
+                bigStr.data, bigStr.data + bigStr.size, found, bigStr.data - found,
+                bigStr.data + bigStr.size - found);
+        return 14;
+    }
+
+    found = puddle_sv_find(small2, bigStr);
+    if(!found)
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_find FAILED to find substring."
+                "\033[0m\n");
+        return 15;
+    }
+    if(found < bigStr.data || found > bigStr.data + bigStr.size - small2.size)
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_find FAILED by returning an "
+                "invalid pointer. \033[0m\n");
+        fprintf(stderr, "StringView sv valid range: %p - %p.\nReturned pointer was: %p."
+                "\nThat's %li away from the start and %li away from the end.",
+                bigStr.data, bigStr.data + bigStr.size, found, bigStr.data - found,
+                bigStr.data + bigStr.size - found);
+        return 16;
+    }
+
+    found = puddle_sv_find(small3, bigStr);
+    if(!found)
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_find FAILED to find substring."
+                "\033[0m\n");
+        return 17;
+    }
+    if(found < bigStr.data || found > bigStr.data + bigStr.size - small3.size)
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_find FAILED by returning an "
+                "invalid pointer. \033[0m\n");
+        fprintf(stderr, "StringView sv valid range: %p - %p.\nReturned pointer was: %p."
+                "\nThat's %li away from the start and %li away from the end.",
+                bigStr.data, bigStr.data + bigStr.size, found, bigStr.data - found,
+                bigStr.data + bigStr.size - found);
+        return 18;
     }
 
     printf("\033[32;1;1m\nSUCCESS: all unit tests passed.\033[0m\n");

@@ -118,14 +118,12 @@ extern uint8_t puddle_sv_is_substr
     StringView second
 );
 
-// TODO: :3
-// Will return a stringview where `result->data` is set to the position at
-// which `pattern` was found inside `sv`. If it wasn't found, the resulting stringview
-// will simply be zeroed.
-extern StringView puddle_sv_find
+// Will return a pointer to the start of `pattern` inside `sv`, if it was found.
+// If it wasn't found, the pointer is null.
+extern const char *puddle_sv_find
 (
-    StringView sv,
-    StringView pattern
+    StringView pattern,
+    StringView sv
 );
 
 // concatenates `first` and `second` one after the other.
@@ -360,20 +358,34 @@ uint8_t puddle_sv_is_substr
     return SV_DIFFERENT;
 }
 
-StringView puddle_sv_find
+const char *puddle_sv_find
 (
-    StringView sv,
-    StringView pattern
+    StringView pattern,
+    StringView sv
 ){
-    // TODO: write finding
-    // ...
-
-    // not found
-    return(StringView)
+    if(sv.data == 0 || pattern.data == 0 || sv.size == 0 || pattern.size == 0)
     {
-        .data = 0,
-        .size = 0
-    };
+        return 0;
+    }
+
+    for(size_t i = 0; i < sv.size; ++i)
+    {
+        size_t j = 0;
+        for(; j < pattern.size; ++j)
+        {
+            if(sv.data[i + j] != pattern.data[j])
+            {
+                break;
+            }
+        }
+
+        if(j == pattern.size)
+        {
+            return(const char *)(sv.data);
+        }
+    }
+
+    return 0;
 }
 
 const char *puddle_sv_concat

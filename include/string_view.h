@@ -13,12 +13,7 @@
 
 #define SV_DIFFERENT     0L
 #define SV_SAME          1L
-
-#define SV_LONGER_FIRST  2L
-#define SV_LONGER_SECOND 3L
-
-#define SV_SUBSTR_FIRST  2L
-#define SV_SUBSTR_SECOND 3L
+#define SV_IS_SUBSTR     2L
 
 // macros for printf() formatting and printing.
 // use like this, with result & expected both stringviews:
@@ -38,8 +33,8 @@ typedef struct s
 String;
 
 // length-based string view (const pointer).
-// data is not guaranteed to be null-terminated.
-// use puddle_sv_cstr() if you require access to a cstring.
+// data is `not` guaranteed to be null-terminated.
+// use `puddle_sv_cstr()` if you require access to a cstring.
 typedef struct sv
 {
     const char *data;
@@ -80,7 +75,7 @@ StringView puddle_cstr_sv_cpy
 // will use malloc() to give you a new const char *.
 extern const char *puddle_sv_cstr
 (
-    StringView *sv
+    StringView sv
 );
 
 // will return the trimmed substring as a new stringview.
@@ -102,21 +97,35 @@ extern void puddle_sv_trim
     uint8_t    direction
 );
 
-// will return:
+// Will return:
 // 0: `SV_DIFFERENT`, if they are different stringviews.
 // 1: `SV_SAME`, if the stringviews have the same content and are the same length.
-// 2: `SV_LONGER_FIRST`, if the second sv is contained fully in the first,
-// but the first sv is longer.
-extern uint8_t puddle_sv_comp
+// In this case, the strings "test" and "test2" are not the same string. For substring
+// testing, use `puddle_sv_is_substr`.
+extern uint8_t puddle_sv_same
 (
-    StringView *first,
-    StringView *second
+    StringView first,
+    StringView second
 );
 
+// Will return:
+// 0: `SV_DIFFERENT`, if the `first` string is `not` included in the `second` string.
+// 1: `SV_SAME`, if the stringviews have the same content and are the same length.
+// 2: `SV_IS_SUBSTR`, if the `first` string is `fully` included in the `second` string.
 extern uint8_t puddle_sv_is_substr
 (
-    StringView *first,
-    StringView *second
+    StringView first,
+    StringView second
+);
+
+// TODO: :3
+// Will return a stringview where `result->data` is set to the position at
+// which `pattern` was found inside `sv`. If it wasn't found, the resulting stringview
+// will simply be zeroed.
+extern StringView puddle_sv_find
+(
+    StringView sv,
+    StringView pattern
 );
 
 // concatenates `first` and `second` one after the other.
@@ -124,8 +133,8 @@ extern uint8_t puddle_sv_is_substr
 // "Hello " + "World"  = "Hello World".
 extern const char *puddle_sv_concat
 (
-    StringView *first,
-    StringView *second
+    StringView first,
+    StringView second
 );
 #endif
 
@@ -204,11 +213,11 @@ StringView puddle_cstr_sv_cpy
 
 const char *puddle_sv_cstr
 (
-    StringView *sv
+    StringView sv
 ){
-    char *result = malloc(sv->size + 1);
-    memcpy(result, sv->data, sv->size);
-    result[sv->size] = '\0';
+    char *result = malloc(sv.size + 1);
+    memcpy(result, sv.data, sv.size);
+    result[sv.size] = '\0';
 
     return result;
 }
@@ -291,64 +300,88 @@ void puddle_sv_trim
     }
 }
 
-// CURRENT: probably rename to puddle_sv_same and remove longer functionality!
-// update docs after!
-uint8_t puddle_sv_comp
+uint8_t puddle_sv_same
 (
-    StringView *first,
-    StringView *second
+    StringView first,
+    StringView second
 ){
-    if(first->size == 0 && second->size == 0)
+    if((first.data == second.data) || (first.size == 0 && second.size == 0))
     {
         return SV_SAME;
     }
-    else if(first->size == 0 || second->size == 0)
+    else if(first.size == 0 || second.size == 0)
     {
         return SV_DIFFERENT;
     }
 
     size_t i = 0;
-    for(; i < first->size; ++i)
+    for(; i < first.size && i < second.size; ++i)
     {
-        if(first->data[i] != second->data[i])
+        if(first.data[i] != second.data[i])
         {
             return SV_DIFFERENT;
         }
-        if(i + 1 == second->size && i + 1 < first->size)
-        {
-            return SV_LONGER_FIRST;
-        }
     }
 
-    if(i == second->size)
+    if(i == second.size && i == first.size)
     {
         return SV_SAME;
     }
-    return SV_LONGER_SECOND;
+    return SV_DIFFERENT;
 }
 
 uint8_t puddle_sv_is_substr
 (
-    StringView *first,
-    StringView *second
+    StringView first,
+    StringView second
 ){
-    // URGENT: substr testing :P
+    if((first.data == second.data) || (first.size == 0 && second.size == 0))
+    {
+        return SV_SAME;
+    }
+
+    for(size_t i = 0; i < second.size; ++i)
+    {
+        size_t j = 0;
+        for(; j < first.size; ++j)
+        {
+            if(second.data[i + j] != first.data[j])
+            {
+                break;
+            }
+        }
+
+        if(j == first.size)
+        {
+            return SV_IS_SUBSTR;
+        }
+    }
+
     return SV_DIFFERENT;
 }
 
-// URGENT: test sv_concat with pointer aliases
+StringView puddle_sv_find
+(
+    StringView sv,
+    StringView pattern
+){
+    // TODO: write finding
+    // ...
+
+    // not found
+    return(StringView)
+    {
+        .data = 0,
+        .size = 0
+    };
+}
+
 const char *puddle_sv_concat
 (
-    StringView *first,
-    StringView *second
+    StringView first,
+    StringView second
 ){
-    if(!first || !second)
-    {
-        fprintf(stderr, "\033[31mERROR: bad sv input.\033[0m\n");
-        return 0;
-    }
-
-    if(!first->data || !second->data)
+    if(!first.data || !second.data)
     {
         fprintf(stderr, "\033[31mERROR: bad stringview data pointer.\033[0m\n");
         return 0;
@@ -357,10 +390,10 @@ const char *puddle_sv_concat
     const char *first_data  = puddle_sv_cstr(first);
     const char *second_data = puddle_sv_cstr(second);
 
-    char *result = malloc(first->size + second->size + 1);
-    memcpy((void*)result, (void*)first_data, first->size);
-    memcpy((void*)(result + first->size), (void*)second_data, second->size);
-    result[first->size + second->size] = '\0';
+    char *result = malloc(first.size + second.size + 1);
+    memcpy((void*)result, (void*)first_data, first.size);
+    memcpy((void*)(result + first.size), (void*)second_data, second.size);
+    result[first.size + second.size] = '\0';
 
     free((void*)first_data);
     free((void*)second_data);

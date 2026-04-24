@@ -44,7 +44,7 @@ StringView;
 
 // will create a string from a cstring, by passing the pointer given
 // as its data and counting its length.
-extern String puddle_cstr_s
+extern String puddle_cstr_str
 (
     char *cstr
 );
@@ -137,7 +137,7 @@ extern const char *puddle_sv_concat
 #endif
 
 #ifdef STRING_VIEW_IMPL
-String puddle_cstr_s
+String puddle_cstr_str
 (
     char *cstr
 ){

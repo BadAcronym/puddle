@@ -15,7 +15,7 @@
 #define SV_SAME          1L
 #define SV_IS_SUBSTR     2L
 
-// macros for printf() formatting and printing.
+// macros for `printf()` formatting and printing.
 // use like this, with result & expected both stringviews:
 // fprintf(stderr, "expected: "PRI_SV" got: "PRI_SV", ARG_SV(expected), ARG_SV(result));
 #define PRI_SV "%.*s"
@@ -23,7 +23,7 @@
 
 // length-based string.
 // data is not guaranteed to be null-terminated.
-// use puddle_sv_cstr() if you require access to a cstring.
+// use `sv_cstr()` if you require access to a cstring.
 // tip: just cast to `StringView` if you require using puddle's sv functions.
 typedef struct s
 {
@@ -34,7 +34,7 @@ String;
 
 // length-based string view (const pointer).
 // data is `not` guaranteed to be null-terminated.
-// use `puddle_sv_cstr()` if you require access to a cstring.
+// use `sv_cstr()` if you require access to a cstring.
 typedef struct sv
 {
     const char *data;
@@ -44,28 +44,28 @@ StringView;
 
 // will create a string from a cstring, by passing the pointer given
 // as its data and counting its length.
-extern String puddle_cstr_str
+extern String cstr_str
 (
     char *cstr
 );
 
 // will create a string, but will not just pass a pointer. Will actually
 // copy its contents and allocate to a new pointer.
-String puddle_cstr_scpy
+String cstr_scpy
 (
     char *cstr
 );
 
 // will create a stringview from a cstring, by passing the pointer given
 // as its data and counting its length.
-extern StringView puddle_cstr_sv
+extern StringView cstr_sv
 (
     const char *cstr
 );
 
 // will create a stringview, but will not just pass a pointer. Will actually
 // copy its contents and allocate to a new pointer.
-StringView puddle_cstr_sv_cpy
+StringView cstr_sv_cpy
 (
     const char *cstr
 );
@@ -73,14 +73,14 @@ StringView puddle_cstr_sv_cpy
 // safe access for anything requiring a null-terminated cstring,
 // because we can't be sure that the stringview is going to be null-terminated.
 // will use malloc() to give you a new const char *.
-extern const char *puddle_sv_cstr
+extern const char *sv_cstr
 (
     StringView sv
 );
 
 // will return the trimmed substring as a new stringview.
 // start_pos & end_pos are both positions in the original string.
-extern StringView puddle_sv_substr
+extern StringView sv_substr
 (
     StringView *sv,
     size_t     start_pos,
@@ -90,7 +90,7 @@ extern StringView puddle_sv_substr
 // will trim count characters from: `SV_LEFT`, `SV_RIGHT` or `SV_BOTH`.
 // in the case of both, it will first trim `count` from the left,
 // then try to trim `count` from the right.
-extern void puddle_sv_trim
+extern void sv_trim
 (
     StringView *sv,
     size_t     count,
@@ -101,8 +101,8 @@ extern void puddle_sv_trim
 // 0: `SV_DIFFERENT`, if they are different stringviews.
 // 1: `SV_SAME`, if the stringviews have the same content and are the same length.
 // In this case, the strings "test" and "test2" are not the same string. For substring
-// testing, use `puddle_sv_is_substr`.
-extern uint8_t puddle_sv_same
+// testing, use `sv_is_substr`.
+extern uint8_t sv_is_same
 (
     StringView first,
     StringView second
@@ -112,7 +112,7 @@ extern uint8_t puddle_sv_same
 // 0: `SV_DIFFERENT`, if the `first` string is `not` included in the `second` string.
 // 1: `SV_SAME`, if the stringviews have the same content and are the same length.
 // 2: `SV_IS_SUBSTR`, if the `first` string is `fully` included in the `second` string.
-extern uint8_t puddle_sv_is_substr
+extern uint8_t sv_is_substr
 (
     StringView first,
     StringView second
@@ -120,7 +120,7 @@ extern uint8_t puddle_sv_is_substr
 
 // Will return a pointer to the start of `pattern` inside `sv`, if it was found.
 // If it wasn't found, the pointer is null.
-extern const char *puddle_sv_find
+extern const char *sv_find
 (
     StringView pattern,
     StringView sv
@@ -131,17 +131,17 @@ extern const char *puddle_sv_find
 // and ends with either the end of the string or a `delim` character. E.g., in the
 // string: `"hello;test;path;for;example"`, and `delim = ';'`, `i = 0` would yield
 // "hello", `i = 3` yields "for", etc.
-StringView puddle_sv_find_by_delim
+StringView sv_find_by_delim
 (
+    StringView sv,
     char       delim,
-    uint32_t   index,
-    StringView sv
+    uint32_t   index
 );
 
 // concatenates `first` and `second` one after the other.
 // `first`  + `second` = `result`.
 // "Hello " + "World"  = "Hello World".
-extern const char *puddle_sv_concat
+extern const char *sv_concat
 (
     StringView first,
     StringView second
@@ -149,7 +149,7 @@ extern const char *puddle_sv_concat
 #endif
 
 #ifdef STRING_VIEW_IMPL
-String puddle_cstr_str
+String cstr_str
 (
     char *cstr
 ){
@@ -165,7 +165,7 @@ String puddle_cstr_str
     };
 }
 
-String puddle_cstr_scpy
+String cstr_scpy
 (
     char *cstr
 ){
@@ -185,7 +185,7 @@ String puddle_cstr_scpy
     };
 }
 
-StringView puddle_cstr_sv
+StringView cstr_sv
 (
     const char *cstr
 ){
@@ -201,7 +201,7 @@ StringView puddle_cstr_sv
     };
 }
 
-StringView puddle_cstr_sv_cpy
+StringView cstr_sv_cpy
 (
     const char *cstr
 ){
@@ -221,7 +221,7 @@ StringView puddle_cstr_sv_cpy
     };
 }
 
-const char *puddle_sv_cstr
+const char *sv_cstr
 (
     StringView sv
 ){
@@ -232,7 +232,7 @@ const char *puddle_sv_cstr
     return result;
 }
 
-StringView puddle_sv_substr
+StringView sv_substr
 (
     StringView *sv,
     size_t     start_pos,
@@ -277,7 +277,7 @@ StringView puddle_sv_substr
     return result;
 }
 
-void puddle_sv_trim
+void sv_trim
 (
     StringView *sv,
     size_t     count,
@@ -310,7 +310,7 @@ void puddle_sv_trim
     }
 }
 
-uint8_t puddle_sv_same
+uint8_t sv_same
 (
     StringView first,
     StringView second
@@ -340,7 +340,7 @@ uint8_t puddle_sv_same
     return SV_DIFFERENT;
 }
 
-uint8_t puddle_sv_is_substr
+uint8_t sv_is_substr
 (
     StringView first,
     StringView second
@@ -370,7 +370,7 @@ uint8_t puddle_sv_is_substr
     return SV_DIFFERENT;
 }
 
-const char *puddle_sv_find
+const char *sv_find
 (
     StringView pattern,
     StringView sv
@@ -400,43 +400,64 @@ const char *puddle_sv_find
     return 0;
 }
 
-StringView puddle_sv_find_by_delim
+StringView sv_find_by_delim
 (
+    StringView sv,
     char       delim,
-    uint32_t   index,
-    StringView sv
+    uint32_t   index
 ){
-    // URGENT: puddle_sv_find_by_delim
-    // make sure no off-by-ones
-
+    StringView result        = {0};
     uint32_t   delim_count   = 0;
     const char *lastword_end = 0;
+
+    if(sv.data == 0)
+    {
+        return result;
+    }
+
+    if(index == 0)
+    {
+        result.data = sv.data;
+        uint32_t i  = 0;
+
+        for(; result.data < (sv.data + sv.size) && sv.data[i] == delim; ++i)
+        {
+            ++result.data;
+        }
+        for(; result.size < sv.size && sv.data[i] != delim; ++i)
+        {
+            ++result.size;
+        }
+
+        return result;
+    }
 
     for(uint64_t i = 0; i < sv.size; ++i)
     {
         if(sv.data[i] == delim)
         {
             ++delim_count;
-            lastword_end = sv.data + i + 1;
-        }
 
-        // hello;test;123;
-        //      ^, return "hello"
-
-        if(delim_count > index)
-        {
             for(; sv.data[i] == delim; ++i)
             {
-                ++lastword_end;
             }
-            // TODO:
-            // abc;;;;efg <- skip to the next non-concatenated ';' after reading abc, which
-            // would be end of string here.
+
+            lastword_end = sv.data + i;
+            printf("identified end of delim @ sv.data + %lu\n", i);
+        }
+
+        // TODO: index 1 needs to return "hello"
+        // ;aaa;;hello;test;;123
+
+        if(delim_count == index)
+        {
         }
     }
+
+    return (StringView){0};
 }
 
-const char *puddle_sv_concat
+const char *sv_concat
 (
     StringView first,
     StringView second
@@ -447,8 +468,8 @@ const char *puddle_sv_concat
         return 0;
     }
 
-    const char *first_data  = puddle_sv_cstr(first);
-    const char *second_data = puddle_sv_cstr(second);
+    const char *first_data  = sv_cstr(first);
+    const char *second_data = sv_cstr(second);
 
     char *result = malloc(first.size + second.size + 1);
     memcpy((void*)result, (void*)first_data, first.size);

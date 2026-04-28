@@ -7,183 +7,349 @@ int main
 (
     void
 ){
-    StringView test        = puddle_cstr_sv("Hello, World!");
-    StringView substr      = puddle_sv_substr(&test, 7, test.size);
-    StringView substr_test = puddle_cstr_sv("World!");
-    StringView sub_test_0  = puddle_cstr_sv("W");
-    StringView sub_test_1  = puddle_sv_substr(&test, 7, 7);
-    StringView test_left   = puddle_cstr_sv("lo, World!");
-    StringView test_right  = puddle_cstr_sv("lo, Worl");
-    StringView test_both   = puddle_cstr_sv(" W");
-    StringView conv_src    = puddle_cstr_sv("The quick lilac fox jumps over the dog.");
-    const char *conv_test  = puddle_sv_cstr(conv_src);
-    StringView conv_test2  = puddle_cstr_sv(conv_test);
-    StringView concat_1    = puddle_cstr_sv("Test ");
-    StringView concat_2    = puddle_cstr_sv("concat !");
-    StringView concat_r    = puddle_cstr_sv("Test concat !");
+    StringView test        = cstr_sv("Hello, World!");
+    StringView substr      = sv_substr(&test, 7, test.size);
+    StringView substr_test = cstr_sv("World!");
+    StringView sub_test_0  = cstr_sv("W");
+    StringView sub_test_1  = sv_substr(&test, 7, 7);
+    StringView test_left   = cstr_sv("lo, World!");
+    StringView test_right  = cstr_sv("lo, Worl");
+    StringView test_both   = cstr_sv(" W");
+    StringView conv_src    = cstr_sv("The quick lilac fox jumps over the dog.");
+    const char *conv_test  = sv_cstr(conv_src);
+    StringView conv_test2  = cstr_sv(conv_test);
+    StringView concat_1    = cstr_sv("Test ");
+    StringView concat_2    = cstr_sv("concat !");
+    StringView concat_r    = cstr_sv("Test concat !");
 
-    if(!puddle_sv_same(conv_src, conv_test2))
+    int num_failed = 0;
+
+    if(!sv_same(conv_src, conv_test2))
     {
-        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_cstr FAILED.\033[0m\n");
+        fprintf(stderr, "\033[31;1;1mERROR: sv_cstr FAILED.\033[0m\n");
         fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"", ARG_SV(conv_src),
                 ARG_SV(conv_test2));
-        return 1;
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_cstr unit test.\033[0m\n");
     }
     free((void*)conv_test);
 
-    if(!puddle_sv_same(substr, substr_test))
+    if(!sv_same(substr, substr_test))
     {
-        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_substr FAILED.\033[0m\n");
+        fprintf(stderr, "\033[31;1;1mERROR: sv_substr FAILED.\033[0m\n");
         fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
                 ARG_SV(substr_test), ARG_SV(substr));
         fprintf(stderr, "\n%zu vs %zu", substr_test.size, substr.size);
-        return 2;
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_substr unit test.\033[0m\n");
     }
 
-    if(!puddle_sv_same(sub_test_0, sub_test_1))
+    if(!sv_same(sub_test_0, sub_test_1))
     {
-        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_substr FAILED "
+        fprintf(stderr, "\033[31;1;1mERROR: sv_substr FAILED "
                 "on a single character.\033[0m\n");
         fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"", ARG_SV(sub_test_0),
                 ARG_SV(sub_test_1));
         fprintf(stderr, "\n%zu vs %zu", sub_test_0.size, sub_test_1.size);
-        return 3;
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_substr on a single character."
+                "\033[0m\n");
     }
 
-    puddle_sv_trim(&test, 3, SV_LEFT);
-    if(!puddle_sv_same(test, test_left))
+    sv_trim(&test, 3, SV_LEFT);
+    if(!sv_same(test, test_left))
     {
-        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_trim FAILED unit test "
+        fprintf(stderr, "\033[31;1;1mERROR: sv_trim FAILED unit test "
                 "with SV_LEFT.\033[0m\n");
         fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"", ARG_SV(test_left),
                 ARG_SV(test));
-        return 4;
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_trim unit test with SV_LEFT."
+                "\033[0m\n");
     }
 
-    puddle_sv_trim(&test, 2, SV_RIGHT);
-    if(!puddle_sv_same(test, test_right))
+    sv_trim(&test, 2, SV_RIGHT);
+    if(!sv_same(test, test_right))
     {
-        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_trim FAILED unit test "
+        fprintf(stderr, "\033[31;1;1mERROR: sv_trim FAILED unit test "
                 "with SV_RIGHT.\033[0m\n");
         fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"", ARG_SV(test_right),
                 ARG_SV(test));
-        return 5;
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_trim unit test with SV_RIGHT."
+                "\033[0m\n");
     }
 
-    puddle_sv_trim(&test, 3, SV_BOTH);
-    if(!puddle_sv_same(test, test_both))
+    sv_trim(&test, 3, SV_BOTH);
+    if(!sv_same(test, test_both))
     {
-        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_trim FAILED unit test "
+        fprintf(stderr, "\033[31;1;1mERROR: sv_trim FAILED unit test "
                 "with SV_BOTH.\033[0m\n");
         fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"", ARG_SV(test_both),
                 ARG_SV(test));
-        return 6;
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_trim unit test with SV_BOTH."
+                "\033[0m\n");
     }
 
-    const char *concatenated = puddle_sv_concat(concat_1, concat_2);
-    StringView test_concat   = puddle_cstr_sv(concatenated);
-    if(!puddle_sv_same(concat_r, test_concat))
+    const char *concatenated = sv_concat(concat_1, concat_2);
+    StringView test_concat   = cstr_sv(concatenated);
+    if(!sv_same(concat_r, test_concat))
     {
-        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_concat FAILED unit test "
-                "with SV_BOTH.\033[0m\n");
+        fprintf(stderr, "\033[31;1;1mERROR: sv_concat FAILED unit test.\033[0m\n");
         fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"", ARG_SV(concat_r),
                 ARG_SV(test_concat));
-        return 7;
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_concat unit test.\033[0m\n");
     }
     free((void*)concatenated);
 
-    StringView bigStr = puddle_cstr_sv("The quick brown fox jumps over the lazy dog.");
-    StringView small0 = puddle_cstr_sv(" The ");
-    StringView small1 = puddle_cstr_sv("The");
-    StringView small2 = puddle_cstr_sv(" jumps ");
-    StringView small3 = puddle_cstr_sv("dog.");
+    StringView bigStr = cstr_sv("The quick brown fox jumps over the lazy dog.");
+    StringView small0 = cstr_sv(" The ");
+    StringView small1 = cstr_sv("The");
+    StringView small2 = cstr_sv(" jumps ");
+    StringView small3 = cstr_sv("dog.");
 
-    if(puddle_sv_is_substr(small0, bigStr))
+    if(sv_is_substr(small0, bigStr))
     {
-        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_is_substr FAILED unit test "
+        fprintf(stderr, "\033[31;1;1mERROR: sv_is_substr FAILED unit test "
                 "with SV_DIFFERENT.\033[0m\n");
-        return 8;
+        ++num_failed;
     }
-    if(!puddle_sv_is_substr(small1, bigStr))
+    else
     {
-        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_is_substr FAILED unit test "
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_is_substr unit test with "
+                "SV_DIFFERENT.\033[0m\n");
+    }
+
+    if(!sv_is_substr(small1, bigStr))
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_is_substr FAILED unit test "
                 "with SV_IS_SUBSTR no 1.\033[0m\n");
-        return 9;
+        ++num_failed;
     }
-    if(!puddle_sv_is_substr(small2, bigStr))
+    else
     {
-        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_is_substr FAILED unit test "
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_is_substr unit test with "
+                "SV_IS_SUBSTR no 1.\033[0m\n");
+    }
+
+    if(!sv_is_substr(small2, bigStr))
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_is_substr FAILED unit test "
                 "with SV_IS_SUBSTR no 2.\033[0m\n");
-        return 10;
+        ++num_failed;
     }
-    if(!puddle_sv_is_substr(small3, bigStr))
+    else
     {
-        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_is_substr FAILED unit test "
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_is_substr unit test with "
+                "SV_IS_SUBSTR no 2.\033[0m\n");
+    }
+
+    if(!sv_is_substr(small3, bigStr))
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_is_substr FAILED unit test "
                 "with SV_IS_SUBSTR no 3.\033[0m\n");
-        return 11;
+        ++num_failed;
     }
-
-    if(puddle_sv_find(small0, bigStr))
+    else
     {
-        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_find FAILED unit test with "
-                "non-findable pattern.\033[0m\n");
-        return 12;
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_is_substr unit test with "
+                "SV_IS_SUBSTR no 3.\033[0m\n");
     }
 
-    const char *found = puddle_sv_find(small1, bigStr);
+    if(sv_find(small0, bigStr))
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find FAILED unit test with "
+                "non-findable pattern.\033[0m\n");
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find unit test with "
+                "non-findable pattern.\033[0m\n");
+    }
+
+    const char *found = sv_find(small1, bigStr);
     if(!found)
     {
-        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_find FAILED to find substring."
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find FAILED to find substring."
                 "\033[0m\n");
-        return 13;
+        ++num_failed;
     }
     if(found < bigStr.data || found > bigStr.data + bigStr.size - small1.size)
     {
-        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_find FAILED by returning an "
-                "invalid pointer. \033[0m\n");
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find FAILED by returning an "
+                "invalid pointer, no 1. \033[0m\n");
         fprintf(stderr, "StringView sv valid range: %p - %p.\nReturned pointer was: %p."
                 "\nThat's %li away from the start and %li away from the end.",
                 bigStr.data, bigStr.data + bigStr.size, found, bigStr.data - found,
                 bigStr.data + bigStr.size - found);
-        return 14;
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find unit test by returning"
+                "a valid pointer, no 1.\033[0m\n");
     }
 
-    found = puddle_sv_find(small2, bigStr);
+    found = sv_find(small2, bigStr);
     if(!found)
     {
-        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_find FAILED to find substring."
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find FAILED to find substring."
                 "\033[0m\n");
-        return 15;
+        ++num_failed;
     }
     if(found < bigStr.data || found > bigStr.data + bigStr.size - small2.size)
     {
-        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_find FAILED by returning an "
-                "invalid pointer. \033[0m\n");
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find FAILED by returning an "
+                "invalid pointer, no 2. \033[0m\n");
         fprintf(stderr, "StringView sv valid range: %p - %p.\nReturned pointer was: %p."
                 "\nThat's %li away from the start and %li away from the end.",
                 bigStr.data, bigStr.data + bigStr.size, found, bigStr.data - found,
                 bigStr.data + bigStr.size - found);
-        return 16;
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find unit test by returning"
+                "a valid pointer, no 2.\033[0m\n");
     }
 
-    found = puddle_sv_find(small3, bigStr);
+    found = sv_find(small3, bigStr);
     if(!found)
     {
-        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_find FAILED to find substring."
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find FAILED to find substring."
                 "\033[0m\n");
-        return 17;
+        ++num_failed;
     }
     if(found < bigStr.data || found > bigStr.data + bigStr.size - small3.size)
     {
-        fprintf(stderr, "\033[31;1;1mERROR: puddle_sv_find FAILED by returning an "
-                "invalid pointer. \033[0m\n");
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find FAILED by returning an "
+                "invalid pointer, no 3. \033[0m\n");
         fprintf(stderr, "StringView sv valid range: %p - %p.\nReturned pointer was: %p."
                 "\nThat's %li away from the start and %li away from the end.",
                 bigStr.data, bigStr.data + bigStr.size, found, bigStr.data - found,
                 bigStr.data + bigStr.size - found);
-        return 18;
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find unit test by returning"
+                "a valid pointer, no 3.\033[0m\n");
     }
 
-    printf("\033[32;1;1m\nSUCCESS: all unit tests passed.\033[0m\n");
-    return 0;
+    StringView testPath = cstr_sv(";file0;;file1;file2;file3;;;;;;;;file4");
+
+    StringView testFile0 = sv_find_by_delim(testPath, ';', 0);
+    StringView expected0 = cstr_sv("file0");
+    if(!sv_same(testFile0, expected0))
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find_by_delim FAILED unit test "
+                "file0.\033[0m\n");
+        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"\n",
+                ARG_SV(expected0), ARG_SV(testFile0));
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find_by_delim unit test with "
+                "index = 0.\033[0m\n");
+    }
+
+    StringView testFile1 = sv_find_by_delim(testPath, ';', 1);
+    StringView expected1 = cstr_sv("file1");
+    if(!sv_same(testFile1, expected1))
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find_by_delim FAILED unit test "
+                "file1.\033[0m\n");
+        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"\n", ARG_SV(expected1),
+                ARG_SV(testFile1));
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find_by_delim unit test with "
+                "index = 1.\033[0m\n");
+    }
+
+    StringView testFile2 = sv_find_by_delim(testPath, ';', 2);
+    StringView expected2 = cstr_sv("file2");
+    if(!sv_same(testFile2, expected2))
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find_by_delim FAILED unit test "
+                "file2.\033[0m\n");
+        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"\n", ARG_SV(expected2),
+                ARG_SV(testFile2));
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find_by_delim unit test with "
+                "index = 2.\033[0m\n");
+    }
+
+    StringView testFile3 = sv_find_by_delim(testPath, ';', 3);
+    StringView expected3 = cstr_sv("file3");
+    if(!sv_same(testFile3, expected3))
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find_by_delim FAILED unit test "
+                "file3.\033[0m\n");
+        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"\n", ARG_SV(expected3),
+                ARG_SV(testFile3));
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find_by_delim unit test with "
+                "index = 3.\033[0m\n");
+    }
+
+    StringView testFile4 = sv_find_by_delim(testPath, ';', 4);
+    StringView expected4 = cstr_sv("file4");
+    if(!sv_same(testFile4, expected4))
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find_by_delim FAILED unit test "
+                "file4.\033[0m\n");
+        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"\n", ARG_SV(expected4),
+                ARG_SV(testFile4));
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find_by_delim unit test with "
+                "index = 4.\033[0m\n");
+    }
+
+    if(!num_failed)
+    {
+        printf("\033[32;1;1m\nSUCCESS: all unit tests passed.\033[0m\n");
+    }
+    else
+    {
+        printf("\033[31;1;1m\nERROR: failed %i unit tests.\033[0m\n", num_failed);
+    }
+
+    return num_failed;
 }

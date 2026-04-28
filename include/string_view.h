@@ -315,8 +315,9 @@ uint8_t sv_same
     StringView first,
     StringView second
 ){
-    if((first.data == second.data) || (first.size == 0 && second.size == 0))
-    {
+    if((first.size == second.size && first.data == second.data) ||
+       (!first.size && !second.size)
+    ){
         return SV_SAME;
     }
     else if(first.size == 0 || second.size == 0)

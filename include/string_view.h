@@ -126,6 +126,18 @@ extern const char *puddle_sv_find
     StringView sv
 );
 
+// Will return a StringView that finds the `i-th` element in `sv`, where an element is
+// a substring that starts with either the start of the string or a `delim` character
+// and ends with either the end of the string or a `delim` character. E.g., in the
+// string: `"hello;test;path;for;example"`, and `delim = ';'`, `i = 0` would yield
+// "hello", `i = 3` yields "for", etc.
+StringView puddle_sv_find_by_delim
+(
+    char       delim,
+    uint32_t   index,
+    StringView sv
+);
+
 // concatenates `first` and `second` one after the other.
 // `first`  + `second` = `result`.
 // "Hello " + "World"  = "Hello World".
@@ -386,6 +398,42 @@ const char *puddle_sv_find
     }
 
     return 0;
+}
+
+StringView puddle_sv_find_by_delim
+(
+    char       delim,
+    uint32_t   index,
+    StringView sv
+){
+    // URGENT: puddle_sv_find_by_delim
+    // make sure no off-by-ones
+
+    uint32_t   delim_count   = 0;
+    const char *lastword_end = 0;
+
+    for(uint64_t i = 0; i < sv.size; ++i)
+    {
+        if(sv.data[i] == delim)
+        {
+            ++delim_count;
+            lastword_end = sv.data + i + 1;
+        }
+
+        // hello;test;123;
+        //      ^, return "hello"
+
+        if(delim_count > index)
+        {
+            for(; sv.data[i] == delim; ++i)
+            {
+                ++lastword_end;
+            }
+            // TODO:
+            // abc;;;;efg <- skip to the next non-concatenated ';' after reading abc, which
+            // would be end of string here.
+        }
+    }
 }
 
 const char *puddle_sv_concat

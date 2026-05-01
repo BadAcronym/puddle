@@ -260,10 +260,10 @@ int main
                 "a valid pointer, no 3.\033[0m\n");
     }
 
-    StringView testPath = cstr_sv(";file0;;file1;file2;file3;;;;;;;;file4");
+    StringView testPath = cstr_sv(";zeroeth;;first;second;third;;;;;;;;fourth");
 
     StringView testFile0 = sv_find_by_delim(testPath, ';', 0);
-    StringView expected0 = cstr_sv("file0");
+    StringView expected0 = cstr_sv("zeroeth");
     if(!sv_same(testFile0, expected0))
     {
         fprintf(stderr, "\033[31;1;1mERROR: sv_find_by_delim FAILED unit test "
@@ -279,7 +279,7 @@ int main
     }
 
     StringView testFile1 = sv_find_by_delim(testPath, ';', 1);
-    StringView expected1 = cstr_sv("file1");
+    StringView expected1 = cstr_sv("first");
     if(!sv_same(testFile1, expected1))
     {
         fprintf(stderr, "\033[31;1;1mERROR: sv_find_by_delim FAILED unit test "
@@ -295,7 +295,7 @@ int main
     }
 
     StringView testFile2 = sv_find_by_delim(testPath, ';', 2);
-    StringView expected2 = cstr_sv("file2");
+    StringView expected2 = cstr_sv("second");
     if(!sv_same(testFile2, expected2))
     {
         fprintf(stderr, "\033[31;1;1mERROR: sv_find_by_delim FAILED unit test "
@@ -311,7 +311,7 @@ int main
     }
 
     StringView testFile3 = sv_find_by_delim(testPath, ';', 3);
-    StringView expected3 = cstr_sv("file3");
+    StringView expected3 = cstr_sv("third");
     if(!sv_same(testFile3, expected3))
     {
         fprintf(stderr, "\033[31;1;1mERROR: sv_find_by_delim FAILED unit test "
@@ -327,7 +327,7 @@ int main
     }
 
     StringView testFile4 = sv_find_by_delim(testPath, ';', 4);
-    StringView expected4 = cstr_sv("file4");
+    StringView expected4 = cstr_sv("fourth");
     if(!sv_same(testFile4, expected4))
     {
         fprintf(stderr, "\033[31;1;1mERROR: sv_find_by_delim FAILED unit test "
@@ -340,6 +340,56 @@ int main
     {
         fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find_by_delim unit test with "
                 "index = 4.\033[0m\n");
+    }
+
+    StringView testPath2 = cstr_sv("zero:one:two::::");
+
+    StringView testFile2_0 = sv_find_by_delim(testPath2, ':', 0);
+    StringView expected2_0 = cstr_sv("zero");
+    if(!sv_same(testFile2_0, expected2_0))
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find_by_delim FAILED unit test "
+                "file0 in path 2.\033[0m\n");
+        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"\n",
+                ARG_SV(expected2_0), ARG_SV(testFile2_0));
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find_by_delim unit test with "
+                "index = 2_0.\033[0m\n");
+    }
+
+    StringView testFile2_1 = sv_find_by_delim(testPath2, ':', 1);
+    StringView expected2_1 = cstr_sv("one");
+    if(!sv_same(testFile2_1, expected2_1))
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find_by_delim FAILED unit test "
+                "file1 in path 2.\033[0m\n");
+        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"\n",
+                ARG_SV(expected2_1), ARG_SV(testFile2_1));
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find_by_delim unit test with "
+                "index = 2_1.\033[0m\n");
+    }
+
+    StringView testFile2_2 = sv_find_by_delim(testPath2, ':', 2);
+    StringView expected2_2 = cstr_sv("two");
+    if(!sv_same(testFile2_2, expected2_2))
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find_by_delim FAILED unit test "
+                "file2 in path 2.\033[0m\n");
+        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"\n",
+                ARG_SV(expected2_2), ARG_SV(testFile2_2));
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find_by_delim unit test with "
+                "index = 2_2.\033[0m\n");
     }
 
     if(!num_failed)

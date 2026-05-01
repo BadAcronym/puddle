@@ -131,6 +131,12 @@ extern const char *sv_find
 // and ends with either the end of the string or a `delim` character. E.g., in the
 // string: `"hello;test;path;for;example"`, and `delim = ';'`, `i = 0` would yield
 // "hello", `i = 3` yields "for", etc.
+//
+// ignores duplicate delimiters, i.e. "hello;test;path;for;example" and
+// ";;hello;test;path;;;;;for;example;;" will yield the same results.
+//
+// if no more results can be found (the index is too high), a null StringView will be
+// returned.
 StringView sv_find_by_delim
 (
     StringView sv,
@@ -407,51 +413,47 @@ StringView sv_find_by_delim
     char       delim,
     uint32_t   index
 ){
-    StringView result        = {0};
-    uint32_t   delim_count   = 0;
-    const char *lastword_end = 0;
+    StringView result          = {0};
+    uint32_t   delim_count     = 0;
+    const char *nextword_start = sv.data;
 
     if(sv.data == 0)
     {
         return result;
     }
 
-    if(index == 0)
+    if(sv.data[0] == delim)
     {
-        result.data = sv.data;
-        uint32_t i  = 0;
-
-        for(; result.data < (sv.data + sv.size) && sv.data[i] == delim; ++i)
-        {
-            ++result.data;
-        }
-        for(; result.size < sv.size && sv.data[i] != delim; ++i)
-        {
-            ++result.size;
-        }
-
-        return result;
+        ++index;
     }
 
     for(uint64_t i = 0; i < sv.size; ++i)
     {
+        size_t substr_size = 0;
+
         if(sv.data[i] == delim)
         {
             ++delim_count;
 
-            for(; sv.data[i] == delim; ++i)
+            for(; i < sv.size && sv.data[i] == delim; ++i)
             {
             }
 
-            lastword_end = sv.data + i;
-            printf("identified end of delim @ sv.data + %lu\n", i);
+            nextword_start = sv.data + i;
         }
-
-        // TODO: index 1 needs to return "hello"
-        // ;aaa;;hello;test;;123
 
         if(delim_count == index)
         {
+            for(; i < sv.size && sv.data[i] != delim; ++i)
+            {
+                ++substr_size;
+            }
+
+            return(StringView)
+            {
+                .data = nextword_start,
+                .size = substr_size
+            };
         }
     }
 

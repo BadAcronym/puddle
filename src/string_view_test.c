@@ -210,7 +210,7 @@ int main
     }
     else
     {
-        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find unit test by returning"
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find unit test by returning "
                 "a valid pointer, no 1.\033[0m\n");
     }
 
@@ -233,7 +233,7 @@ int main
     }
     else
     {
-        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find unit test by returning"
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find unit test by returning "
                 "a valid pointer, no 2.\033[0m\n");
     }
 
@@ -256,7 +256,7 @@ int main
     }
     else
     {
-        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find unit test by returning"
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find unit test by returning "
                 "a valid pointer, no 3.\033[0m\n");
     }
 

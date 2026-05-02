@@ -144,6 +144,13 @@ StringView sv_find_by_delim
     uint32_t   index
 );
 
+// Will count the amount of substrings that are separated by the given delimiter.
+uint32_t sv_count_by_delim
+(
+    StringView sv,
+    char       delim
+);
+
 // Will sort the given StringView in alphabetical order, respecting the delimiter
 // given: `"hello;test;path;123"` -> `"123;hello;path;test"`.
 void sv_sort_by_delim
@@ -468,12 +475,54 @@ StringView sv_find_by_delim
     return (StringView){0};
 }
 
+uint32_t sv_count_by_delim
+(
+    StringView sv,
+    char       delim
+){
+    uint32_t delim_count = 0;
+
+    if(sv.data == 0)
+    {
+        return 0;
+    }
+
+    for(uint32_t i = 0; i < sv.size; ++i)
+    {
+        if(sv.data[i] == delim)
+        {
+            ++delim_count;
+
+            for(; i < sv.size && sv.data[i] == delim; ++i)
+            {
+            }
+        }
+    }
+
+    if(sv.data[sv.size - 1] != delim && sv.data[0] != delim)
+    {
+        return delim_count + 1;
+    }
+    else if(sv.data[sv.size - 1] == delim && sv.data[0] == delim)
+    {
+        return delim_count - 1;
+    }
+
+    return delim_count;
+}
+
 void sv_sort_by_delim
 (
     StringView sv,
     char       delim
 ){
+    uint32_t count          = sv_count_by_delim(sv, delim);
+    char**   pointer_buffer = malloc(count * sizeof(char*));
+
     // TODO:
+    printf("found %u substrings to sort.\n", count);
+
+    free(pointer_buffer);
 }
 
 const char *sv_concat

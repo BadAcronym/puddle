@@ -144,6 +144,14 @@ StringView sv_find_by_delim
     uint32_t   index
 );
 
+// Will sort the given StringView in alphabetical order, respecting the delimiter
+// given: `"hello;test;path;123"` -> `"123;hello;path;test"`.
+void sv_sort_by_delim
+(
+    StringView sv,
+    char       delim
+);
+
 // concatenates `first` and `second` one after the other.
 // `first`  + `second` = `result`.
 // "Hello " + "World"  = "Hello World".
@@ -458,6 +466,14 @@ StringView sv_find_by_delim
     }
 
     return (StringView){0};
+}
+
+void sv_sort_by_delim
+(
+    StringView sv,
+    char       delim
+){
+    // TODO:
 }
 
 const char *sv_concat

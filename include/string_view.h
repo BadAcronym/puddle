@@ -558,20 +558,45 @@ const char *sv_sort_by_delim
         buf[i] = sv_find_by_delim(sv, delim, i);
     }
 
-    for(uint32_t i = 0; i < count - 1; ++i)
+    // "abc:abd:123:aaa"
+    // i = 3, j = 0
+    // i - j = 3, i - j - 1 = 2
+    // "abc:abd:aaa:123"
+    // i = 3, j = 1
+    // i - j = 2, i - j - 1 = 1
+    // "abc:aaa:abd:123"
+    // i = 3, j = 2
+    // i - j = 1, i - j - 1 = 0
+    // "abc:aaa:abd:123"
+
+    // FIXME: we're swapping the wrong things, the indexing is wrong?
+    // the swapping behaviour is actually wrong, I think we need to look into bubble
+    // sort again. lol
+
+    printf("before: ");
+    for(uint8_t p = 0; p < count; ++p)
     {
-        while(!sv_is_lesser(buf[i], buf[i + 1]))
+        printf(PRI_SV":", ARG_SV(buf[p]));
+    }
+    printf("\n");
+
+    for(uint32_t i = count - 1; i > 0; --i)
+    {
+        for(uint32_t j = 0; !sv_is_lesser(buf[i - j], buf[i - j - 1]); ++j)
         {
-            StringView tmp = buf[i];
-            buf[i] = buf[i + 1];
-            buf[i + 1] = tmp;
 
-            if(i == 0)
+            printf("swapping "PRI_SV" with "PRI_SV"\n",
+                   ARG_SV(buf[i - j]), ARG_SV(buf[i - j - 1]));
+            StringView tmp = buf[i - j];
+            buf[i - j] = buf[i - j - 1];
+            buf[i - j - 1] = tmp;
+
+            printf("after: ");
+            for(uint8_t p = 0; p < count; ++p)
             {
-                break;
+                printf(PRI_SV":", ARG_SV(buf[p]));
             }
-
-            --i;
+            printf("\n");
         }
     }
 

@@ -151,6 +151,13 @@ uint32_t sv_count_by_delim
     char       delim
 );
 
+// will return 1 if the first sv is alphabetically lesser to the second, 0 if it isn't.
+uint8_t sv_is_lesser
+(
+    StringView first,
+    StringView second
+);
+
 // Will sort the given StringView in alphabetical order, respecting the delimiter
 // given: `"hello;test;path;123"` -> `"123;hello;path;test"`.
 // Returns a newly allocated c string, which can be absorbed into a StringView with the
@@ -513,7 +520,7 @@ uint32_t sv_count_by_delim
     return delim_count;
 }
 
-uint8_t first_is_lesser
+uint8_t sv_is_lesser
 (
     StringView first,
     StringView second
@@ -553,7 +560,7 @@ const char *sv_sort_by_delim
 
     for(uint32_t i = 0; i < count - 1; ++i)
     {
-        while(!first_is_lesser(buf[i], buf[i + 1]))
+        while(!sv_is_lesser(buf[i], buf[i + 1]))
         {
             StringView tmp = buf[i];
             buf[i] = buf[i + 1];

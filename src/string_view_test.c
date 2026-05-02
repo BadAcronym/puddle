@@ -429,6 +429,26 @@ int main
         .size = testPath_tosort.size
     };
 
+    StringView a = cstr_sv("..");
+    StringView b = cstr_sv(".");
+    if(sv_is_lesser(a, b))
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_is_lesser FAILED unit test "
+                "with \"..\" vs \".\".\033[0m\n");
+        fprintf(stderr, "expected: 0\ngot: 1\n");
+        ++num_failed;
+    }
+
+    StringView a1 = cstr_sv("123");
+    StringView b1 = cstr_sv("ab");
+    if(sv_is_lesser(b1, a1))
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_is_lesser FAILED unit test "
+                "with \"123\" vs \"abc\".\033[0m\n");
+        fprintf(stderr, "expected: 0\ngot: 1\n");
+        ++num_failed;
+    }
+
     result = sv_count_by_delim(testPath_sorted, ':');
     if(result != 4)
     {

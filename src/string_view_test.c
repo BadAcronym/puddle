@@ -260,7 +260,7 @@ int main
                 "a valid pointer, no 3.\033[0m\n");
     }
 
-    StringView testPath = cstr_sv(";zeroeth;;first;second;third;;;;;;;;fourth");
+    StringView testPath = cstr_sv(";zeroeth;;first;second;third;;;;;;;;fourth;");
 
     StringView testFile0 = sv_find_by_delim(testPath, ';', 0);
     StringView expected0 = cstr_sv("zeroeth");
@@ -394,6 +394,50 @@ int main
 
     StringView testPath_sort = cstr_sv("abc:abd:123:aaa");
     sv_sort_by_delim(testPath_sort, ':');
+
+    // TODO: test sv_count_by_delim
+
+    uint32_t result = sv_count_by_delim(testPath, ';');
+    if(result != 5)
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_count_by_delim FAILED unit test "
+                "counting symbols in testPath.\033[0m\n");
+        fprintf(stderr, "expected: 5\ngot: %u\n", result);
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_count_by_delim unit test with "
+                "testPath.\033[0m\n");
+    }
+
+    result = sv_count_by_delim(testPath2, ':');
+    if(result != 3)
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_count_by_delim FAILED unit test "
+                "counting symbols in testPath2.\033[0m\n");
+        fprintf(stderr, "expected: 3\ngot: %u\n", result);
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_count_by_delim unit test with "
+                "testPath2.\033[0m\n");
+    }
+
+    result = sv_count_by_delim(testPath_sort, ':');
+    if(result != 4)
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_count_by_delim FAILED unit test "
+                "counting symbols in testPath_sort.\033[0m\n");
+        fprintf(stderr, "expected: 4\ngot: %u\n", result);
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_count_by_delim unit test with "
+                "testPath_sort.\033[0m\n");
+    }
 
     StringView expected_sort0 = cstr_sv("123");
     StringView testFile_sort0 = sv_find_by_delim(testPath_sort, ':', 0);

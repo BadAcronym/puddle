@@ -392,11 +392,6 @@ int main
                 "index = 2_2.\033[0m\n");
     }
 
-    StringView testPath_sort = cstr_sv("abc:abd:123:aaa");
-    sv_sort_by_delim(testPath_sort, ':');
-
-    // TODO: test sv_count_by_delim
-
     uint32_t result = sv_count_by_delim(testPath, ';');
     if(result != 5)
     {
@@ -425,6 +420,8 @@ int main
                 "testPath2.\033[0m\n");
     }
 
+    StringView testPath_sort = cstr_sv("abc:abd:123:aaa");
+
     result = sv_count_by_delim(testPath_sort, ':');
     if(result != 4)
     {
@@ -438,6 +435,8 @@ int main
         fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_count_by_delim unit test with "
                 "testPath_sort.\033[0m\n");
     }
+
+    sv_sort_by_delim(testPath_sort, ':');
 
     StringView expected_sort0 = cstr_sv("123");
     StringView testFile_sort0 = sv_find_by_delim(testPath_sort, ':', 0);

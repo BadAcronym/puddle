@@ -392,6 +392,73 @@ int main
                 "index = 2_2.\033[0m\n");
     }
 
+    StringView testPath_sort = cstr_sv("abc:abd:123:aaa");
+    sv_sort_by_delim(testPath_sort, ':');
+
+    StringView expected_sort0 = cstr_sv("123");
+    StringView testFile_sort0 = sv_find_by_delim(testPath_sort, ':', 0);
+    if(!sv_same(testFile_sort0, expected_sort0))
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_sort_by_delim FAILED unit test "
+                "with index 0.\033[0m\n");
+        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"\n",
+                ARG_SV(expected_sort0), ARG_SV(testFile_sort0));
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_sort_by_delim unit test with "
+                "index = 0.\033[0m\n");
+    }
+
+    StringView expected_sort1 = cstr_sv("aaa");
+    StringView testFile_sort1 = sv_find_by_delim(testPath_sort, ':', 1);
+    if(!sv_same(testFile_sort1, expected_sort1))
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_sort_by_delim FAILED unit test "
+                "with index 1.\033[0m\n");
+        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"\n",
+                ARG_SV(expected_sort1), ARG_SV(testFile_sort1));
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_sort_by_delim unit test with "
+                "index = 1.\033[0m\n");
+    }
+
+    StringView expected_sort2 = cstr_sv("abc");
+    StringView testFile_sort2 = sv_find_by_delim(testPath_sort, ':', 2);
+    if(!sv_same(testFile_sort2, expected_sort2))
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_sort_by_delim FAILED unit test "
+                "with index 2.\033[0m\n");
+        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"\n",
+                ARG_SV(expected_sort2), ARG_SV(testFile_sort2));
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_sort_by_delim unit test with "
+                "index = 2.\033[0m\n");
+    }
+
+    StringView expected_sort3 = cstr_sv("abd");
+    StringView testFile_sort3 = sv_find_by_delim(testPath_sort, ':', 3);
+    if(!sv_same(testFile_sort2, expected_sort2))
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_sort_by_delim FAILED unit test "
+                "with index 3.\033[0m\n");
+        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"\n",
+                ARG_SV(expected_sort3), ARG_SV(testFile_sort3));
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_sort_by_delim unit test with "
+                "index = 3.\033[0m\n");
+    }
+
     if(!num_failed)
     {
         printf("\033[32;1;1m\nSUCCESS: all unit tests passed.\033[0m\n");

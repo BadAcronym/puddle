@@ -153,7 +153,9 @@ uint32_t sv_count_by_delim
 
 // Will sort the given StringView in alphabetical order, respecting the delimiter
 // given: `"hello;test;path;123"` -> `"123;hello;path;test"`.
-void sv_sort_by_delim
+// Returns a newly allocated c string, which can be absorbed into a StringView with the
+// same size as the input sv.
+const char *sv_sort_by_delim
 (
     StringView sv,
     char       delim
@@ -511,18 +513,80 @@ uint32_t sv_count_by_delim
     return delim_count;
 }
 
-void sv_sort_by_delim
+uint8_t first_is_lesser
+(
+    StringView first,
+    StringView second
+){
+    for(uint32_t i = 0; i < first.size && second.size; ++i)
+    {
+        if(first.data[i] < second.data[i])
+        {
+            return 1;
+        }
+        else if(second.data[i] < first.data[i])
+        {
+            return 0;
+        }
+
+        if(i == first.size && first.size < second.size)
+        {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+const char *sv_sort_by_delim
 (
     StringView sv,
     char       delim
 ){
-    uint32_t count          = sv_count_by_delim(sv, delim);
-    char**   pointer_buffer = malloc(count * sizeof(char*));
+    uint32_t   count = sv_count_by_delim(sv, delim);
+    StringView *buf  = malloc(count * sizeof(StringView));
 
-    // TODO:
-    printf("found %u substrings to sort.\n", count);
+    for(uint32_t i = 0; i < count; ++i)
+    {
+        buf[i] = sv_find_by_delim(sv, delim, i);
+    }
 
-    free(pointer_buffer);
+    for(uint32_t i = 0; i < count - 1; ++i)
+    {
+        while(!first_is_lesser(buf[i], buf[i + 1]))
+        {
+            StringView tmp = buf[i];
+            buf[i] = buf[i + 1];
+            buf[i + 1] = tmp;
+
+            if(i == 0)
+            {
+                break;
+            }
+
+            --i;
+        }
+    }
+
+    char *result = malloc(sv.size);
+
+    uint32_t offset = 0;
+    for(uint32_t i = 0; i < count; ++i)
+    {
+        for(uint32_t j = 0; j < buf[i].size; ++j)
+        {
+            result[offset + j] = buf[i].data[j];
+        }
+
+        if(offset + buf[i].size < sv.size)
+        {
+            result[offset + buf[i].size] = delim;
+        }
+        offset += buf[i].size + 1;
+    }
+
+    free(buf);
+    return result;
 }
 
 const char *sv_concat

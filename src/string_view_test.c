@@ -420,26 +420,31 @@ int main
                 "testPath2.\033[0m\n");
     }
 
-    StringView testPath_sort = cstr_sv("abc:abd:123:aaa");
+    StringView testPath_tosort = cstr_sv("abc:abd:123:aaa");
+    const char* sorted = sv_sort_by_delim(testPath_tosort, ':');
 
-    result = sv_count_by_delim(testPath_sort, ':');
+    StringView testPath_sorted =
+    {
+        .data = sorted,
+        .size = testPath_tosort.size
+    };
+
+    result = sv_count_by_delim(testPath_sorted, ':');
     if(result != 4)
     {
         fprintf(stderr, "\033[31;1;1mERROR: sv_count_by_delim FAILED unit test "
-                "counting symbols in testPath_sort.\033[0m\n");
+                "counting symbols in testPath_sorted.\033[0m\n");
         fprintf(stderr, "expected: 4\ngot: %u\n", result);
         ++num_failed;
     }
     else
     {
         fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_count_by_delim unit test with "
-                "testPath_sort.\033[0m\n");
+                "testPath_sorted.\033[0m\n");
     }
 
-    sv_sort_by_delim(testPath_sort, ':');
-
     StringView expected_sort0 = cstr_sv("123");
-    StringView testFile_sort0 = sv_find_by_delim(testPath_sort, ':', 0);
+    StringView testFile_sort0 = sv_find_by_delim(testPath_sorted, ':', 0);
     if(!sv_same(testFile_sort0, expected_sort0))
     {
         fprintf(stderr, "\033[31;1;1mERROR: sv_sort_by_delim FAILED unit test "
@@ -455,7 +460,7 @@ int main
     }
 
     StringView expected_sort1 = cstr_sv("aaa");
-    StringView testFile_sort1 = sv_find_by_delim(testPath_sort, ':', 1);
+    StringView testFile_sort1 = sv_find_by_delim(testPath_sorted, ':', 1);
     if(!sv_same(testFile_sort1, expected_sort1))
     {
         fprintf(stderr, "\033[31;1;1mERROR: sv_sort_by_delim FAILED unit test "
@@ -471,7 +476,7 @@ int main
     }
 
     StringView expected_sort2 = cstr_sv("abc");
-    StringView testFile_sort2 = sv_find_by_delim(testPath_sort, ':', 2);
+    StringView testFile_sort2 = sv_find_by_delim(testPath_sorted, ':', 2);
     if(!sv_same(testFile_sort2, expected_sort2))
     {
         fprintf(stderr, "\033[31;1;1mERROR: sv_sort_by_delim FAILED unit test "
@@ -487,7 +492,7 @@ int main
     }
 
     StringView expected_sort3 = cstr_sv("abd");
-    StringView testFile_sort3 = sv_find_by_delim(testPath_sort, ':', 3);
+    StringView testFile_sort3 = sv_find_by_delim(testPath_sorted, ':', 3);
     if(!sv_same(testFile_sort2, expected_sort2))
     {
         fprintf(stderr, "\033[31;1;1mERROR: sv_sort_by_delim FAILED unit test "

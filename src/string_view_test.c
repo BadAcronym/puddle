@@ -438,6 +438,11 @@ int main
         fprintf(stderr, "expected: 0\ngot: 1\n");
         ++num_failed;
     }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: sv_is_lesser passed unit test "
+                "with \"..\" vs \".\".\033[0m\n");
+    }
 
     StringView a1 = cstr_sv("123");
     StringView b1 = cstr_sv("ab");
@@ -447,6 +452,11 @@ int main
                 "with \"123\" vs \"abc\".\033[0m\n");
         fprintf(stderr, "expected: 0\ngot: 1\n");
         ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: sv_is_lesser passed unit test "
+                "with \"123\" vs \"abc\".\033[0m\n");
     }
 
     result = sv_count_by_delim(testPath_sorted, ':');
@@ -461,6 +471,56 @@ int main
     {
         fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_count_by_delim unit test with "
                 "testPath_sorted.\033[0m\n");
+    }
+
+    StringView testPath_real = cstr_sv("32 32 textures 2.qoi;"
+                                       ".;32 32 textures master file.aseprite;"
+                                       "water edge texture 1 32 32.qoi;"
+                                       "grass 32 32 animated.qoi;"
+                                       "water edge texture 2 32 32.qoi;"
+                                       "32 32 textures master.qoi;"
+                                       "dirt texture 1 32 32.qoi;"
+                                       "grass 32 32 1.qoi;"
+                                       "dirt texture 2 32 32.qoi;"
+                                       "water edge texture 3 32 32.qoi;..;"
+                                       "animated shallow water.qoi;"
+                                       "water edge texture 4 32 32.qoi;");
+    const char* sorted_real  = sv_sort_by_delim(testPath_real, ';');
+    testPath_real.data       = sorted_real;
+
+    StringView single_dot  = cstr_sv(".");
+    StringView two_dot     = cstr_sv("..");
+    StringView one_test;
+    StringView two_test;
+    one_test = sv_find_by_delim(testPath_real, ';', 0);
+    two_test = sv_find_by_delim(testPath_real, ';', 1);
+
+    if(!sv_same(one_test, single_dot))
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_sort_by_delim FAILED unit test "
+                "with real path and the '.' identifier.\033[0m\n");
+        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"\n",
+                ARG_SV(single_dot), ARG_SV(one_test));
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_sort_by_delim unit test with "
+                "real path and the '.' identifier.\033[0m\n");
+    }
+
+    if(!sv_same(two_test, two_dot))
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_sort_by_delim FAILED unit test "
+                "with real path and the '..' identifier.\033[0m\n");
+        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"\n",
+                ARG_SV(two_dot), ARG_SV(two_test));
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_sort_by_delim unit test with "
+                "real path and the '..' identifier.\033[0m\n");
     }
 
     StringView expected_sort0 = cstr_sv("123");

@@ -536,9 +536,13 @@ uint8_t sv_is_lesser
             return 0;
         }
 
-        if(i == first.size && first.size < second.size)
+        if(i == first.size - 1 && first.size < second.size)
         {
             return 1;
+        }
+        else if(i == second.size - 1 && second.size < first.size)
+        {
+            return 0;
         }
     }
 

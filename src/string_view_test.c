@@ -522,6 +522,7 @@ int main
         fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_sort_by_delim unit test with "
                 "real path and the '..' identifier.\033[0m\n");
     }
+    free((void*)testPath_real.data);
 
     StringView expected_sort0 = cstr_sv("123");
     StringView testFile_sort0 = sv_find_by_delim(testPath_sorted, ':', 0);
@@ -586,6 +587,7 @@ int main
         fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_sort_by_delim unit test with "
                 "index = 3.\033[0m\n");
     }
+    free((void*)sorted);
 
     if(!num_failed)
     {

@@ -424,7 +424,7 @@ const char *sv_find
 
         if(j == pattern.size)
         {
-            return(const char *)(sv.data);
+            return(&sv.data[i]);
         }
     }
 

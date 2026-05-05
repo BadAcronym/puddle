@@ -126,12 +126,13 @@ int main
     free((void*)concatenated);
 
     StringView bigStr = cstr_sv("The quick brown fox jumps over the lazy dog.");
-    StringView small0 = cstr_sv(" The ");
-    StringView small1 = cstr_sv("The");
+    StringView small0 = cstr_sv("The ");
+    StringView small1 = cstr_sv(" The");
     StringView small2 = cstr_sv(" jumps ");
     StringView small3 = cstr_sv("dog.");
+    StringView small4 = cstr_sv(".");
 
-    if(sv_is_substr(small0, bigStr))
+    if(sv_is_substr(small1, bigStr))
     {
         fprintf(stderr, "\033[31;1;1mERROR: sv_is_substr FAILED unit test "
                 "with SV_DIFFERENT.\033[0m\n");
@@ -143,7 +144,7 @@ int main
                 "SV_DIFFERENT.\033[0m\n");
     }
 
-    if(!sv_is_substr(small1, bigStr))
+    if(!sv_is_substr(small0, bigStr))
     {
         fprintf(stderr, "\033[31;1;1mERROR: sv_is_substr FAILED unit test "
                 "with SV_IS_SUBSTR no 1.\033[0m\n");
@@ -179,7 +180,7 @@ int main
                 "SV_IS_SUBSTR no 3.\033[0m\n");
     }
 
-    if(sv_find(small0, bigStr))
+    if(sv_find(small1, bigStr))
     {
         fprintf(stderr, "\033[31;1;1mERROR: sv_find FAILED unit test with "
                 "non-findable pattern.\033[0m\n");
@@ -191,21 +192,28 @@ int main
                 "non-findable pattern.\033[0m\n");
     }
 
-    const char *found = sv_find(small1, bigStr);
+    const char *found = sv_find(small0, bigStr);
     if(!found)
     {
         fprintf(stderr, "\033[31;1;1mERROR: sv_find FAILED to find substring."
                 "\033[0m\n");
         ++num_failed;
     }
-    if(found < bigStr.data || found > bigStr.data + bigStr.size - small1.size)
+    if(found < bigStr.data || found > bigStr.data + bigStr.size - small0.size)
     {
         fprintf(stderr, "\033[31;1;1mERROR: sv_find FAILED by returning an "
                 "invalid pointer, no 1. \033[0m\n");
         fprintf(stderr, "StringView sv valid range: %p - %p.\nReturned pointer was: %p."
-                "\nThat's %li away from the start and %li away from the end.",
+                "\nThat's %li away from the start and %li away from the end.\n",
                 bigStr.data, bigStr.data + bigStr.size, found, bigStr.data - found,
                 bigStr.data + bigStr.size - found);
+        ++num_failed;
+    }
+    else if(found != bigStr.data)
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find FAILED by returning the wrong "
+                "offset. Expected 0, got: %u\033[0m\n",
+                (uint32_t)(found - bigStr.data));
         ++num_failed;
     }
     else
@@ -226,9 +234,16 @@ int main
         fprintf(stderr, "\033[31;1;1mERROR: sv_find FAILED by returning an "
                 "invalid pointer, no 2. \033[0m\n");
         fprintf(stderr, "StringView sv valid range: %p - %p.\nReturned pointer was: %p."
-                "\nThat's %li away from the start and %li away from the end.",
+                "\nThat's %li away from the start and %li away from the end.\n",
                 bigStr.data, bigStr.data + bigStr.size, found, bigStr.data - found,
                 bigStr.data + bigStr.size - found);
+        ++num_failed;
+    }
+    else if(found != bigStr.data + 19)
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find FAILED by returning the wrong "
+                "offset. Expected 20, got: %u\033[0m\n",
+                (uint32_t)(found - bigStr.data));
         ++num_failed;
     }
     else
@@ -249,7 +264,7 @@ int main
         fprintf(stderr, "\033[31;1;1mERROR: sv_find FAILED by returning an "
                 "invalid pointer, no 3. \033[0m\n");
         fprintf(stderr, "StringView sv valid range: %p - %p.\nReturned pointer was: %p."
-                "\nThat's %li away from the start and %li away from the end.",
+                "\nThat's %li away from the start and %li away from the end.\n",
                 bigStr.data, bigStr.data + bigStr.size, found, bigStr.data - found,
                 bigStr.data + bigStr.size - found);
         ++num_failed;
@@ -258,6 +273,36 @@ int main
     {
         fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find unit test by returning "
                 "a valid pointer, no 3.\033[0m\n");
+    }
+
+    found = sv_find(small4, bigStr);
+    if(!found)
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find FAILED to find substring."
+                "\033[0m\n");
+        ++num_failed;
+    }
+    if(found < bigStr.data || found > bigStr.data + bigStr.size - small4.size)
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find FAILED by returning an "
+                "invalid pointer, no 4. \033[0m\n");
+        fprintf(stderr, "StringView sv valid range: %p - %p.\nReturned pointer was: %p."
+                "\nThat's %li away from the start and %li away from the end.\n",
+                bigStr.data, bigStr.data + bigStr.size, found, bigStr.data - found,
+                bigStr.data + bigStr.size - found);
+        ++num_failed;
+    }
+    else if(found != bigStr.data + 43)
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find FAILED by returning the wrong "
+                "offset. Expected 43, got: %u\033[0m\n",
+                (uint32_t)(found - bigStr.data));
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find unit test by returning "
+                "a valid pointer, no 4.\033[0m\n");
     }
 
     StringView testPath = cstr_sv(";zeroeth;;first;second;third;;;;;;;;fourth;");

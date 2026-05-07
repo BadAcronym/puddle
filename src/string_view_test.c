@@ -485,7 +485,7 @@ int main
     }
     else
     {
-        fprintf(stderr, "\033[32;1;1mSUCCESS: sv_is_lesser passed unit test "
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_is_lesser unit test "
                 "with \"..\" vs \".\".\033[0m\n");
     }
 
@@ -500,7 +500,7 @@ int main
     }
     else
     {
-        fprintf(stderr, "\033[32;1;1mSUCCESS: sv_is_lesser passed unit test "
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_is_lesser unit test "
                 "with \"123\" vs \"abc\".\033[0m\n");
     }
 

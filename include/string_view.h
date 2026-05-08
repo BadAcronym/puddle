@@ -78,6 +78,12 @@ const char *sv_cstr
     StringView sv
 );
 
+// just like sv_cstr, but for strings :)
+const char *str_cstr
+(
+    String str
+);
+
 // will create a copied StringView from a string. Its data will be newly allocated.
 StringView str_sv_cpy
 (
@@ -264,6 +270,17 @@ const char *sv_cstr
     char *result = malloc(sv.size + 1);
     memcpy(result, sv.data, sv.size);
     result[sv.size] = '\0';
+
+    return result;
+}
+
+const char *str_cstr
+(
+    String str
+){
+    char *result = malloc(str.size + 1);
+    memcpy(result, str.data, str.size);
+    result[str.size] = '\0';
 
     return result;
 }

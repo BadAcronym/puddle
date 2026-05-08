@@ -44,21 +44,21 @@ StringView;
 
 // will create a string from a cstring, by passing the pointer given
 // as its data and counting its length.
-extern String cstr_str
+String cstr_str
 (
     char *cstr
 );
 
 // will create a string, but will not just pass a pointer. Will actually
 // copy its contents and allocate to a new pointer.
-String cstr_scpy
+String cstr_str_cpy
 (
     char *cstr
 );
 
 // will create a stringview from a cstring, by passing the pointer given
 // as its data and counting its length.
-extern StringView cstr_sv
+StringView cstr_sv
 (
     const char *cstr
 );
@@ -73,14 +73,20 @@ StringView cstr_sv_cpy
 // safe access for anything requiring a null-terminated cstring,
 // because we can't be sure that the stringview is going to be null-terminated.
 // will use malloc() to give you a new const char *.
-extern const char *sv_cstr
+const char *sv_cstr
 (
     StringView sv
 );
 
+// will create a copied StringView from a string. Its data will be newly allocated.
+StringView str_sv_cpy
+(
+    String str
+);
+
 // will return the trimmed substring as a new stringview.
 // start_pos & end_pos are both positions in the original string.
-extern StringView sv_substr
+StringView sv_substr
 (
     StringView *sv,
     size_t     start_pos,
@@ -90,7 +96,7 @@ extern StringView sv_substr
 // will trim count characters from: `SV_LEFT`, `SV_RIGHT` or `SV_BOTH`.
 // in the case of both, it will first trim `count` from the left,
 // then try to trim `count` from the right.
-extern void sv_trim
+void sv_trim
 (
     StringView *sv,
     size_t     count,
@@ -102,7 +108,7 @@ extern void sv_trim
 // 1: `SV_SAME`, if the stringviews have the same content and are the same length.
 // In this case, the strings "test" and "test2" are not the same string. For substring
 // testing, use `sv_is_substr`.
-extern uint8_t sv_is_same
+uint8_t sv_is_same
 (
     StringView first,
     StringView second
@@ -112,7 +118,7 @@ extern uint8_t sv_is_same
 // 0: `SV_DIFFERENT`, if the `first` string is `not` included in the `second` string.
 // 1: `SV_SAME`, if the stringviews have the same content and are the same length.
 // 2: `SV_IS_SUBSTR`, if the `first` string is `fully` included in the `second` string.
-extern uint8_t sv_is_substr
+uint8_t sv_is_substr
 (
     StringView first,
     StringView second
@@ -120,7 +126,7 @@ extern uint8_t sv_is_substr
 
 // Will return a pointer to the start of `pattern` inside `sv`, if it was found.
 // If it wasn't found, the pointer is null.
-extern const char *sv_find
+const char *sv_find
 (
     StringView pattern,
     StringView sv
@@ -171,7 +177,7 @@ const char *sv_sort_by_delim
 // concatenates `first` and `second` one after the other.
 // `first`  + `second` = `result`.
 // "Hello " + "World"  = "Hello World".
-extern const char *sv_concat
+const char *sv_concat
 (
     StringView first,
     StringView second
@@ -195,7 +201,7 @@ String cstr_str
     };
 }
 
-String cstr_scpy
+String cstr_str_cpy
 (
     char *cstr
 ){
@@ -260,6 +266,24 @@ const char *sv_cstr
     result[sv.size] = '\0';
 
     return result;
+}
+
+StringView str_sv_cpy
+(
+    String str
+){
+    char *buf = malloc(str.size);
+
+    for(uint32_t i = 0; i < str.size; ++i)
+    {
+        buf[i] = str.data[i];
+    }
+
+    return(StringView)
+    {
+        .data = buf,
+        .size = str.size
+    };
 }
 
 StringView sv_substr

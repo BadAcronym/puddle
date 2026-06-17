@@ -114,7 +114,7 @@ void sv_trim
 // 1: `SV_SAME`, if the stringviews have the same content and are the same length.
 // In this case, the strings "test" and "test2" are not the same string. For substring
 // testing, use `sv_is_substr`.
-uint8_t sv_is_same
+uint8_t sv_same
 (
     StringView first,
     StringView second

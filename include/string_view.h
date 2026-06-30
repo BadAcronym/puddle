@@ -623,7 +623,7 @@ const char *sv_sort_by_delim
         }
     }
 
-    char *result = malloc(sv.size);
+    char *result = malloc(sv.size + 1);
 
     uint32_t offset = 0;
     for(uint32_t i = 0; i < count; ++i)
@@ -639,6 +639,8 @@ const char *sv_sort_by_delim
         }
         offset += buf[i].size + 1;
     }
+
+    result[sv.size] = '\0';
 
     free(buf);
     return result;

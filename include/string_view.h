@@ -81,9 +81,10 @@ void sv_cstr
 );
 
 // just like sv_cstr, but for strings :)
-const char *str_cstr
+void str_cstr
 (
-    String str
+    String str,
+    char   *buf
 );
 
 // will create a copied StringView from a string. Its data will be newly allocated.
@@ -280,15 +281,19 @@ void sv_cstr
     buf[sv.size] = '\0';
 }
 
-const char *str_cstr
+void str_cstr
 (
-    String str
+    String str,
+    char   *buf
 ){
-    char *result = malloc(str.size + 1);
-    memcpy(result, str.data, str.size);
-    result[str.size] = '\0';
+    if(!buf)
+    {
+        fprintf(stderr, "\033[31;1mERROR: passed nullptr as buf.\033[0m\n");
+        return;
+    }
 
-    return result;
+    memcpy(buf, str.data, str.size);
+    buf[str.size] = '\0';
 }
 
 StringView str_sv_cpy

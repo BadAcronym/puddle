@@ -189,10 +189,13 @@ void sv_sort_by_delim
 // concatenates `first` and `second` one after the other.
 // `first`  + `second` = `result`.
 // "Hello " + "World"  = "Hello World".
-const char *sv_concat
+// will write into buf.
+// the `buf` pointer needs to have enough space for `first.size + second.size + 1`.
+void sv_concat
 (
     StringView first,
-    StringView second
+    StringView second,
+    char       *buf
 );
 #endif
 
@@ -707,15 +710,16 @@ void sv_sort_by_delim
     free(sv_buffer);
 }
 
-const char *sv_concat
+void sv_concat
 (
     StringView first,
-    StringView second
+    StringView second,
+    char       *buf
 ){
     if(!first.data || !second.data)
     {
         fprintf(stderr, "\033[31mERROR: bad stringview data pointer.\033[0m\n");
-        return 0;
+        return;
     }
 
     char first_data[first.size + 1];
@@ -724,12 +728,9 @@ const char *sv_concat
     sv_cstr(first, first_data);
     sv_cstr(second, second_data);
 
-    char *result = malloc(first.size + second.size + 1);
-    memcpy((void*)result, (void*)first_data, first.size);
-    memcpy((void*)(result + first.size), (void*)second_data, second.size);
-    result[first.size + second.size] = '\0';
-
-    return result;
+    memcpy((void*)buf, (void*)first_data, first.size);
+    memcpy((void*)(buf + first.size), (void*)second_data, second.size);
+    buf[first.size + second.size] = '\0';
 }
 
 #endif

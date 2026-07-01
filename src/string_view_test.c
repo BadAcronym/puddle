@@ -110,7 +110,8 @@ int main
                 "\033[0m\n");
     }
 
-    const char *concatenated = sv_concat(concat_1, concat_2);
+    char concatenated[concat_1.size + concat_2.size + 1];
+    sv_concat(concat_1, concat_2, concatenated);
     StringView test_concat   = cstr_sv(concatenated);
     if(!sv_same(concat_r, test_concat))
     {
@@ -123,7 +124,6 @@ int main
     {
         fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_concat unit test.\033[0m\n");
     }
-    free((void*)concatenated);
 
     StringView bigStr = cstr_sv("The quick brown fox jumps over the lazy dog.");
     StringView small0 = cstr_sv("The ");

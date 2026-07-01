@@ -63,11 +63,12 @@ StringView cstr_sv
     const char *cstr
 );
 
-// will create a stringview, but will not just pass a pointer. Will actually
-// copy its contents and allocate to a new pointer.
+// will create a stringview.
+// requires a buffer to be passed that can fit the contents.
 StringView cstr_sv_cpy
 (
-    const char *cstr
+    const char *cstr,
+    char       *buf
 );
 
 // safe access for anything requiring a null-terminated cstring,
@@ -87,10 +88,11 @@ void str_cstr
     char   *buf
 );
 
-// will create a copied StringView from a string. Its data will be newly allocated.
+// will create a copied StringView from a String. just like sv_cstr.
 StringView str_sv_cpy
 (
-    String str
+    String str,
+    char   *buf
 );
 
 // will return the trimmed substring as a new stringview.
@@ -175,12 +177,13 @@ uint8_t sv_is_lesser
 
 // Will sort the given StringView in alphabetical order, respecting the delimiter
 // given: `"hello;test;path;123"` -> `"123;hello;path;test"`.
-// Returns a newly allocated c string, which can be absorbed into a StringView with the
-// same size as the input sv.
-const char *sv_sort_by_delim
+// Will return the resulting, sorted string into `buf`, which needs to be at least as
+// big as `sv.size + 1`.
+void sv_sort_by_delim
 (
     StringView sv,
-    char       delim
+    char       delim,
+    char       *buf
 );
 
 // concatenates `first` and `second` one after the other.
@@ -198,6 +201,12 @@ String cstr_str
 (
     char *cstr
 ){
+    if(!cstr)
+    {
+        fprintf(stderr, "\033[31;1mERROR: passed nullptr as cstr.\033[0m\n");
+        return (String){0};
+    }
+
     uint32_t i = 0;
     for(; cstr[i] != '\0'; ++i)
     {
@@ -214,6 +223,12 @@ String cstr_str_cpy
 (
     char *cstr
 ){
+    if(!cstr)
+    {
+        fprintf(stderr, "\033[31;1mERROR: passed nullptr as cstr.\033[0m\n");
+        return (String){0};
+    }
+
     uint32_t i = 0;
     for(; cstr[i] != '\0'; ++i)
     {
@@ -234,6 +249,12 @@ StringView cstr_sv
 (
     const char *cstr
 ){
+    if(!cstr)
+    {
+        fprintf(stderr, "\033[31;1mERROR: passed nullptr as cstr.\033[0m\n");
+        return (StringView){0};
+    }
+
     uint32_t i = 0;
     for(; cstr[i] != '\0'; ++i)
     {
@@ -248,14 +269,25 @@ StringView cstr_sv
 
 StringView cstr_sv_cpy
 (
-    const char *cstr
+    const char *cstr,
+    char       *buf
 ){
+    if(!buf)
+    {
+        fprintf(stderr, "\033[31;1mERROR: passed nullptr as buf.\033[0m\n");
+        return (StringView){0};
+    }
+    if(!cstr)
+    {
+        fprintf(stderr, "\033[31;1mERROR: passed nullptr as cstr.\033[0m\n");
+        return (StringView){0};
+    }
+
     uint32_t i = 0;
     for(; cstr[i] != '\0'; ++i)
     {
     }
 
-    char *buf = malloc(i + 2);
     memcpy((void*)buf, cstr, i);
     buf[i + 1] = '\0';
 
@@ -276,6 +308,11 @@ void sv_cstr
         fprintf(stderr, "\033[31;1mERROR: passed nullptr as buf.\033[0m\n");
         return;
     }
+    if(!sv.data)
+    {
+        fprintf(stderr, "\033[31;1mERROR: passed nullptr as sv.data.\033[0m\n");
+        return;
+    }
 
     memcpy(buf, sv.data, sv.size);
     buf[sv.size] = '\0';
@@ -291,6 +328,11 @@ void str_cstr
         fprintf(stderr, "\033[31;1mERROR: passed nullptr as buf.\033[0m\n");
         return;
     }
+    if(!str.data)
+    {
+        fprintf(stderr, "\033[31;1mERROR: passed nullptr as str.data.\033[0m\n");
+        return;
+    }
 
     memcpy(buf, str.data, str.size);
     buf[str.size] = '\0';
@@ -298,9 +340,14 @@ void str_cstr
 
 StringView str_sv_cpy
 (
-    String str
+    String str,
+    char   *buf
 ){
-    char *buf = malloc(str.size);
+    if(!str.data)
+    {
+        fprintf(stderr, "\033[31;1mERROR: passed nullptr as str.data.\033[0m\n");
+        return (StringView){0};
+    }
 
     for(uint32_t i = 0; i < str.size; ++i)
     {
@@ -601,17 +648,24 @@ uint8_t sv_is_lesser
     return 0;
 }
 
-const char *sv_sort_by_delim
+void sv_sort_by_delim
 (
     StringView sv,
-    char       delim
+    char       delim,
+    char       *buf
 ){
-    uint32_t   count = sv_count_by_delim(sv, delim);
-    StringView *buf  = malloc(count * sizeof(StringView));
+    if(!buf)
+    {
+        fprintf(stderr, "\033[31;1mERROR: passed nullptr as buf.\033[0m\n");
+        return;
+    }
+
+    uint32_t   count      = sv_count_by_delim(sv, delim);
+    StringView *sv_buffer = malloc(count * sizeof(StringView));
 
     for(uint32_t i = 0; i < count; ++i)
     {
-        buf[i] = sv_find_by_delim(sv, delim, i);
+        sv_buffer[i] = sv_find_by_delim(sv, delim, i);
     }
 
     for(uint32_t i = 0; i < count - 1; ++i)
@@ -619,11 +673,11 @@ const char *sv_sort_by_delim
         uint8_t swapped = 0;
         for(uint32_t j = 0; j < count - i - 1; ++j)
         {
-            if(sv_is_lesser(buf[j + 1], buf[j]))
+            if(sv_is_lesser(sv_buffer[j + 1], sv_buffer[j]))
             {
-                StringView tmp = buf[j];
-                buf[j] = buf[j + 1];
-                buf[j + 1] = tmp;
+                StringView tmp = sv_buffer[j];
+                sv_buffer[j] = sv_buffer[j + 1];
+                sv_buffer[j + 1] = tmp;
                 swapped = 1;
             }
         }
@@ -634,27 +688,23 @@ const char *sv_sort_by_delim
         }
     }
 
-    char *result = malloc(sv.size + 1);
-
     uint32_t offset = 0;
     for(uint32_t i = 0; i < count; ++i)
     {
-        for(uint32_t j = 0; j < buf[i].size; ++j)
+        for(uint32_t j = 0; j < sv_buffer[i].size; ++j)
         {
-            result[offset + j] = buf[i].data[j];
+            buf[offset + j] = sv_buffer[i].data[j];
         }
 
-        if(offset + buf[i].size < sv.size)
+        if(offset + sv_buffer[i].size < sv.size)
         {
-            result[offset + buf[i].size] = delim;
+            buf[offset + sv_buffer[i].size] = delim;
         }
-        offset += buf[i].size + 1;
+        offset += sv_buffer[i].size + 1;
     }
 
-    result[sv.size] = '\0';
-
-    free(buf);
-    return result;
+    buf[sv.size] = '\0';
+    free(sv_buffer);
 }
 
 const char *sv_concat

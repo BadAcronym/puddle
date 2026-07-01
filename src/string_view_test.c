@@ -466,7 +466,8 @@ int main
     }
 
     StringView testPath_tosort = cstr_sv("abc:abd:123:aaa");
-    const char* sorted = sv_sort_by_delim(testPath_tosort, ':');
+    char sorted[testPath_tosort.size + 1];
+    sv_sort_by_delim(testPath_tosort, ':', sorted);
 
     StringView testPath_sorted =
     {
@@ -530,8 +531,9 @@ int main
                                        "water edge texture 3 32 32.qoi;..;"
                                        "animated shallow water.qoi;"
                                        "water edge texture 4 32 32.qoi;");
-    const char* sorted_real  = sv_sort_by_delim(testPath_real, ';');
-    testPath_real.data       = sorted_real;
+    char sorted_real[testPath_real.size + 1];
+    sv_sort_by_delim(testPath_real, ';', sorted_real);
+    testPath_real.data = sorted_real;
 
     StringView single_dot  = cstr_sv(".");
     StringView two_dot     = cstr_sv("..");
@@ -567,7 +569,6 @@ int main
         fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_sort_by_delim unit test with "
                 "real path and the '..' identifier.\033[0m\n");
     }
-    free((void*)testPath_real.data);
 
     StringView expected_sort0 = cstr_sv("123");
     StringView testFile_sort0 = sv_find_by_delim(testPath_sorted, ':', 0);
@@ -632,7 +633,6 @@ int main
         fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_sort_by_delim unit test with "
                 "index = 3.\033[0m\n");
     }
-    free((void*)sorted);
 
     if(!num_failed)
     {

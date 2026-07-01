@@ -16,7 +16,8 @@ int main
     StringView test_right  = cstr_sv("lo, Worl");
     StringView test_both   = cstr_sv(" W");
     StringView conv_src    = cstr_sv("The quick lilac fox jumps over the dog.");
-    const char *conv_test  = sv_cstr(conv_src);
+    char conv_test[conv_src.size + 1];
+    sv_cstr(conv_src, conv_test);
     StringView conv_test2  = cstr_sv(conv_test);
     StringView concat_1    = cstr_sv("Test ");
     StringView concat_2    = cstr_sv("concat !");
@@ -35,7 +36,6 @@ int main
     {
         fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_cstr unit test.\033[0m\n");
     }
-    free((void*)conv_test);
 
     if(!sv_same(substr, substr_test))
     {

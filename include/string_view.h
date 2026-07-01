@@ -72,10 +72,12 @@ StringView cstr_sv_cpy
 
 // safe access for anything requiring a null-terminated cstring,
 // because we can't be sure that the stringview is going to be null-terminated.
-// will use malloc() to give you a new const char *.
-const char *sv_cstr
+// will use the provided buffer pointer to write the data into.
+// The buffer needs to be at least `sv.size + 1` big.
+void sv_cstr
 (
-    StringView sv
+    StringView sv,
+    char       *buf
 );
 
 // just like sv_cstr, but for strings :)
@@ -263,15 +265,19 @@ StringView cstr_sv_cpy
     };
 }
 
-const char *sv_cstr
+void sv_cstr
 (
-    StringView sv
+    StringView sv,
+    char       *buf
 ){
-    char *result = malloc(sv.size + 1);
-    memcpy(result, sv.data, sv.size);
-    result[sv.size] = '\0';
+    if(!buf)
+    {
+        fprintf(stderr, "\033[31;1mERROR: passed nullptr as buf.\033[0m\n");
+        return;
+    }
 
-    return result;
+    memcpy(buf, sv.data, sv.size);
+    buf[sv.size] = '\0';
 }
 
 const char *str_cstr
@@ -657,16 +663,16 @@ const char *sv_concat
         return 0;
     }
 
-    const char *first_data  = sv_cstr(first);
-    const char *second_data = sv_cstr(second);
+    char first_data[first.size + 1];
+    char second_data[second.size + 1];
+
+    sv_cstr(first, first_data);
+    sv_cstr(second, second_data);
 
     char *result = malloc(first.size + second.size + 1);
     memcpy((void*)result, (void*)first_data, first.size);
     memcpy((void*)(result + first.size), (void*)second_data, second.size);
     result[first.size + second.size] = '\0';
-
-    free((void*)first_data);
-    free((void*)second_data);
 
     return result;
 }

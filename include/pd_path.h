@@ -5,6 +5,7 @@
 
 #ifdef BUILD_LINUX
     #include <sys/stat.h>
+    #include <dirent.h>
 #endif
 
 #include "string_view.h"
@@ -40,8 +41,10 @@ StringView pdListFiles
 #endif
 
 #ifdef PD_PATH_IMPL
+
 #define STRING_VIEW_IMPL
 #include "string_view.h"
+
 uint8_t pdVerifyPath
 (
     StringView path
@@ -158,7 +161,8 @@ void pdExpandPath
 
 StringView pdListFiles
 (
-    StringView directory
+    StringView directory,
+    char       *buf
 ){
     DIR           *dir;
     struct dirent *ent;
@@ -185,8 +189,10 @@ StringView pdListFiles
         return(StringView){0};
     }
 
+    char listBuffer[listSize + 1];
+
     String list = {0};
-    list.data   = (char*)malloc(listSize + 1);
+    list.data   = listBuffer;
     list.size   = 0;
     uint32_t offset = 0;
 
@@ -213,11 +219,10 @@ StringView pdListFiles
         .size = list.size
     };
 
-    char *sorted = calloc(4096, 1);
-    sv_sort_by_delim(result, ';', sorted);
+    sv_sort_by_delim(result, ';', buf);
 
     free((void*)result.data);
-    result.data = sorted;
+    result.data = buf;
 
     free(dir);
 
@@ -228,7 +233,7 @@ StringView pdListFiles
 // StringView pdListFiles
 // (
 //     StringView directory,
-       char       *buf
+//     char       *buf
 // ){
 //     WIN32_FIND_DATAA fileData;
 //     HANDLE           foundHandle;

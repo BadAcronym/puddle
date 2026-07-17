@@ -474,7 +474,12 @@ void sv_sort_by_delim
         return;
     }
 
-    uint32_t   count      = sv_count_by_delim(sv, delim);
+    uint32_t count = sv_count_by_delim(sv, delim);
+    if(!count)
+    {
+        return;
+    }
+
     StringView *sv_buffer = malloc(count * sizeof(StringView));
 
     for(uint32_t i = 0; i < count; ++i)
@@ -487,11 +492,17 @@ void sv_sort_by_delim
         uint8_t swapped = 0;
         for(uint32_t j = 0; j < count - i - 1; ++j)
         {
-            if(sv_is_lesser(sv_buffer[j + 1], sv_buffer[j]))
+            if(!sv_buffer[j + 1].data)
             {
-                StringView tmp = sv_buffer[j];
-                sv_buffer[j] = sv_buffer[j + 1];
+                continue;
+            }
+
+            if(!sv_buffer[j].data || sv_is_lesser(sv_buffer[j + 1], sv_buffer[j]))
+            {
+                StringView tmp   = sv_buffer[j];
+                sv_buffer[j]     = sv_buffer[j + 1];
                 sv_buffer[j + 1] = tmp;
+
                 swapped = 1;
             }
         }

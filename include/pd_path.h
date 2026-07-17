@@ -7,6 +7,7 @@
     #include <sys/stat.h>
 #endif
 
+#define STRING_VIEW_IMPL
 #include "string_view.h"
 
 #define PD_TYPE_ERROR     0

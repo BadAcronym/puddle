@@ -427,28 +427,39 @@ uint8_t sv_is_lesser
     StringView first,
     StringView second
 ){
+    if(!first.data)
+    {
+        fprintf(stderr, "\033[31;1mERROR: passed nullptr as first.data.\033[0m\n");
+        return SV_GREATER;
+    }
+    else if(!second.data)
+    {
+        fprintf(stderr, "\033[31;1mERROR: passed nullptr as second.data.\033[0m\n");
+        return SV_GREATER;
+    }
+
     for(uint32_t i = 0; i < first.size && second.size; ++i)
     {
         if(first.data[i] < second.data[i])
         {
-            return 1;
+            return SV_LESSER;
         }
         else if(second.data[i] < first.data[i])
         {
-            return 0;
+            return SV_GREATER;
         }
 
         if(i == first.size - 1 && first.size < second.size)
         {
-            return 1;
+            return SV_LESSER;
         }
         else if(i == second.size - 1 && second.size < first.size)
         {
-            return 0;
+            return SV_GREATER;
         }
     }
 
-    return 0;
+    return SV_LESSER;
 }
 
 void sv_sort_by_delim

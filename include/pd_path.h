@@ -1,5 +1,5 @@
-#ifndef PD_PATH_DECL
-#define PD_PATH_DECL
+#ifndef PD_PATH_H
+#define PD_PATH_H
 
 #include <stdint.h>
 
@@ -38,12 +38,6 @@ StringView pdListFiles
     StringView directory,
     char       *buf
 );
-#endif
-
-#ifdef PD_PATH_IMPL
-
-#define STRING_VIEW_IMPL
-#include "string_view.h"
 
 uint8_t pdVerifyPath
 (

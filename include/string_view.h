@@ -1,5 +1,5 @@
-#ifndef STRING_VIEW_DECL
-#define STRING_VIEW_DECL
+#ifndef STRING_VIEW_H
+#define STRING_VIEW_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -197,9 +197,7 @@ void sv_concat
     StringView second,
     char       *buf
 );
-#endif
 
-#ifdef STRING_VIEW_IMPL
 String cstr_str
 (
     char *cstr

@@ -227,7 +227,8 @@ StringView pdListFiles
 // windows version of the old API
 // StringView pdListFiles
 // (
-//     StringView directory
+//     StringView directory,
+       char       *buf
 // ){
 //     WIN32_FIND_DATAA fileData;
 //     HANDLE           foundHandle;

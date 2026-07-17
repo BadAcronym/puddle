@@ -154,7 +154,6 @@ StringView pdListFiles
 
     sv_sort_by_delim(result, ';', buf);
 
-    free((void*)result.data);
     result.data = buf;
 
     free(dir);

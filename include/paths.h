@@ -14,6 +14,9 @@
 #define PD_TYPE_DIRECTORY 2
 #define PD_TYPE_OTHER     3
 
+// will verify if a given path exists. Will return `PD_TYPE_ERROR`, if it does not
+// exist, `PD_TYPE_FILE` or `PD_TYPE_DIRECTORY` if it does, and `PD_TYPE_OTHER` in any
+// other case.
 uint8_t pdVerifyPath
 (
     StringView path

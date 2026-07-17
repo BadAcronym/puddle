@@ -1,5 +1,5 @@
-#ifndef PATH_DECL
-#define PATH_DECL
+#ifndef PD_PATH_DECL
+#define PD_PATH_DECL
 
 #include <stdint.h>
 
@@ -31,7 +31,7 @@ void pdExpandPath
 );
 #endif
 
-#ifdef STRING_VIEW_IMPL
+#ifdef PD_PATH_IMPL
 uint8_t pdVerifyPath
 (
     StringView path

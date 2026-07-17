@@ -11,6 +11,9 @@
 #define SV_RIGHT 1L
 #define SV_BOTH  2L
 
+#define SV_GREATER 0L
+#define SV_LESSER  1L
+
 #define SV_DIFFERENT     0L
 #define SV_SAME          1L
 #define SV_IS_SUBSTR     2L
@@ -168,7 +171,8 @@ uint32_t sv_count_by_delim
     char       delim
 );
 
-// will return 1 if the first sv is alphabetically lesser to the second, 0 if it isn't.
+// will return `SV_LESSER` (1) if the first sv is alphabetically lesser to the
+// second, `SV_GREATER` (0) if it isn't.
 uint8_t sv_is_lesser
 (
     StringView first,

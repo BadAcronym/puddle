@@ -25,7 +25,7 @@ if($build -eq "asan" -or $build -eq "debug" -or $build -eq "release")
     Write-Host "`ncompiling puddle...`n" -Fore Cyan
 
     premake5 vs2026
-    &MSBuild ./build/puddle.sln
+    &MSBuild ./build/puddle.slnx -p:Configuration=$build
 }
 else
 {

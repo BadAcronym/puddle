@@ -48,4 +48,4 @@ Write-Host ""
 
 Write-Host "running string_view unit tests..." -Fore Cyan
  
-./bin/$build/svtest.exe
+&./bin/$build/svtest.exe

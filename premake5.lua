@@ -62,7 +62,6 @@ project("svtest")
                 "./include/string_view*" })
         includedirs({"./include/"})
         libdirs("./bin/%{cfg.buildcfg}/")
-        links("puddle.lib")
 
     filter({"platforms:linux", "configurations:debug or asan"})
         buildoptions({"-gfull", "-O1"})

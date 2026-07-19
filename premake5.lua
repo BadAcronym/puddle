@@ -2,9 +2,14 @@
 
 workspace("puddle")
     configurations({"debug", "asan", "release"})
-    platforms({"linux", "windows"})
     location("build")
     architecture("x86_64")
+
+    if package.config:sub(1,1) == '\\' then
+        platforms { "x64" }
+    else
+        platforms { "linux" }
+    end
 
 project("svtest")
     language("C")
@@ -31,8 +36,8 @@ project("svtest")
         symbols("Off")
         optimize("Speed")
 
-    filter("platforms:Linux")
-        system("Linux")
+    filter("platforms:linux")
+        system("linux")
         defines("BUILD_LINUX")
         targetdir("bin/%{cfg.buildcfg}")
         objdir("obj/svtest/")
@@ -46,8 +51,8 @@ project("svtest")
         linkoptions({"-fuse-ld=mold", "-lm"})
         toolset("clang")
 
-    filter("platforms:Windows")
-        system("Windows")
+    filter("platforms:x64")
+        system("windows")
         defines("BUILD_WINDOWS")
         targetdir("bin/%{cfg.buildcfg}")
         objdir("obj/")
@@ -59,22 +64,22 @@ project("svtest")
         libdirs("./bin/%{cfg.buildcfg}/")
         links("puddle.lib")
 
-    filter({"platforms:Linux", "configurations:debug or asan"})
+    filter({"platforms:linux", "configurations:debug or asan"})
         buildoptions({"-gfull", "-O1"})
         linkoptions({"-gfull", "-O1"})
 
-    filter({"platforms:Linux", "configurations:asan"})
+    filter({"platforms:linux", "configurations:asan"})
         buildoptions({"-fsanitize=address,leak,undefined", "-fno-omit-frame-pointer",
                       "-static-libasan"})
         linkoptions({"-fsanitize=address,leak,undefined", "-fno-omit-frame-pointer",
                      "-static-libasan"})
 
-    filter({"platforms:Windows", "configurations:debug or asan"})
+    filter({"platforms:x64", "configurations:debug or asan"})
         kind("ConsoleApp")
 
-    filter({"platforms:Windows", "configurations:asan"})
+    filter({"platforms:x64", "configurations:asan"})
         editandcontinue("Off")
         buildoptions({"/fsanitize=address", "/Zi", "/INCREMENTAL:NO"})
 
-    filter({"platforms:Windows", "configurations:release"})
+    filter({"platforms:x64", "configurations:release"})
         linkoptions({"/NODEFAULTLIB:MSVCRTD"})

@@ -2,6 +2,7 @@
 
 #include <sys/stat.h>
 #include <windows.h>
+#include <direct.h>
 
 uint8_t pdVerifyPath
 (
@@ -77,13 +78,15 @@ void pdExpandPath
     }
     else if(sv_same(path_sv, dot_sv))
     {
-        const char *pwd   = getenv("PWD");
-        StringView pwd_sv = cstr_sv(pwd);
+        char cwd[4096];
+        _getcwd(cwd, 4096);
+
+        StringView cwd_sv = cstr_sv(cwd);
 
         uint32_t i = 0;
-        for(; i < pwd_sv.size; ++i)
+        for(; i < cwd_sv.size; ++i)
         {
-            buf[i] = pwd[i];
+            buf[i] = cwd[i];
         }
         buf[i] = '\0';
     }

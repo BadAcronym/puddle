@@ -1,12 +1,19 @@
 #include "pd_path.h"
 
+#include <sys/stat.h>
+#include <windows.h>
+
 uint8_t pdVerifyPath
 (
     StringView path
 ){
     struct _stat pathInfo;
 
-    if(_stat(path, &pathInfo))
+    char buf[4096];
+    char *path_cstr = 0; 
+    sv_cstr(path, path_cstr);
+
+    if(_stat(path_cstr, &pathInfo))
     {
         return PD_TYPE_ERROR;
     }
@@ -99,20 +106,20 @@ StringView pdListFiles
     WIN32_FIND_DATAA fileData;
     HANDLE           foundHandle;
 
-    char *winPath         = malloc(path.size + 3);
-    for(uint16_t i = 0; i < path.size; ++i)
+    char *winPath = malloc(directory.size + 3);
+    for(uint16_t i = 0; i < directory.size; ++i)
     {
-        winPath[i] = path[i];
+        winPath[i] = directory.data[i];
     }
-    winPath[path.size]     = '\\';
-    winPath[path.size + 1] = '*';
-    winPath[path.size + 2] = '\0';
+    winPath[directory.size]     = '\\';
+    winPath[directory.size + 1] = '*';
+    winPath[directory.size + 2] = '\0';
 
     foundHandle = FindFirstFileA(winPath, &fileData);
     if(foundHandle == INVALID_HANDLE_VALUE)
     {
         fprintf(stderr, "\n\033[31;1;7mERROR: failed to open directory.\033[0m\n");
-        return 0;
+        return (StringView){0};
     }
 
     uint32_t listSize = 0;

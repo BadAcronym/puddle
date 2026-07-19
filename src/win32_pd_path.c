@@ -8,20 +8,20 @@ uint8_t pdVerifyPath
 
     if(_stat(path, &pathInfo))
     {
-        return RV_TYPE_ERROR;
+        return PD_TYPE_ERROR;
     }
 
     if(_S_IFDIR & pathInfo.st_mode)
     {
-        return RV_TYPE_DIRECTORY;
+        return PD_TYPE_DIRECTORY;
     }
 
     if(_S_IFREG & pathInfo.st_mode)
     {
-        return RV_TYPE_FILE;
+        return PD_TYPE_FILE;
     }
 
-    return RV_TYPE_OTHER;
+    return PD_TYPE_OTHER;
 }
 
 void pdExpandPath

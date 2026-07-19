@@ -16,7 +16,7 @@ int main
     StringView test_right  = cstr_sv("lo, Worl");
     StringView test_both   = cstr_sv(" W");
     StringView conv_src    = cstr_sv("The quick lilac fox jumps over the dog.");
-    char conv_test[conv_src.size + 1];
+    char conv_test[4096];
     sv_cstr(conv_src, conv_test);
     StringView conv_test2  = cstr_sv(conv_test);
     StringView concat_1    = cstr_sv("Test ");
@@ -110,7 +110,7 @@ int main
                 "\033[0m\n");
     }
 
-    char concatenated[concat_1.size + concat_2.size + 1];
+    char concatenated[4096];
     sv_concat(concat_1, concat_2, concatenated);
     StringView test_concat   = cstr_sv(concatenated);
     if(!sv_same(concat_r, test_concat))
@@ -466,7 +466,7 @@ int main
     }
 
     StringView testPath_tosort = cstr_sv("abc:abd:123:aaa");
-    char sorted[testPath_tosort.size + 1];
+    char sorted[4096];
     sv_sort_by_delim(testPath_tosort, ':', sorted);
 
     StringView testPath_sorted =
@@ -531,12 +531,12 @@ int main
                                        "water edge texture 3 32 32.qoi;..;"
                                        "animated shallow water.qoi;"
                                        "water edge texture 4 32 32.qoi;");
-    char sorted_real[testPath_real.size + 1];
+    char sorted_real[4096];
     sv_sort_by_delim(testPath_real, ';', sorted_real);
     testPath_real.data = sorted_real;
 
-    StringView single_dot  = cstr_sv(".");
-    StringView two_dot     = cstr_sv("..");
+    StringView single_dot = cstr_sv(".");
+    StringView two_dot    = cstr_sv("..");
     StringView one_test;
     StringView two_test;
     one_test = sv_find_by_delim(testPath_real, ';', 0);

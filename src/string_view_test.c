@@ -1,7 +1,6 @@
-#define PD_PATH_IMPL
-#include "pd_path.h"
-
 #include <stdio.h>
+
+#include "string_view.h"
 
 int main
 (

@@ -1,4 +1,8 @@
-param($build)
+param
+(
+    [Parameter(Position = 0)][string]$build,
+    [Parameter(Position = 1)][string]$compile_only
+)
 
 if(-Not(Test-Path "./obj/"))
 {
@@ -24,8 +28,10 @@ if($build -eq "asan" -or $build -eq "debug" -or $build -eq "release")
 {
     Write-Host "`ncompiling puddle...`n" -Fore Cyan
 
-    premake5 vs2026
-    &MSBuild ./build/puddle.slnx -p:Configuration=$build
+    premake5 gmake
+    pushd "./build/"
+    make config=$build\_windows
+    popd
 }
 else
 {
@@ -41,11 +47,11 @@ if($LASTEXITCODE -ne 0)
 
 Write-Host ""
 
-# if [[ $2 = "--compile-only" ]]
-# then
-#     exit 0
-# fi
+if($compile_only -eq "--compile-only")
+{
+    exit 0;
+}
 
 Write-Host "running string_view unit tests..." -Fore Cyan
- 
+
 &./bin/$build/svtest.exe

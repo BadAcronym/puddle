@@ -12,6 +12,7 @@ project("svtest")
     warnings("Extra")
     targetname("svtest")
     kind("ConsoleApp")
+    toolset("clang")
 
     filter("configurations:asan")
         defines{"ASAN"}
@@ -42,9 +43,9 @@ project("svtest")
                 "./include/string_view*" })
         includedirs({ "./include/", "/usr/include/", "./vendor/"})
         libdirs("./bin/%{cfg.buildcfg}/")
-        buildoptions({"-Wextra", "-Wall", "-Wpedantic", "-Wconversion"})
+        buildoptions({"-Wextra", "-Wall", "-Wpedantic", "-Wconversion", "-Wshadow",
+                      "-Wformat"})
         linkoptions({"-fuse-ld=mold", "-lm"})
-        toolset("clang")
 
     filter("platforms:windows")
         system("windows")
@@ -57,6 +58,9 @@ project("svtest")
                 "./include/string_view*" })
         includedirs({"./include/"})
         libdirs("./bin/%{cfg.buildcfg}/")
+        buildoptions({"-Wextra", "-Wall", "-Wpedantic", "-Wconversion", "-Wshadow",
+                      "-Wformat"})
+        linkoptions({"-fuse-ld=lld"})
 
     filter({"platforms:linux", "configurations:debug or asan"})
         buildoptions({"-gfull", "-O1"})
@@ -72,8 +76,10 @@ project("svtest")
         kind("ConsoleApp")
 
     filter({"platforms:windows", "configurations:asan"})
-        editandcontinue("Off")
+        toolset("clang-cl")
         buildoptions({"/fsanitize=address", "/Zi", "/INCREMENTAL:NO"})
+        linkoptions{"/link clang_rt.asan_dynamic-x86_64.lib clang_rt.asan_dynamic_runtime_thunk-x86_64.lib"}
+        editandcontinue("Off")
 
-    filter({"platforms:windows", "configurations:release"})
-        linkoptions({"/NODEFAULTLIB:MSVCRTD"})
+    -- filter({"platforms:windows", "configurations:release"})
+        -- linkoptions({"/NODEFAULTLIB:MSVCRTD"})

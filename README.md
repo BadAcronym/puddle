@@ -6,14 +6,9 @@ future.
 
 To build the binary from source, you'll need:
 + `premake5`
-+ `clang` (`mingw` on windows)
++ `mold` (`mingw`'s `lld` on windows)
++ `clang` (`mingw`'s `clang` on windows)
 + `bash` (`pwsh` on windows)
-
-Note that `gcc` and `mingw-gcc` will work, but are not actively tested by me. I do know
-that `mingw-gcc` cannot interface with windows' address sanitizer, so only
-`release/debug` builds there.
-
-There is no support for the MSVC compiler or linker, as they are not very good.
 
 And simply run:
 ```
@@ -25,11 +20,18 @@ Or, for example:
 ./run debug --compile-only
 ```
 
+There is no support for the MSVC compiler or linker, as they are not very good.
+
+Note that `gcc` and `mingw-gcc` will work, but are not actively tested by me. I do know
+that `mingw` cannot interface with windows' address sanitizer, so:
+
 For address sanitization on windows:
 
-Make sure the MSVC address sanitizer is installed via the Microsoft Visual Studio
-installer and is added to your path (the versions vary, you'll have to change them
-to fit yours):
+Make sure `clang-cl` and the MSVC address sanitizer are installed via the Microsoft
+Visual Studio installer and the following lines are added to your path (the versions
+vary, you'll have to change them to fit yours):
+
 ```
-C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.52.36520\bin\Hostx86\x64
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.52.36520\bin\Hostx64\x64
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.52.36520\lib\x64
 ```

@@ -19,7 +19,7 @@ if(-Not(Test-Path "./build/"))
     mkdir "./build/"
 }
 
-if($null -eq $build)
+if($null -eq $build -or $build -eq "")
 {
     $build = "release"
 }
@@ -30,12 +30,12 @@ if($build -eq "asan" -or $build -eq "debug" -or $build -eq "release")
 
     premake5 gmake
     pushd "./build/"
-    make config=$build\_windows
+    make config=$build`_windows
     popd
 }
 else
 {
-    echo -e "`nERROR: invalid make config: '$build'." -Fore Red
+    Write-Host "`nERROR: invalid make config: '$build'." -Fore Red
     exit -2;
 }
 

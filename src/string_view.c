@@ -544,8 +544,8 @@ void sv_concat
         return;
     }
 
-    char first_data[4096];
-    char second_data[4096];
+    char first_data[first.size + 1];
+    char second_data[second.size + 1];
 
     sv_cstr(first, first_data);
     sv_cstr(second, second_data);

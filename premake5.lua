@@ -2,14 +2,9 @@
 
 workspace("puddle")
     configurations({"debug", "asan", "release"})
+    platforms{"linux", "windows"}
     location("build")
     architecture("x86_64")
-
-    if package.config:sub(1,1) == '\\' then
-        platforms { "x64" }
-    else
-        platforms { "linux" }
-    end
 
 project("svtest")
     language("C")
@@ -51,7 +46,7 @@ project("svtest")
         linkoptions({"-fuse-ld=mold", "-lm"})
         toolset("clang")
 
-    filter("platforms:x64")
+    filter("platforms:windows")
         system("windows")
         defines("BUILD_WINDOWS")
         targetdir("bin/%{cfg.buildcfg}")
@@ -73,12 +68,12 @@ project("svtest")
         linkoptions({"-fsanitize=address,leak,undefined", "-fno-omit-frame-pointer",
                      "-static-libasan"})
 
-    filter({"platforms:x64", "configurations:debug or asan"})
+    filter({"platforms:windows", "configurations:debug or asan"})
         kind("ConsoleApp")
 
-    filter({"platforms:x64", "configurations:asan"})
+    filter({"platforms:windows", "configurations:asan"})
         editandcontinue("Off")
         buildoptions({"/fsanitize=address", "/Zi", "/INCREMENTAL:NO"})
 
-    filter({"platforms:x64", "configurations:release"})
+    filter({"platforms:windows", "configurations:release"})
         linkoptions({"/NODEFAULTLIB:MSVCRTD"})

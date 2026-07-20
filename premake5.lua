@@ -13,6 +13,7 @@ project("svtest")
     targetname("svtest")
     kind("ConsoleApp")
     toolset("clang")
+    buildoptions({"-Wextra", "-Wall", "-Wpedantic", "-Wconversion", "-Wshadow", "-Wformat"})
 
     filter("configurations:asan")
         defines{"ASAN"}
@@ -43,8 +44,6 @@ project("svtest")
                 "./include/string_view*" })
         includedirs({ "./include/", "/usr/include/", "./vendor/"})
         libdirs("./bin/%{cfg.buildcfg}/")
-        buildoptions({"-Wextra", "-Wall", "-Wpedantic", "-Wconversion", "-Wshadow",
-                      "-Wformat"})
         linkoptions({"-fuse-ld=mold", "-lm"})
 
     filter("platforms:windows")
@@ -58,8 +57,6 @@ project("svtest")
                 "./include/string_view*" })
         includedirs({"./include/"})
         libdirs("./bin/%{cfg.buildcfg}/")
-        buildoptions({"-Wextra", "-Wall", "-Wpedantic", "-Wconversion", "-Wshadow",
-                      "-Wformat"})
         linkoptions({"-fuse-ld=lld"})
 
     filter({"platforms:linux", "configurations:debug or asan"})

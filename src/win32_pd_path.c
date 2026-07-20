@@ -10,8 +10,7 @@ uint8_t pdVerifyPath
 ){
     struct _stat pathInfo;
 
-    char buf[4096];
-    char *path_cstr = 0; 
+    char path_cstr[4096];
     sv_cstr(path, path_cstr);
 
     if(_stat(path_cstr, &pathInfo))
@@ -139,7 +138,6 @@ StringView pdListFiles
     FindClose(foundHandle);
     foundHandle = FindFirstFileA(winPath, &fileData);
 
-    char     *list  = (char*)malloc(listSize + 1);
     uint32_t offset = 0;
 
     while(FindNextFileA(foundHandle, &fileData))
@@ -147,18 +145,15 @@ StringView pdListFiles
         uint8_t length = 0;
         for(; length < 255 && fileData.cFileName[length] != '\0'; ++length)
         {
-            list[offset + length] = fileData.cFileName[length];
+            buf[offset + length] = fileData.cFileName[length];
         }
-        list[offset + length] = ';';
+        buf[offset + length] = ';';
         offset += length + 1;
     }
 
-    list[offset] = '\0';
+    buf[offset] = '\0';
 
     FindClose(foundHandle);
     free(winPath);
-    return(StringView)
-    {
-        .data = list,
-    };
+    return cstr_sv(buf);
 }

@@ -25,6 +25,8 @@ project("svtest")
         staticruntime("off")
         runtime("debug")
         symbols("On")
+        buildoptions({"-gfull", "-O1"})
+        linkoptions({"-gfull", "-O1"})
 
     filter("configurations:release")
         defines{"NDEBUG"}
@@ -58,10 +60,6 @@ project("svtest")
         includedirs({"./include/"})
         libdirs("./bin/%{cfg.buildcfg}/")
         linkoptions({"-fuse-ld=lld"})
-
-    filter({"platforms:linux", "configurations:debug or asan"})
-        buildoptions({"-gfull", "-O1"})
-        linkoptions({"-gfull", "-O1"})
 
     filter({"platforms:linux", "configurations:asan"})
         buildoptions({"-fsanitize=address,leak,undefined", "-fno-omit-frame-pointer",

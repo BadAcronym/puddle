@@ -41,6 +41,16 @@ void pdExpandPath
 
     StringView homevar = cstr_sv("$HOME");
     const char *home   = getenv("HOME");
+    if(!home)
+    {
+        home = getenv("USERPROFILE");
+        if(!home)
+        {
+            fprintf(stderr, "\033[31mERROR: couldn't resolve HOME or USERPROFILE."
+                    "\033[0m\n");
+            return;
+        }
+    }
     StringView home_sv = cstr_sv(home);
 
     if(home && path_sv.size > 0 && path[0] == '~')

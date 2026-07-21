@@ -68,6 +68,8 @@ project("svtest")
                      "-static-libasan"})
 
     filter({"platforms:windows", "configurations:debug or asan"})
+        buildoptions("-gcodeview");
+        linkoptions("-gcodeview");
         kind("ConsoleApp")
 
     filter({"platforms:windows", "configurations:asan"})

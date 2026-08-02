@@ -410,11 +410,11 @@ uint32_t sv_count_by_delim
         }
     }
 
-    if(sv.data[sv.size - 1] != delim && sv.data[0] != delim)
+    if(sv.size && sv.data[sv.size - 1] != delim && sv.data[0] != delim)
     {
         return delim_count + 1;
     }
-    else if(sv.data[sv.size - 1] == delim && sv.data[0] == delim)
+    else if(sv.size && sv.data[sv.size - 1] == delim && sv.data[0] == delim)
     {
         return delim_count - 1;
     }

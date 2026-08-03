@@ -464,6 +464,46 @@ int main
                 "testPath2.\033[0m\n");
     }
 
+    // WIP: sv_separate_by_delim testing
+
+    StringView premade[6] =
+    {
+        cstr_sv("test1"),
+        cstr_sv("2"),
+        cstr_sv("third"),
+        cstr_sv("fourth"),
+        cstr_sv("five"),
+        cstr_sv("sixth_last!;")
+    };
+
+    StringView separate_sv = cstr_sv("test1:2:third:fourth:five:sixth_last!;");
+    uint32_t   itemcount   = sv_count_by_delim(separate_sv, ':');
+    StringView separated_list[itemcount];
+    sv_separate_by_delim(separate_sv, separated_list, ':');
+
+    if(itemcount != 6)
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_count_by_delim FAILED unit test "
+                "counting symbols in separate_sv.\033[0m\n");
+        fprintf(stderr, "expected: 6\ngot: %u\n", itemcount);
+        ++num_failed;
+    }
+    else
+    {
+        for(uint32_t i = 0; i < itemcount; ++i)
+        {
+            if(!sv_same(premade[i], separated_list[i]))
+            {
+                fprintf(stderr, "\033[31;1;1mERROR: sv_separate_by_delim FAILED unit "
+                        "test in separate_sv.\033[0m\n");
+                fprintf(stderr, "expected: "PRI_SV"\ngot: "PRI_SV"\n",
+                        ARG_SV(premade[i]), ARG_SV(separated_list[i]));
+                ++num_failed;
+                break;
+            }
+        }
+    }
+
     StringView testPath_tosort = cstr_sv("abc:abd:123:aaa");
     char sorted[testPath_tosort.size + 1];
     sv_sort_by_delim(testPath_tosort, ':', sorted);

@@ -171,14 +171,6 @@ uint32_t sv_count_by_delim
     char       delim
 );
 
-// will return `SV_LESSER` (1) if the first sv is alphabetically lesser to the
-// second, `SV_GREATER` (0) if it isn't.
-uint8_t sv_is_lesser
-(
-    StringView first,
-    StringView second
-);
-
 // Will sort the given StringView in alphabetical order, respecting the delimiter
 // given: `"hello;test;path;123"` -> `"123;hello;path;test"`.
 // Will return the resulting, sorted string into `buf`, which needs to be at least as
@@ -188,6 +180,23 @@ void sv_sort_by_delim
     StringView sv,
     char       delim,
     char       *buf
+);
+
+// Will separate every substring found in `sv` (separated by `delim`) and place them as
+// entries in `buf[i]`, in the order they appear in the original string.
+void sv_separate_by_delim
+(
+    StringView sv,
+    StringView *buf,
+    char       delim
+);
+
+// will return `SV_LESSER` (1) if the first sv is alphabetically lesser to the
+// second, `SV_GREATER` (0) if it isn't.
+uint8_t sv_is_lesser
+(
+    StringView first,
+    StringView second
 );
 
 // concatenates `first` and `second` one after the other.

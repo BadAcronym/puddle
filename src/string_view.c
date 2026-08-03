@@ -422,46 +422,6 @@ uint32_t sv_count_by_delim
     return delim_count;
 }
 
-uint8_t sv_is_lesser
-(
-    StringView first,
-    StringView second
-){
-    if(!first.data)
-    {
-        fprintf(stderr, "\033[31;1mERROR: passed nullptr as first.data.\033[0m\n");
-        return SV_GREATER;
-    }
-    else if(!second.data)
-    {
-        fprintf(stderr, "\033[31;1mERROR: passed nullptr as second.data.\033[0m\n");
-        return SV_GREATER;
-    }
-
-    for(uint32_t i = 0; i < first.size && second.size; ++i)
-    {
-        if(first.data[i] < second.data[i])
-        {
-            return SV_LESSER;
-        }
-        else if(second.data[i] < first.data[i])
-        {
-            return SV_GREATER;
-        }
-
-        if(i == first.size - 1 && first.size < second.size)
-        {
-            return SV_LESSER;
-        }
-        else if(i == second.size - 1 && second.size < first.size)
-        {
-            return SV_GREATER;
-        }
-    }
-
-    return SV_LESSER;
-}
-
 void sv_sort_by_delim
 (
     StringView sv,
@@ -530,6 +490,55 @@ void sv_sort_by_delim
 
     buf[sv.size] = '\0';
     free(sv_buffer);
+}
+
+void sv_separate_by_delim
+(
+    StringView sv,
+    StringView *buf,
+    char       delim
+){
+    // TODO:
+}
+
+uint8_t sv_is_lesser
+(
+    StringView first,
+    StringView second
+){
+    if(!first.data)
+    {
+        fprintf(stderr, "\033[31;1mERROR: passed nullptr as first.data.\033[0m\n");
+        return SV_GREATER;
+    }
+    else if(!second.data)
+    {
+        fprintf(stderr, "\033[31;1mERROR: passed nullptr as second.data.\033[0m\n");
+        return SV_GREATER;
+    }
+
+    for(uint32_t i = 0; i < first.size && second.size; ++i)
+    {
+        if(first.data[i] < second.data[i])
+        {
+            return SV_LESSER;
+        }
+        else if(second.data[i] < first.data[i])
+        {
+            return SV_GREATER;
+        }
+
+        if(i == first.size - 1 && first.size < second.size)
+        {
+            return SV_LESSER;
+        }
+        else if(i == second.size - 1 && second.size < first.size)
+        {
+            return SV_GREATER;
+        }
+    }
+
+    return SV_LESSER;
 }
 
 void sv_concat

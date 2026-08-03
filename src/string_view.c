@@ -498,7 +498,40 @@ void sv_separate_by_delim
     StringView *buf,
     char       delim
 ){
-    // TODO:
+    uint32_t   index  = 0;
+    const char *nextword_start = sv.data;
+
+    if(sv.data == 0)
+    {
+        return;
+    }
+
+    for(uint64_t i = 0; i < sv.size; ++i)
+    {
+        size_t substr_size = 0;
+
+        if(sv.data[i] == delim)
+        {
+            for(; i < sv.size && sv.data[i] == delim; ++i)
+            {
+                ++nextword_start;
+            }
+        }
+
+        for(; i < sv.size && sv.data[i] != delim; ++i)
+        {
+            ++substr_size;
+        }
+
+        buf[index].data = nextword_start;
+        buf[index].size = substr_size;
+
+        fprintf(stderr, "found entry %u: '"PRI_SV"', size %zu\n", index,
+                ARG_SV(buf[index]), substr_size);
+        fprintf(stderr, "current i: %lu\n", i);
+
+        ++index;
+    }
 }
 
 uint8_t sv_is_lesser

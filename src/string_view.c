@@ -526,9 +526,7 @@ void sv_separate_by_delim
         buf[index].data = nextword_start;
         buf[index].size = substr_size;
 
-        fprintf(stderr, "found entry %u: '"PRI_SV"', size %zu\n", index,
-                ARG_SV(buf[index]), substr_size);
-        fprintf(stderr, "current i: %lu\n", i);
+        nextword_start += substr_size + 1;
 
         ++index;
     }

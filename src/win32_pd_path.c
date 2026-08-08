@@ -31,7 +31,7 @@ uint8_t pdVerifyPath
     return PD_TYPE_OTHER;
 }
 
-void pdExpandPath
+StringView pdExpandPath
 (
     const char *path,
     char*      buf
@@ -108,6 +108,8 @@ void pdExpandPath
         }
         buf[i] = '\0';
     }
+
+    return cstr_sv(buf);
 }
 
 StringView pdListFiles

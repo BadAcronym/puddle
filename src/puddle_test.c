@@ -487,17 +487,24 @@ int main
         ++num_failed;
     }
 
-    for(uint32_t i = 0; i < itemcount; ++i)
+    uint8_t sep_i = 0;
+    for(; sep_i < itemcount; ++sep_i)
     {
-        if(!sv_same(premade[i], separated_list[i]))
+        if(!sv_same(premade[sep_i], separated_list[sep_i]))
         {
             fprintf(stderr, "\033[31;1;1mERROR: sv_separate_by_delim FAILED unit "
                     "test in separate_sv.\033[0m\n");
             fprintf(stderr, "expected: "PRI_SV"\ngot: "PRI_SV"\n",
-                    ARG_SV(premade[i]), ARG_SV(separated_list[i]));
+                    ARG_SV(premade[sep_i]), ARG_SV(separated_list[sep_i]));
             ++num_failed;
             break;
         }
+    }
+
+    if(sep_i == 6)
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_separate_by_delim unit test "
+                "with separate_sv. \033[0m\n");
     }
 
     StringView testPath_tosort = cstr_sv("abc:abd:123:aaa");

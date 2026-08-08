@@ -52,7 +52,7 @@ fi
 
 popd > /dev/null
 
-echo -e "\033[36mrunning string_view unit tests...\033[0m"
+echo -e "\033[36mrunning string_view unit tests...\033[0m\n"
 
 chmod +x ./bin/$build/svtest
 ./bin/$build/svtest

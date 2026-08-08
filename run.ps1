@@ -52,6 +52,6 @@ if($compile_only -eq "--compile-only")
     exit 0;
 }
 
-Write-Host "running string_view unit tests..." -Fore Cyan
+Write-Host "running string_view unit tests...`n" -Fore Cyan
 
 &./bin/$build/svtest.exe

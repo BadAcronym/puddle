@@ -98,6 +98,25 @@ StringView pdExpandPath
     return cstr_sv(buf);
 }
 
+StringView pdParentPath
+(
+    StringView path,
+    char       *buf
+){
+    pdExpandPath(path, buf);
+    StringView expanded = cstr_sv(buf);
+
+    const char *lastdir = sv_find_last("/");
+
+    expanded.size -= (size_t)(expanded.data - lastdir);
+
+    uint8_t code = pdVerifyPath(expanded);
+    if(code != PD_TYPE_FILE && code != PD_TYPE_DIRECTORY)
+    {
+        return (StringView){0};
+    }
+}
+
 StringView pdListFiles
 (
     StringView directory,

@@ -163,8 +163,8 @@ StringView pdListFiles
 
     while((ent = readdir(dir)))
     {
-        uint8_t curr_length = 0;
-        for(; curr_length >= 0 && ent->d_name[curr_length] != '\0'; ++curr_length)
+        uint16_t curr_length = 0;
+        for(; curr_length < 4096 && ent->d_name[curr_length] != '\0'; ++curr_length)
         {
             list.data[offset + curr_length] = ent->d_name[curr_length];
         }

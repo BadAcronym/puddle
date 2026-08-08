@@ -16,18 +16,24 @@
 #define PD_TYPE_OTHER     3
 
 // will verify if a given path exists. Will return `PD_TYPE_ERROR`, if it does not
-// exist, `PD_TYPE_FILE` or `PD_TYPE_DIRECTORY` if it does, and `PD_TYPE_OTHER` in any
-// other case.
+// exist, `PD_TYPE_FILE` or `PD_TYPE_DIRECTORY` if it does, and `PD_TYPE_OTHER` in
+// any other case.
 uint8_t pdVerifyPath
 (
     StringView path
 );
 
-// will expand the given path into buf, resolving '.', '$HOME' and '~', but currently no
-// other symbols.
-void pdExpandPath
+// will expand the given path into buf, resolving '.', '$HOME' and '~', but
+// currently no other symbols.
+StringView pdExpandPath
 (
     const char *path,
+    char       *buf
+);
+
+StringView pdParentPath
+(
+    StringView path,
     char       *buf
 );
 

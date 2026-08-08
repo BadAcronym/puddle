@@ -117,10 +117,12 @@ StringView pdParentPath
     StringView path,
     char       *buf
 ){
+    StringView sep = cstr_sv("\\");
+
     pdExpandPath(path, buf);
     StringView expanded = cstr_sv(buf);
 
-    const char *lastdir = sv_find_last("\\");
+    const char *lastdir = sv_find_last(sep, expanded);
 
     expanded.size -= (size_t)(expanded.data - lastdir);
 
@@ -129,6 +131,8 @@ StringView pdParentPath
     {
         return (StringView){0};
     }
+
+    return expanded;
 }
 
 StringView pdListFiles

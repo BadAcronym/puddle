@@ -138,9 +138,17 @@ uint8_t sv_is_substr
     StringView second
 );
 
-// Will return a pointer to the start of `pattern` inside `sv`, if it was found.
-// If it wasn't found, the pointer is null.
+// Will return a pointer to the start of the first occurrence of `pattern` inside `sv`,
+// if it was found. If it wasn't found, the pointer is null.
 const char *sv_find
+(
+    StringView pattern,
+    StringView sv
+);
+
+// Will return a pointer to the start of the last occurrence of `pattern` inside `sv`,
+// if it was found. If it wasn't found, the pointer is null.
+const char *sv_find_last
 (
     StringView pattern,
     StringView sv

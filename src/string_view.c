@@ -333,6 +333,38 @@ const char *sv_find
     return 0;
 }
 
+const char *sv_find_last
+(
+    StringView pattern,
+    StringView sv
+){
+    if(sv.data == 0 || pattern.data == 0 || sv.size == 0 || pattern.size == 0)
+    {
+        return 0;
+    }
+
+    const char *current = 0;
+
+    for(size_t i = 0; i < sv.size; ++i)
+    {
+        size_t j = 0;
+        for(; j < pattern.size; ++j)
+        {
+            if(sv.data[i + j] != pattern.data[j])
+            {
+                break;
+            }
+        }
+
+        if(j == pattern.size)
+        {
+            current = sv.data + i;
+        }
+    }
+
+    return current;
+}
+
 StringView sv_find_by_delim
 (
     StringView sv,

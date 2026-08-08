@@ -25,12 +25,16 @@ uint8_t pdVerifyPath
 
 // will expand the given path into buf, resolving '.', '$HOME' and '~', but
 // currently no other symbols.
+// Returns a StringView created from buf.
 StringView pdExpandPath
 (
-    const char *path,
+    StringView path,
     char       *buf
 );
 
+// returns parent path of the passed path. If an absolute path was passed, it will
+// simply return a trimmed StringView from the same pointer. If the path needs to be
+// resolved first, that resolved parent path will be written to `buf`.
 StringView pdParentPath
 (
     StringView path,

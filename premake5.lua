@@ -6,14 +6,15 @@ workspace("puddle")
     location("build")
     architecture("x86_64")
 
-project("svtest")
+project("puddle_test")
     language("C")
     cdialect("C99")
     warnings("Extra")
-    targetname("svtest")
+    targetname("puddletest")
     kind("ConsoleApp")
     toolset("clang")
-    buildoptions({"-Wextra", "-Wall", "-Wpedantic", "-Wconversion", "-Wshadow", "-Wformat"})
+    buildoptions({"-Wextra", "-Wall", "-Wpedantic", "-Wconversion", "-Wshadow",
+                  "-Wformat", "-Wtype-limits"})
 
     filter("configurations:asan")
         defines{"ASAN"}
@@ -39,11 +40,16 @@ project("svtest")
         system("linux")
         defines("BUILD_LINUX")
         targetdir("bin/%{cfg.buildcfg}")
-        objdir("obj/svtest/")
-        files({ "./src/linux_string_view*",
+        objdir("obj/puddletest/")
+        files({ "./src/puddle_test*",
+                "./src/linux_string_view*",
                 "./include/linux_string_view*",
                 "./src/string_view*",
-                "./include/string_view*" })
+                "./include/string_view*",
+                "./src/linux_pd_path*",
+                "./include/linux_pd_path*",
+                "./src/pd_path*",
+                "./include/pd_path*" })
         includedirs({ "./include/", "/usr/include/", "./vendor/"})
         libdirs("./bin/%{cfg.buildcfg}/")
         linkoptions({"-fuse-ld=mold", "-lm"})
@@ -53,10 +59,15 @@ project("svtest")
         defines("BUILD_WINDOWS")
         targetdir("bin/%{cfg.buildcfg}")
         objdir("obj/")
-        files({ "./src/win32_string_view*",
+        files({ "./src/puddle_test*",
+                "./src/win32_string_view*",
                 "./include/win32_string_view*",
                 "./src/string_view*",
-                "./include/string_view*" })
+                "./include/string_view*",
+                "./src/win32_pd_path*",
+                "./include/win32_pd_path*",
+                "./src/pd_path*",
+                "./include/pd_path*" })
         includedirs({"./include/"})
         libdirs("./bin/%{cfg.buildcfg}/")
         linkoptions({"-fuse-ld=lld"})
@@ -77,6 +88,3 @@ project("svtest")
         buildoptions({"/fsanitize=address", "/Zi", "/INCREMENTAL:NO"})
         linkoptions{"/link clang_rt.asan_dynamic-x86_64.lib clang_rt.asan_dynamic_runtime_thunk-x86_64.lib"}
         editandcontinue("Off")
-
-    -- filter({"platforms:windows", "configurations:release"})
-        -- linkoptions({"/NODEFAULTLIB:MSVCRTD"})

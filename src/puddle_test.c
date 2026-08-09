@@ -704,8 +704,6 @@ int main
                 "index = 3.\033[0m\n");
     }
 
-    // TODO: pdParentPath tests
-
     if(!num_failed)
     {
         printf("\033[32;1;1m\nSUCCESS: all unit tests passed.\033[0m\n");

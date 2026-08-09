@@ -317,13 +317,14 @@ int main
         fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find_last unit test by "
                         "returning a valid pointer, no 1.\033[0m\n");
     }
+
     StringView duplStr = cstr_sv("The fox jumps jumps jumps jumps");
-    found = sv_find_last(small2, bigStr);
-    if(found != bigStr.data + 19)
+    found = sv_find_last(small2, duplStr);
+    if(found != duplStr.data + 19)
     {
         fprintf(stderr, "\033[31;1;1mERROR: sv_find FAILED by returning the wrong "
                 "offset. Expected 19, got: %u\033[0m\n",
-                (uint32_t)(found - bigStr.data));
+                (uint32_t)(found - duplStr.data));
         ++num_failed;
     }
     else

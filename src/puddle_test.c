@@ -304,6 +304,34 @@ int main
                 "a valid pointer, no 4.\033[0m\n");
     }
 
+    found = sv_find_last(small4, bigStr);
+    if(found != bigStr.data + 43)
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find FAILED by returning the wrong "
+                "offset. Expected 43, got: %u\033[0m\n",
+                (uint32_t)(found - bigStr.data));
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find_last unit test by "
+                        "returning a valid pointer, no 1.\033[0m\n");
+    }
+    StringView duplStr = cstr_sv("The fox jumps jumps jumps jumps");
+    found = sv_find_last(small2, bigStr);
+    if(found != bigStr.data + 19)
+    {
+        fprintf(stderr, "\033[31;1;1mERROR: sv_find FAILED by returning the wrong "
+                "offset. Expected 19, got: %u\033[0m\n",
+                (uint32_t)(found - bigStr.data));
+        ++num_failed;
+    }
+    else
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_find_last unit test by "
+                        "returning a valid pointer, no 2.\033[0m\n");
+    }
+
     StringView testPath = cstr_sv(";zeroeth;;first;second;third;;;;;;;;fourth;");
 
     StringView testFile0 = sv_find_by_delim(testPath, ';', 0);
@@ -675,6 +703,8 @@ int main
         fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_sort_by_delim unit test with "
                 "index = 3.\033[0m\n");
     }
+
+    // TODO: pdParentPath tests
 
     if(!num_failed)
     {

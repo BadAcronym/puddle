@@ -10,7 +10,7 @@ uint8_t pdVerifyPath
 ){
     struct _stat pathInfo;
 
-    char path_cstr[4096];
+    char path_cstr[path.size + 1];
     sv_cstr(path, path_cstr);
 
     if(_stat(path_cstr, &pathInfo))

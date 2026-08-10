@@ -33,10 +33,14 @@ uint8_t pdVerifyPath
 
 StringView pdExpandPath
 (
-    const char *path,
+    StringView path,
     char*      buf
 ){
-    StringView path_sv = cstr_sv(path);
+    if(!path.data)
+    {
+        return (StringView){0};
+    }
+
     StringView dot_sv  = cstr_sv(".");
 
     StringView homevar = cstr_sv("$HOME");
@@ -48,12 +52,12 @@ StringView pdExpandPath
         {
             fprintf(stderr, "\033[31mERROR: couldn't resolve HOME or USERPROFILE."
                     "\033[0m\n");
-            return;
+            return(StringView){0};
         }
     }
     StringView home_sv = cstr_sv(home);
 
-    if(home && path_sv.size > 0 && path[0] == '~')
+    if(home && path.size > 0 && path.data[0] == '~')
     {
         uint32_t i = 0;
         for(; i < home_sv.size; ++i)
@@ -62,9 +66,9 @@ StringView pdExpandPath
         }
 
         uint32_t j = 0;
-        for(; j < path_sv.size && j < 4096 - i; ++j)
+        for(; j < path.size && j < 4096 - i; ++j)
         {
-            buf[i + j] = path[j + 1];
+            buf[i + j] = path.data[j + 1];
         }
 
         if(buf[i + j - 1] == '\n')
@@ -73,7 +77,7 @@ StringView pdExpandPath
         }
         buf[i + j] = '\0';
     }
-    else if(home && path_sv.size > 4 && sv_find(homevar, path_sv) == path_sv.data)
+    else if(home && path.size > 4 && sv_find(homevar, path) == path.data)
     {
         uint32_t i = 0;
         for(; i < home_sv.size; ++i)
@@ -82,9 +86,9 @@ StringView pdExpandPath
         }
 
         uint32_t j = 0;
-        for(; j < path_sv.size && j < 4096 - i - homevar.size; ++j)
+        for(; j < path.size && j < 4096 - i - homevar.size; ++j)
         {
-            buf[i + j] = path[j + homevar.size];
+            buf[i + j] = path.data[j + homevar.size];
         }
 
         if(buf[i + j - 1] == '\n')
@@ -93,7 +97,7 @@ StringView pdExpandPath
         }
         buf[i + j] = '\0';
     }
-    else if(sv_same(path_sv, dot_sv))
+    else if(sv_same(path, dot_sv))
     {
         char cwd[4096];
         _getcwd(cwd, 4096);
@@ -115,9 +119,9 @@ StringView pdExpandPath
     else
     {
         uint32_t i = 0;
-        for(; i < path_sv.size && i < 4096; ++i)
+        for(; i < path.size && i < 4096; ++i)
         {
-            buf[i] = path[i];
+            buf[i] = path.data[i];
         }
 
         if(buf[i - 1] == '\n')

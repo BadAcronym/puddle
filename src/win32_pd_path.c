@@ -67,6 +67,10 @@ StringView pdExpandPath
             buf[i + j] = path[j + 1];
         }
 
+        if(buf[i + j - 1] == '\n')
+        {
+            buf[i + j - 1] = '\0';
+        }
         buf[i + j] = '\0';
     }
     else if(home && path_sv.size > 4 && sv_find(homevar, path_sv) == path_sv.data)
@@ -83,6 +87,10 @@ StringView pdExpandPath
             buf[i + j] = path[j + homevar.size];
         }
 
+        if(buf[i + j - 1] == '\n')
+        {
+            buf[i + j - 1] = '\0';
+        }
         buf[i + j] = '\0';
     }
     else if(sv_same(path_sv, dot_sv))
@@ -97,6 +105,11 @@ StringView pdExpandPath
         {
             buf[i] = cwd[i];
         }
+
+        if(buf[i - 1] == '\n')
+        {
+            buf[i - 1] = '\0';
+        }
         buf[i] = '\0';
     }
     else
@@ -105,6 +118,11 @@ StringView pdExpandPath
         for(; i < path_sv.size && i < 4096; ++i)
         {
             buf[i] = path[i];
+        }
+
+        if(buf[i - 1] == '\n')
+        {
+            buf[i - 1] = '\0';
         }
         buf[i] = '\0';
     }

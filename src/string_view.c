@@ -59,7 +59,7 @@ StringView cstr_sv
     }
 
     uint32_t i = 0;
-    for(; cstr[i] != '\0'; ++i)
+    for(; cstr[i] != '\0' && cstr[i] != '\n'; ++i)
     {
     }
 

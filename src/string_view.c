@@ -247,6 +247,21 @@ uint8_t sv_same
     StringView first,
     StringView second
 ){
+    if(!first.data)
+    {
+        fprintf(stderr, "\033[33;1mWARNING: passed nullptr as first.data.\033[0m\n");
+        if(second.data)
+        {
+            return SV_DIFFERENT;
+        }
+        return 0;
+    }
+    else if(!second.data)
+    {
+        fprintf(stderr, "\033[33;1mWARNING: passed nullptr as second.data.\033[0m\n");
+        return SV_DIFFERENT;
+    }
+
     if((first.size == second.size && first.data == second.data) ||
        (!first.size && !second.size)
     ){

@@ -28,7 +28,7 @@ uint8_t pdVerifyPath
 StringView pdExpandPath
 (
     StringView path,
-    char*      buf
+    char       *buf
 ){
     if(!path.data)
     {

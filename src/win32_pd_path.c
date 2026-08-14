@@ -181,15 +181,12 @@ StringView pdListFiles
         return (StringView){0};
     }
 
-    uint32_t listSize = 0;
-
     while(FindNextFileA(foundHandle, &fileData))
     {
         uint8_t length = 0;
         for(; length < 255 && fileData.cFileName[length] != '\0'; ++length)
         {
         }
-        listSize += length + 1;
     }
 
     FindClose(foundHandle);

@@ -6,36 +6,13 @@
 
 #define PD_ARR_INIT_SIZE 32
 
-typedef struct DynArr
+typedef struct ArrayHeader
 {
     void     *mem;
     size_t   size;
     size_t   cap;
     uint16_t typeSize;
 }
-DynArr;
-
-extern void pdPushArr
-(
-    DynArr *dyn,
-    void   *element
-);
-
-extern void pdRemoveArr
-(
-    DynArr *dyn,
-    void   *element
-);
-
-extern void pdReserveArr
-(
-    DynArr   *dyn,
-    uint64_t count
-);
-
-extern void pdClearArr
-(
-    DynArr *dyn
-);
+ArrayHeader;
 
 #endif

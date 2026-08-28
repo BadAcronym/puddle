@@ -2,62 +2,67 @@
 
 #include "dynamic_array.h"
 
-void pdPushArr
-(
-    DynArr *dyn,
-    void   *element
-){
-    if(!dyn)
-    {
-        fprintf(stderr, "\033[31;1mERROR: cannot push to nullptr Dynamic Array."
-                "\033[0m\n");
-        return;
-    }
-    else if(!dyn->typeSize)
-    {
-        fprintf(stderr, "\033[31;1mERROR: typeSize cannot be NULL.\033[0m\n");
-        return;
-    }
+// beware of not passing a pointer in arr that does not
+// have the array header at ptr - 1.
+#define pdReserveArr(arr, requested)                                      \
+do                                                                        \
+{                                                                         \
+    if(arr && (requested) < arr.cap)                                      \
+    {                                                                     \
+        break;                                                            \
+    }                                                                     \
+                                                                          \
+    ArrayHeader *header = 0;                                              \
+    if(arr)                                                               \
+    {                                                                     \
+        header = (ArrayHeader*)arr - 1;                                   \
+    }                                                                     \
+                                                                          \
+    size_t alloc = PD_ARR_INIT_SIZE;                                      \
+    if(header && header.cap)                                              \
+    {                                                                     \
+        alloc = header.cap;                                               \
+    }                                                                     \
+                                                                          \
+    if(alloc < (requested))                                               \
+    {                                                                     \
+        alloc = (requested);                                              \
+    }                                                                     \
+                                                                          \
+    header = realloc(header, alloc * sizeof(*arr) + sizeof(ArrayHeader)); \
+    header->cap = allocated;                                              \
+    arr = (void*)(header + 1);                                            \
+}                                                                         \
+while(0)
 
-    if(!dyn->cap)
-    {
-        // TODO: alloc
-    }
-    else if(dyn->size > dyn->cap - 1)
-    {
-        // TODO: realloc to dyn->cap * 2
-    }
+// #define pdPushArr(arr, element) \
+// do \
+// {  \
+    // TODO: reserve size * 2 if size not big enough
+    // if(!arr)
+    // {
+    //     fprintf(stderr, "\033[31;1mERROR: cannot push to nullptr Dynamic Array."
+    //             "\033[0m\n");
+    //     return;
+    // }
 
     // TODO: push element
-}
+// } \
+// while(0)
 
-void pdRemoveArr
-(
-    DynArr *dyn,
-    void   *element
-){
-    for(uint64_t i = 0; i < dyn->size; ++i)
-    {
-        // TODO: figure out how to do this without GNU extensions or C++ templates
-        if(dyn->mem + (i * dyn->typeSize))
-        {
-            // TODO: remove specified element from array, which means moving the
-            // tail end over it
-        }
-    }
-}
+// void pdRemoveArr
+// (
+//     DynArr *arr,
+//     void   *element
+// ){
+    // TODO: remove specified element from array, which means moving the
+    // tail end over it
+    // TODO: specify by index, not by value
+// }
 
-void pdReserveArr
-(
-    DynArr   *dyn,
-    uint64_t count
-){
-    // TODO: alloc like push
-}
-
-void pdClearArr
-(
-    DynArr *dyn
-){
+// void pdClearArr
+// (
+//     DynArr *arr
+// ){
     // TODO: free? set to 0? we'll see
-}
+// }

@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "string_view.h"
+#include "dynamic_array.h"
 
 int main
 (
@@ -704,6 +705,11 @@ int main
         fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_sort_by_delim unit test with "
                 "index = 3.\033[0m\n");
     }
+
+    // TODO: test dyn arr reserve!
+
+    float *dynArr = 0;
+    pdReserveArr(dynArr, 10);
 
     if(!num_failed)
     {

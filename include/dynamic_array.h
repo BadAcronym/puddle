@@ -10,7 +10,7 @@ typedef struct DynArr
 {
     void     *mem;
     size_t   size;
-    size_t   reserved;
+    size_t   cap;
     uint16_t typeSize;
 }
 DynArr;

@@ -19,14 +19,16 @@ void pdPushArr
         return;
     }
 
-    if(!dyn->reserved)
+    if(!dyn->cap)
     {
         // TODO: alloc
     }
-    else if(dyn->size + 1 > dyn->reserved)
+    else if(dyn->size > dyn->cap - 1)
     {
-        // TODO: realloc to dyn->reserved * 2
+        // TODO: realloc to dyn->cap * 2
     }
+
+    // TODO: push element
 }
 
 void pdRemoveArr
@@ -34,8 +36,15 @@ void pdRemoveArr
     DynArr *dyn,
     void   *element
 ){
-    // TODO: remove specified element from array, which means moving the tail end over
-    // it
+    for(uint64_t i = 0; i < dyn->size; ++i)
+    {
+        // TODO: figure out how to do this without GNU extensions or C++ templates
+        if(dyn->mem + (i * dyn->typeSize))
+        {
+            // TODO: remove specified element from array, which means moving the
+            // tail end over it
+        }
+    }
 }
 
 void pdReserveArr

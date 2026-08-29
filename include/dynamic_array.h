@@ -9,64 +9,68 @@
 
 typedef struct ArrayHeader
 {
-    void     *mem;
-    size_t   size;
-    size_t   cap;
-    uint16_t typeSize;
+    size_t size;
+    size_t cap;
 }
 ArrayHeader;
 
-// beware of not passing a pointer in arr that does not
-// have the array header at ptr - 1.
-#define pdReserveArr(arr, requested)                                      \
-do                                                                        \
-{                                                                         \
-    if(arr && (requested) < ((ArrayHeader*)(arr - 1))->cap)               \
-    {                                                                     \
-        break;                                                            \
-    }                                                                     \
-                                                                          \
-    ArrayHeader *header = 0;                                              \
-    if(arr)                                                               \
-    {                                                                     \
-        header = (ArrayHeader*)arr - 1;                                   \
-    }                                                                     \
-                                                                          \
-    size_t alloc = requested;                                             \
-    if(!requested)                                                        \
-    {                                                                     \
-        alloc = PD_ARR_INIT_SIZE;                                         \
-    }                                                                     \
-    if(header && header->cap)                                             \
-    {                                                                     \
-        alloc = header->cap;                                              \
-    }                                                                     \
-                                                                          \
-    if(alloc < (requested))                                               \
-    {                                                                     \
-        alloc = (requested);                                              \
-    }                                                                     \
-                                                                          \
-    header = realloc(header, alloc * sizeof(*arr) + sizeof(ArrayHeader)); \
-    header->cap = alloc;                                                  \
-    arr = (void*)(header + 1);                                            \
-}                                                                         \
+#define pdArr(type) type *
+#define pdArrHeader(arr) ((ArrayHeader*)(arr - 1))
+#define pdArrSize(arr) (pdArrHeader(arr)->size)
+#define pdArrCap(arr)  (pdArrHeader(arr)->cap)
+
+// make sure to pass a pointer that is either null, or a correctly constructed array
+// that has an array header at ptr - 1.
+#define pdArrReserve(arr, requested)                                            \
+do                                                                              \
+{                                                                               \
+    if(arr && (requested) < pdArrCap(arr))                                      \
+    {                                                                           \
+        break;                                                                  \
+    }                                                                           \
+                                                                                \
+    ArrayHeader *header = 0;                                                    \
+    if(arr)                                                                     \
+    {                                                                           \
+        header = pdArrHeader(arr);                                              \
+    }                                                                           \
+                                                                                \
+    size_t alloc = (requested);                                                 \
+    if(requested <= 0)                                                          \
+    {                                                                           \
+        alloc = PD_ARR_INIT_SIZE;                                               \
+    }                                                                           \
+                                                                                \
+    if(header && header->cap)                                                   \
+    {                                                                           \
+        alloc = header->cap;                                                    \
+    }                                                                           \
+                                                                                \
+    header = realloc(header, alloc * sizeof(*arr) + sizeof(ArrayHeader));       \
+    header->cap = alloc;                                                        \
+    arr = (void*)(header + 1);                                                  \
+}                                                                               \
 while(0)
 
-// #define pdPushArr(arr, element) \
-// do \
-// {  \
-    // TODO: reserve size * 2 if size not big enough
-    // if(!arr)
-    // {
-    //     fprintf(stderr, "\033[31;1mERROR: cannot push to nullptr Dynamic Array."
-    //             "\033[0m\n");
-    //     return;
-    // }
-
-    // TODO: push element
-// } \
-// while(0)
+#define pdArrPush(arr, elem)                                                \
+do                                                                          \
+{                                                                           \
+    size_t ogSize = 0;                                                      \
+                                                                            \
+    if(!arr)                                                                \
+    {                                                                       \
+        pdArrReserve(arr, PD_ARR_INIT_SIZE);                                \
+    }                                                                       \
+    else if(pdArrSize(arr) + 1 > pdArrCap(arr))                             \
+    {                                                                       \
+        pdArrReserve(arr, pdArrCap(arr) * 2);                               \
+    }                                                                       \
+                                                                            \
+    arr[pdArrSize(arr)] = elem;                                             \
+    pdArrSize(arr)++;                                                       \
+                                                                            \
+}                                                                           \
+while(0)
 
 // void pdRemoveArr
 // (

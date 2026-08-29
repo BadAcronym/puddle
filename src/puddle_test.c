@@ -706,29 +706,27 @@ int main
                 "index = 3.\033[0m\n");
     }
 
-    // TODO: test dyn arr reserve!
-
-    float testVals[10] =
+    float testValsFloat[10] =
     {
         0.1f, 0.22f, 0.333f, 0.4444f, 0.5f,
         69.120f, 111001.12f, 199.99999f, 2.13f, 3.149175f
     };
 
-    float *arr = 0;
+    float *arr_float = 0;
     for(uint32_t i = 0; i < 10; ++i)
     {
-        pdArrPush(arr, testVals[i]);
+        pdArrPush(arr_float, testValsFloat[i]);
     }
 
     uint8_t failed = 0;
-    for(uint32_t i = 0; i < pdArrSize(arr); ++i)
+    for(uint32_t i = 0; i < pdArrSize(arr_float); ++i)
     {
-        if(testVals[i] != arr[i])
+        if(testValsFloat[i] != arr_float[i])
         {
             fprintf(stderr, "\033[31;1;1mERROR: pdArrPush FAILED unit test with type "
                     "float.\033[0m\n");
             fprintf(stderr, "expected: %f\ngot: %f\n",
-                    testVals[i], arr[i]);
+                    testValsFloat[i], arr_float[i]);
             ++num_failed;
             failed = 1;
         }
@@ -738,6 +736,40 @@ int main
         fprintf(stderr, "\033[32;1;1mSUCCESS: passed pdPushArr unit test with type "
                 "float.\033[0m\n");
     }
+    pdArrFree(arr_float);
+
+    uint32_t testVals32[10] =
+    {
+        65535, 10597, 19, 192856, 19285,
+        198, 19285615, 918, 19285, 1509
+    };
+
+    pdArr(uint32_t) arr_uint;
+    pdArrReserve(arr_uint, 5);
+    for(uint32_t i = 0; i < 10; ++i)
+    {
+        pdArrPush(arr_uint, testVals32[i]);
+    }
+
+    failed = 0;
+    for(uint32_t i = 0; i < pdArrSize(arr_uint); ++i)
+    {
+        if(testVals32[i] != arr_uint[i])
+        {
+            fprintf(stderr, "\033[31;1;1mERROR: pdArrPush FAILED unit test with type "
+                    "uint32_t.\033[0m\n");
+            fprintf(stderr, "expected: %u\ngot: %u\n",
+                    testVals32[i], arr_uint[i]);
+            ++num_failed;
+            failed = 1;
+        }
+    }
+    if(!failed)
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed pdPushArr unit test with type "
+                "uint32_t.\033[0m\n");
+    }
+    pdArrFree(arr_uint);
 
     if(!num_failed)
     {

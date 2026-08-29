@@ -708,8 +708,36 @@ int main
 
     // TODO: test dyn arr reserve!
 
-    float *dynArr = 0;
-    pdReserveArr(dynArr, 10);
+    float testVals[10] =
+    {
+        0.1f, 0.22f, 0.333f, 0.4444f, 0.5f,
+        69.120f, 111001.12f, 199.99999f, 2.13f, 3.149175f
+    };
+
+    float *arr = 0;
+    for(uint32_t i = 0; i < 10; ++i)
+    {
+        pdArrPush(arr, testVals[i]);
+    }
+
+    uint8_t failed = 0;
+    for(uint32_t i = 0; i < pdArrSize(arr); ++i)
+    {
+        if(testVals[i] != arr[i])
+        {
+            fprintf(stderr, "\033[31;1;1mERROR: pdArrPush FAILED unit test with type "
+                    "float.\033[0m\n");
+            fprintf(stderr, "expected: %f\ngot: %f\n",
+                    testVals[i], arr[i]);
+            ++num_failed;
+            failed = 1;
+        }
+    }
+    if(!failed)
+    {
+        fprintf(stderr, "\033[32;1;1mSUCCESS: passed pdPushArr unit test with type "
+                "float.\033[0m\n");
+    }
 
     if(!num_failed)
     {

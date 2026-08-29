@@ -15,7 +15,7 @@ typedef struct ArrayHeader
 ArrayHeader;
 
 #define pdArr(type) type *
-#define pdArrHeader(arr) ((ArrayHeader*)(arr - 1))
+#define pdArrHeader(arr) ((ArrayHeader*)arr - 1)
 #define pdArrSize(arr) (pdArrHeader(arr)->size)
 #define pdArrCap(arr)  (pdArrHeader(arr)->cap)
 

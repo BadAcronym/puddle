@@ -14,7 +14,9 @@ typedef struct ArrayHeader
 }
 ArrayHeader;
 
+// take care to declare 0, not some garbage pointer.
 #define pdArr(type) type *
+
 #define pdArrHeader(arr) ((ArrayHeader*)arr - 1)
 #define pdArrSize(arr) (pdArrHeader(arr)->size)
 #define pdArrCap(arr)  (pdArrHeader(arr)->cap)
@@ -72,7 +74,6 @@ do                                                                              
                                                                                 \
     arr[pdArrSize(arr)] = elem;                                                 \
     pdArrSize(arr)++;                                                           \
-                                                                                \
 }                                                                               \
 while(0)
 

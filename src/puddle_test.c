@@ -744,7 +744,7 @@ int main
         198, 19285615, 918, 19285, 1509
     };
 
-    pdArr(uint32_t) arr_uint;
+    pdArr(uint32_t) arr_uint = 0;
     pdArrReserve(arr_uint, 5);
     for(uint32_t i = 0; i < 10; ++i)
     {

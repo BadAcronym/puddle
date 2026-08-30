@@ -80,12 +80,19 @@ while(0)
 #define pdArrRemove(arr, index)                                                        \
 do                                                                                     \
 {                                                                                      \
-    if(!arr || !pdArrSize(arr) || index > pdArrSize(arr) - 1)                          \
+    if(!arr || !pdArrSize(arr) || (index) > pdArrSize(arr) - 1)                        \
     {                                                                                  \
         break;                                                                         \
     }                                                                                  \
                                                                                        \
-    memmove(&arr[index], &arr[index + 1], (pdArrSize(arr) - (index)) * sizeof(*arr));  \
+    if(index == pdArrSize(arr) - 1)                                                    \
+    {                                                                                  \
+        arr[index] = 0;                                                                \
+        break;                                                                         \
+    }                                                                                  \
+                                                                                       \
+    size_t moveSize = (pdArrSize(arr) - (index) - 1) * sizeof(*arr);                   \
+    memmove(&arr[(index)], &arr[(index) + 1], moveSize);                               \
     --pdArrSize(arr);                                                                  \
 }                                                                                      \
 while(0)                                                                               \

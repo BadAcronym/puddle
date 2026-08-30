@@ -25,60 +25,69 @@ ArrayHeader;
 
 // make sure to pass a pointer that is either null, or a correctly constructed array
 // that has an array header at ptr - 1.
-#define pdArrReserve(arr, requested)                                            \
-do                                                                              \
-{                                                                               \
-    if(arr && (requested) < pdArrCap(arr))                                      \
-    {                                                                           \
-        break;                                                                  \
-    }                                                                           \
-                                                                                \
-    ArrayHeader *header = 0;                                                    \
-    uint8_t     init    = 0;                                                    \
-    if(arr)                                                                     \
-    {                                                                           \
-        header = pdArrHeader(arr);                                              \
-    }                                                                           \
-    else                                                                        \
-    {                                                                           \
-        init = 1;                                                               \
-    }                                                                           \
-                                                                                \
-    size_t alloc = (requested);                                                 \
-    if(requested <= 0)                                                          \
-    {                                                                           \
-        alloc = PD_ARR_INIT_SIZE;                                               \
-    }                                                                           \
-                                                                                \
-    header = realloc(header, alloc * sizeof(*arr) + sizeof(ArrayHeader));       \
-    header->cap = alloc;                                                        \
-    if(init)                                                                    \
-    {                                                                           \
-        header->size = 0;                                                       \
-    }                                                                           \
-    arr = (void*)(header + 1);                                                  \
-}                                                                               \
+#define pdArrReserve(arr, requested)                                                   \
+do                                                                                     \
+{                                                                                      \
+    if(arr && (requested) < pdArrCap(arr))                                             \
+    {                                                                                  \
+        break;                                                                         \
+    }                                                                                  \
+                                                                                       \
+    ArrayHeader *header = 0;                                                           \
+    uint8_t     init    = 0;                                                           \
+    if(arr)                                                                            \
+    {                                                                                  \
+        header = pdArrHeader(arr);                                                     \
+    }                                                                                  \
+    else                                                                               \
+    {                                                                                  \
+        init = 1;                                                                      \
+    }                                                                                  \
+                                                                                       \
+    size_t alloc = (requested);                                                        \
+    if(requested <= 0)                                                                 \
+    {                                                                                  \
+        alloc = PD_ARR_INIT_SIZE;                                                      \
+    }                                                                                  \
+                                                                                       \
+    header = realloc(header, alloc * sizeof(*arr) + sizeof(ArrayHeader));              \
+    header->cap = alloc;                                                               \
+    if(init)                                                                           \
+    {                                                                                  \
+        header->size = 0;                                                              \
+    }                                                                                  \
+    arr = (void*)(header + 1);                                                         \
+}                                                                                      \
 while(0)
 
-#define pdArrPush(arr, elem)                                                    \
-do                                                                              \
-{                                                                               \
-    if(!arr)                                                                    \
-    {                                                                           \
-        pdArrReserve(arr, PD_ARR_INIT_SIZE);                                    \
-    }                                                                           \
-    else if(pdArrSize(arr) + 1 > pdArrCap(arr))                                 \
-    {                                                                           \
-        pdArrReserve(arr, pdArrCap(arr) * 2);                                   \
-    }                                                                           \
-                                                                                \
-    arr[pdArrSize(arr)] = elem;                                                 \
-    pdArrSize(arr)++;                                                           \
-}                                                                               \
+#define pdArrPush(arr, elem)                                                           \
+do                                                                                     \
+{                                                                                      \
+    if(!arr)                                                                           \
+    {                                                                                  \
+        pdArrReserve(arr, PD_ARR_INIT_SIZE);                                           \
+    }                                                                                  \
+    else if(pdArrSize(arr) + 1 > pdArrCap(arr))                                        \
+    {                                                                                  \
+        pdArrReserve(arr, pdArrCap(arr) * 2);                                          \
+    }                                                                                  \
+                                                                                       \
+    arr[pdArrSize(arr)] = elem;                                                        \
+    ++pdArrSize(arr);                                                                  \
+}                                                                                      \
 while(0)
 
-// TODO: remove specified element from array, which means moving the
-// tail end over it
-// #define pdRemoveArr(arr, index)
+#define pdArrRemove(arr, index)                                                        \
+do                                                                                     \
+{                                                                                      \
+    if(!arr || !pdArrSize(arr) || index > pdArrSize(arr) - 1)                          \
+    {                                                                                  \
+        break;                                                                         \
+    }                                                                                  \
+                                                                                       \
+    memmove(&arr[index], &arr[index + 1], (pdArrSize(arr) - (index)) * sizeof(*arr));  \
+    --pdArrSize(arr);                                                                  \
+}                                                                                      \
+while(0)                                                                               \
 
 #endif

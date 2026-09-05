@@ -5,9 +5,8 @@ The only binary is currently for testing, but static libraries may join this rep
 future.
 
 To build the binary from source, you'll need:
-+ `premake5`
++ `gcc or clang`
 + `mold` (`mingw`'s `lld` on windows)
-+ `clang` (`mingw`'s `clang` on windows)
 + `bash` (`pwsh` on windows)
 
 And simply run:

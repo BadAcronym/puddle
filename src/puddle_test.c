@@ -2,6 +2,7 @@
 
 #include "string_view.h"
 #include "dynamic_array.h"
+#include "pd_path.h"
 
 int main
 (
@@ -779,6 +780,9 @@ int main
     {
         printf("\033[31;1;1m\nERROR: failed %i unit tests.\033[0m\n", num_failed);
     }
+
+    char buf[4096 * 12];
+    pdListFiles(cstr_sv("."), buf);
 
     return num_failed;
 }

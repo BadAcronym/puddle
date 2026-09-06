@@ -177,7 +177,7 @@ StringView pdListFiles
     list.size   = 0;
     uint32_t offset = 0;
 
-    free(dir);
+    free((void*)dir);
     dir = opendir(path);
 
     while((ent = readdir(dir)))
@@ -204,7 +204,7 @@ StringView pdListFiles
 
     result.data = buf;
 
-    free(dir);
+    free((void*)dir);
 
     return result;
 }

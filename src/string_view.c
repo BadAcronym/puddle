@@ -520,10 +520,10 @@ void sv_sort_by_delim
         }
     }
 
-    uint32_t offset = 0;
+    size_t offset = 0;
     for(uint32_t i = 0; i < count; ++i)
     {
-        for(uint32_t j = 0; j < sv_buffer[i].size; ++j)
+        for(size_t j = 0; j < sv_buffer[i].size; ++j)
         {
             buf[offset + j] = sv_buffer[i].data[j];
         }

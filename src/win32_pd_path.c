@@ -1,7 +1,7 @@
 #include "pd_path.h"
 
 #include <sys/stat.h>
-#include <windows.h>
+#include <Windows.h>
 #include <direct.h>
 
 uint8_t pdVerifyPath

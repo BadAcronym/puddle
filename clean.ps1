@@ -1,18 +1,16 @@
 Write-Host "cleaning up puddle builds..." -Fore Yellow
 
-if(Test-Path "./build")
-{
-    rm "./build/" -Recurse -Force
-}
-
 if(Test-Path "./bin")
 {
     rm "./bin/" -Recurse -Force
 }
 
-if(Test-Path "./obj")
+foreach($file in (gci *.o))
 {
-    rm "./obj/" -Recurse -Force
+    if(Test-Path $file)
+    {
+        Remove-Item $file
+    }
 }
 
 Write-Host "cleaned puddle!`n" -Fore Green

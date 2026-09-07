@@ -16,18 +16,20 @@ if($build -eq $null -or $build -eq "")
 
 $args_always=@("-DBUILD_WINDOWS",
 "src/win32_pd_path.c", "src/puddle_test.c", "src/string_view.c",
-"-Iinclude",
+"-Iinclude", "-std=c99",
 "-Wextra", "-Wall", "-Wpedantic", "-Wconversion", "-Wshadow", "-Wsign-compare",
-"-Wtype-limits", "-Wunused")
+"-Wtype-limits", "-Wunused",
+"-Wno-unsafe-buffer-usage", "-Wno-declaration-after-statement", "-Wno-vla",
+"-Wno-implicit-void-ptr-cast")
 
 $args_release=@("-O2")
 
 $args_debug=@("-DDEBUG", "-gcodeview", "-O0")
-$args_debug_cl=@("/DEFINE:DEBUG", "/Zi", "/O0")
+$args_debug_cl=@("/DDEBUG", "/Zi", "/Od")
 
-$args_asan=$args_debug_cl+@("/DEFINE:ASAN", "/fsanitize=address",
-"/link", "/SUBSYSTEM:CONSOLE", "clang_rt.asan_dynamic-x86_64.lib",
-"clang_rt.asan_dynamic_runtime_thunk-x86_64.lib")
+$args_asan=$args_debug_cl+@("-oa.exe", "/clang:-std=c99", "/DASAN",
+"/fsanitize=address", "/MD",
+"/link", "/SUBSYSTEM:CONSOLE")
 
 function compile
 {
@@ -35,14 +37,18 @@ function compile
 
     Write-Host "identifying a compiler..."
 
-    if(Get-Command clang -ErrorAction SilentlyContinue)
+    if($build -eq "asan")
+    {
+        if(-Not(Get-Command clang -ErrorAction SilentlyContinue))
+        {
+            Write-Host "ERROR: clang-cl needed for address sanitization." -Fore Red
+        }
+        $script:compiler="clang-cl"
+    }
+    elseif(Get-Command clang -ErrorAction SilentlyContinue)
     {
         Write-Host "found clang."
         $script:compiler="clang"
-        if($build -eq "asan")
-        {
-            $script:compiler="clang-cl"
-        }
     }
     elseif(Get-Command gcc -ErrorAction SilentlyContinue)
     {
@@ -71,7 +77,12 @@ function compile
         Write-Host "`nERROR: $script:compiler failed to compile puddle.`n" -Fore Red
         exit -1
     }
-    mv ./a.exe ./bin/$build/puddletest.exe
+    Move-Item ./a.exe ./bin/$build/puddletest.exe -Force
+    if($build -eq "release")
+    {
+        return;
+    }
+    Move-Item ./a.pdb ./bin/$build/puddletest.pdb -Force
 }
 
 if($build -eq "release")

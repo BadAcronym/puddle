@@ -1,4 +1,5 @@
 #include "pd_path.h"
+#include "pd_print_macros.h"
 
 #include <sys/stat.h>
 #include <Windows.h>
@@ -50,8 +51,7 @@ StringView pdExpandPath
         home = getenv("USERPROFILE");
         if(!home)
         {
-            fprintf(stderr, "\033[31mERROR: couldn't resolve HOME or USERPROFILE."
-                    "\033[0m\n");
+            PD_ERROR("couldn't resolve neither $env:HOME nor $env:USERPROFILE.");
             return(StringView){0};
         }
     }
@@ -177,7 +177,7 @@ StringView pdListFiles
     foundHandle = FindFirstFileA(winPath, &fileData);
     if(foundHandle == INVALID_HANDLE_VALUE)
     {
-        fprintf(stderr, "\n\033[31;1;7mERROR: failed to open directory.\033[0m\n");
+        PD_ERROR("failed to open directory to enumerate files: '%s'", winPath);
         return (StringView){0};
     }
 

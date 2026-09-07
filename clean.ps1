@@ -13,4 +13,20 @@ foreach($file in (gci *.o))
     }
 }
 
+foreach($file in (gci *.exe))
+{
+    if(Test-Path $file)
+    {
+        Remove-Item $file
+    }
+}
+
+foreach($file in (gci *.pdb))
+{
+    if(Test-Path $file)
+    {
+        Remove-Item $file
+    }
+}
+
 Write-Host "cleaned puddle!`n" -Fore Green

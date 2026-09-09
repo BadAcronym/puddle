@@ -17,6 +17,7 @@ src/linux_pd_path.c \
 src/puddle_test.c \
 src/string_view.c \
 -Iinclude/ \
+-std=c99 \
 -Wextra -Wall -Wpedantic -Wconversion -Wshadow -Wsign-compare -Wtype-limits -Wunused \
 -fuse-ld=mold"
 

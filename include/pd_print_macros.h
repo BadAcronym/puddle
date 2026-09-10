@@ -26,7 +26,15 @@
 #define SELECT_10TH(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, ...) a10
 
 #define PD_ERROR(...) \
-        fprintf(stderr, "\n\033[31;1m" __LOCATION__ "\n\033[31;1;7mERROR: " \
+        fprintf(stderr, "\n\033[31;1m" __LOCATION__ "\033[31;1;7m\nERROR: " \
+                FIRST(__VA_ARGS__) "\033[0m\n" REST(__VA_ARGS__))
+
+#define PD_FAIL(...) \
+        fprintf(stderr, "\n\033[31;1m" __LOCATION__ "\033[31;1;7m\nFAIL: " \
+                FIRST(__VA_ARGS__) "\033[0m\n" REST(__VA_ARGS__))
+
+#define PD_SUCCESS(...) \
+        fprintf(stdout, "\033[32;1;1mSUCCESS: " \
                 FIRST(__VA_ARGS__) "\033[0m\n" REST(__VA_ARGS__))
 
 #define PD_WARN(...) \

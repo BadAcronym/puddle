@@ -3,6 +3,7 @@
 #include "string_view.h"
 #include "dynamic_array.h"
 #include "pd_path.h"
+#include "pd_print_macros.h"
 
 int main
 (
@@ -28,72 +29,61 @@ int main
 
     if(!sv_same(conv_src, conv_test2))
     {
-        fprintf(stderr, "\033[31;1;1mERROR: sv_cstr FAILED.\033[0m\n");
-        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"", ARG_SV(conv_src),
-                ARG_SV(conv_test2));
+        PD_FAIL("sv_cstr. expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
+                 ARG_SV(conv_src), ARG_SV(conv_test2));
         ++num_failed;
     }
     else
     {
-        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_cstr unit test.\033[0m\n");
+        PD_SUCCESS("passed sv_cstr unit test.");
     }
 
     if(!sv_same(substr, substr_test))
     {
-        fprintf(stderr, "\033[31;1;1mERROR: sv_substr FAILED.\033[0m\n");
-        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
+        PD_FAIL("sv_substr. expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
                 ARG_SV(substr_test), ARG_SV(substr));
-        fprintf(stderr, "\n%zu vs %zu", substr_test.size, substr.size);
+        PD_DEBUG("%zu vs %zu", substr_test.size, substr.size);
         ++num_failed;
     }
     else
     {
-        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_substr unit test.\033[0m\n");
+        PD_SUCCESS("passed sv_substr unit test.");
     }
 
     if(!sv_same(sub_test_0, sub_test_1))
     {
-        fprintf(stderr, "\033[31;1;1mERROR: sv_substr FAILED "
-                "on a single character.\033[0m\n");
-        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"", ARG_SV(sub_test_0),
-                ARG_SV(sub_test_1));
-        fprintf(stderr, "\n%zu vs %zu", sub_test_0.size, sub_test_1.size);
+        PD_FAIL("sv_substr. expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
+                ARG_SV(sub_test_0), ARG_SV(sub_test_1));
+        PD_DEBUG("%zu vs %zu", substr_test.size, substr.size);
         ++num_failed;
     }
     else
     {
-        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_substr on a single character."
-                "\033[0m\n");
+        PD_SUCCESS("passed sv_substr test on a single character.");
     }
 
     sv_trim(&test, 3, SV_LEFT);
     if(!sv_same(test, test_left))
     {
-        fprintf(stderr, "\033[31;1;1mERROR: sv_trim FAILED unit test "
-                "with SV_LEFT.\033[0m\n");
-        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"", ARG_SV(test_left),
-                ARG_SV(test));
+        PD_FAIL("sv_trim with SV_LEFT. expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
+                ARG_SV(test_left), ARG_SV(test));
         ++num_failed;
     }
     else
     {
-        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_trim unit test with SV_LEFT."
-                "\033[0m\n");
+        PD_SUCCESS("passed sv_trim with SV_LEFT.");
     }
 
     sv_trim(&test, 2, SV_RIGHT);
     if(!sv_same(test, test_right))
     {
-        fprintf(stderr, "\033[31;1;1mERROR: sv_trim FAILED unit test "
-                "with SV_RIGHT.\033[0m\n");
-        fprintf(stderr, "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"", ARG_SV(test_right),
-                ARG_SV(test));
+        PD_FAIL("sv_trim with SV_RIGHT. expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
+                ARG_SV(test_right), ARG_SV(test));
         ++num_failed;
     }
     else
     {
-        fprintf(stderr, "\033[32;1;1mSUCCESS: passed sv_trim unit test with SV_RIGHT."
-                "\033[0m\n");
+        PD_SUCCESS("passed sv_trim with SV_RIGHT.");
     }
 
     sv_trim(&test, 3, SV_BOTH);
@@ -772,13 +762,9 @@ int main
     }
     pdArrFree(arr_uint);
 
-    if(!num_failed)
+    if(num_failed)
     {
-        printf("\033[32;1;1m\nSUCCESS: all unit tests passed.\033[0m\n");
-    }
-    else
-    {
-        printf("\033[31;1;1m\nERROR: failed %i unit tests.\033[0m\n", num_failed);
+        PD_ERROR("failed %i unit tests.", num_failed);
     }
 
     char buf[4096 * 12];

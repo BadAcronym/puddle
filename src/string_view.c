@@ -1,4 +1,5 @@
 #include "string_view.h"
+#include "pd_print_macros.h"
 
 String cstr_str
 (
@@ -6,7 +7,7 @@ String cstr_str
 ){
     if(!cstr)
     {
-        fprintf(stderr, "\033[31;1mERROR: passed nullptr as cstr.\033[0m\n");
+        PD_ERROR("passed nullptr as cstr.");
         return (String){0};
     }
 
@@ -28,7 +29,7 @@ String cstr_str_cpy
 ){
     if(!cstr)
     {
-        fprintf(stderr, "\033[31;1mERROR: passed nullptr as cstr.\033[0m\n");
+        PD_ERROR("passed nullptr as cstr.");
         return (String){0};
     }
 
@@ -54,7 +55,7 @@ StringView cstr_sv
 ){
     if(!cstr)
     {
-        fprintf(stderr, "\033[31;1mERROR: passed nullptr as cstr.\033[0m\n");
+        PD_ERROR("passed nullptr as cstr.");
         return (StringView){0};
     }
 
@@ -77,12 +78,12 @@ StringView cstr_sv_cpy
 ){
     if(!buf)
     {
-        fprintf(stderr, "\033[31;1mERROR: passed nullptr as buf.\033[0m\n");
+        PD_ERROR("passed nullptr as buf.");
         return (StringView){0};
     }
     if(!cstr)
     {
-        fprintf(stderr, "\033[31;1mERROR: passed nullptr as cstr.\033[0m\n");
+        PD_ERROR("passed nullptr as cstr.");
         return (StringView){0};
     }
 
@@ -108,12 +109,12 @@ void sv_cstr
 ){
     if(!buf)
     {
-        fprintf(stderr, "\033[31;1mERROR: passed nullptr as buf.\033[0m\n");
+        PD_ERROR("passed nullptr as buf.");
         return;
     }
     if(!sv.data)
     {
-        fprintf(stderr, "\033[31;1mERROR: passed nullptr as sv.data.\033[0m\n");
+        PD_ERROR("passed nullptr as sv.data.");
         return;
     }
 
@@ -128,12 +129,12 @@ void str_cstr
 ){
     if(!buf)
     {
-        fprintf(stderr, "\033[31;1mERROR: passed nullptr as buf.\033[0m\n");
+        PD_ERROR("passed nullptr as buf.");
         return;
     }
     if(!str.data)
     {
-        fprintf(stderr, "\033[31;1mERROR: passed nullptr as str.data.\033[0m\n");
+        PD_ERROR("passed nullptr as str.data.");
         return;
     }
 
@@ -148,7 +149,7 @@ StringView str_sv_cpy
 ){
     if(!str.data)
     {
-        fprintf(stderr, "\033[31;1mERROR: passed nullptr as str.data.\033[0m\n");
+        PD_ERROR("passed nullptr as str.data.");
         return (StringView){0};
     }
 
@@ -172,8 +173,7 @@ StringView sv_substr
 ){
     if(start_pos > end_pos)
     {
-        fprintf(stderr, "\033[31;3;1mERROR: end_pos cannot be smaller than start_pos."
-                "\033[0m\n");
+        PD_ERROR("end_pos cannot be smaller than start_pos.");
         return(StringView)
         {
             .data = 0,
@@ -183,8 +183,7 @@ StringView sv_substr
 
     if(start_pos > sv->size)
     {
-        fprintf(stderr, "\033[31;3;1mERROR: start_pos cannot be larger than sv->size."
-                "\033[0m\n");
+        PD_ERROR("start_pos cannot be larger than sv->size.");
         return(StringView)
         {
             .data = 0,
@@ -217,7 +216,7 @@ void sv_trim
 ){
     if(direction > SV_BOTH)
     {
-        fprintf(stderr, "\033[31;3;1mERROR: unknown direction.\033[0m\n");
+        PD_ERROR("unknown direction.");
         return;
     }
 
@@ -249,7 +248,7 @@ uint8_t sv_same
 ){
     if(!first.data)
     {
-        fprintf(stderr, "\033[33;1mWARNING: passed nullptr as first.data.\033[0m\n");
+        PD_WARN("passed nullptr as first.data.");
         if(second.data)
         {
             return SV_DIFFERENT;
@@ -258,7 +257,7 @@ uint8_t sv_same
     }
     else if(!second.data)
     {
-        fprintf(stderr, "\033[33;1mWARNING: passed nullptr as second.data.\033[0m\n");
+        PD_WARN("passed nullptr as second.data.");
         return SV_DIFFERENT;
     }
 
@@ -477,7 +476,7 @@ void sv_sort_by_delim
 ){
     if(!buf)
     {
-        fprintf(stderr, "\033[31;1mERROR: passed nullptr as buf.\033[0m\n");
+        PD_ERROR("passed nullptr as buf.");
         return;
     }
 
@@ -586,12 +585,12 @@ uint8_t sv_is_lesser
 ){
     if(!first.data)
     {
-        fprintf(stderr, "\033[31;1mERROR: passed nullptr as first.data.\033[0m\n");
+        PD_WARN("passed nullptr as first.data.");
         return SV_GREATER;
     }
     else if(!second.data)
     {
-        fprintf(stderr, "\033[31;1mERROR: passed nullptr as second.data.\033[0m\n");
+        PD_WARN("passed nullptr as second.data.");
         return SV_GREATER;
     }
 
@@ -625,9 +624,14 @@ void sv_concat
     StringView second,
     char       *buf
 ){
-    if(!first.data || !second.data)
+    if(!first.data)
     {
-        fprintf(stderr, "\033[31mERROR: bad stringview data pointer.\033[0m\n");
+        PD_WARN("passed nullptr as first.data.");
+        return;
+    }
+    if(!second.data)
+    {
+        PD_WARN("passed nullptr as second.data.");
         return;
     }
 

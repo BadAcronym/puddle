@@ -1,4 +1,5 @@
 #include "pd_path.h"
+#include "pd_print_macros.h"
 
 uint8_t pdVerifyPath
 (
@@ -166,7 +167,7 @@ StringView pdListFiles
     }
     else
     {
-        fprintf(stderr, "\n\033[31;1;7mERROR: failed to open directory.\033[0m\n");
+        PD_ERROR("failed to open directory '%s'.", path);
         return(StringView){0};
     }
 

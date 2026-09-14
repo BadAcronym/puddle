@@ -1,6 +1,9 @@
 #ifndef PUDDLE_PRINT_MACROS
 #define PUDDLE_PRINT_MACROS
 
+#include <stdio.h>
+#include <stdlib.h>
+
 // (Paulo):
 // __LINE__ is a number, so we need to transform it into a string in the
 // pre-processor with some funky stuff.
@@ -44,8 +47,23 @@
 #ifdef DEBUG
     #define PD_DEBUG(...) \
             printf(FIRST(__VA_ARGS__) "\n" REST(__VA_ARGS__))
+
+    #define PD_ASSERT(condition, ...)                               \
+    do                                                              \
+    {                                                               \
+        if(condition)                                               \
+        {                                                           \
+            break;                                                  \
+        }                                                           \
+        fprintf(stderr, "\n\033[31;1m" __LOCATION__                 \
+                "\033[31;1;7m\nASSERTION FAILED: "                  \
+                FIRST(__VA_ARGS__) "\033[0m\n" REST(__VA_ARGS__));  \
+        exit(1);                                                    \
+    }                                                               \
+    while(0);
 #else
     #define PD_DEBUG(...)
+    #define PD_ASSERT(condition, ...)
 #endif
 
 #endif

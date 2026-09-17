@@ -66,4 +66,12 @@
     #define PD_ASSERT(condition, ...)
 #endif
 
+#ifdef TRACE
+    #define PD_TRACE(...) \
+            printf(FIRST(__VA_ARGS__) "\n" REST(__VA_ARGS__))
+#else
+    #define PD_TRACE(...)
+
+#endif
+
 #endif

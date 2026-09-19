@@ -66,6 +66,12 @@ StringView cstr_sv
     const char *cstr
 );
 
+// will copy a stringview into another stringview, calling `malloc` to do so.
+StringView sv_cpy
+(
+    StringView sv
+);
+
 // will create a stringview.
 // requires a buffer to be passed that can fit the contents.
 StringView cstr_sv_cpy
@@ -78,7 +84,8 @@ StringView cstr_sv_cpy
 // because we can't be sure that the stringview is going to be null-terminated.
 // will use the provided buffer pointer to write the data into.
 // The buffer needs to be at least `sv.size + 1` big.
-void sv_cstr
+// If no pointer is returned, it was unsuccessful.
+const char *sv_cstr
 (
     StringView sv,
     char       *buf

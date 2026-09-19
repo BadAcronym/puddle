@@ -102,7 +102,31 @@ StringView cstr_sv_cpy
     };
 }
 
-void sv_cstr
+StringView sv_cpy
+(
+    StringView sv
+){
+    if(!sv.data)
+    {
+        PD_ERROR("passed nullptr as sv.data.");
+        return (StringView){0};
+    }
+
+    char *buf = (char*)malloc(sv.size + 1);
+
+    for(uint32_t i = 0; i < sv.size; ++i)
+    {
+        buf[i] = sv.data[i];
+    }
+
+    return(StringView)
+    {
+        .data = buf,
+        .size = sv.size
+    };
+}
+
+const char *sv_cstr
 (
     StringView sv,
     char       *buf
@@ -110,16 +134,18 @@ void sv_cstr
     if(!buf)
     {
         PD_ERROR("passed nullptr as buf.");
-        return;
+        return 0;
     }
     if(!sv.data)
     {
         PD_ERROR("passed nullptr as sv.data.");
-        return;
+        return 0;
     }
 
     memcpy(buf, sv.data, sv.size);
     buf[sv.size] = '\0';
+
+    return buf;
 }
 
 void str_cstr

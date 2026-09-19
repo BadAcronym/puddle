@@ -618,7 +618,7 @@ uint8_t sv_is_lesser
     return SV_LESSER;
 }
 
-void sv_concat
+StringView sv_concat
 (
     StringView first,
     StringView second,
@@ -627,12 +627,12 @@ void sv_concat
     if(!first.data)
     {
         PD_WARN("passed nullptr as first.data.");
-        return;
+        return (StringView){0};
     }
     if(!second.data)
     {
         PD_WARN("passed nullptr as second.data.");
-        return;
+        return (StringView){0};
     }
 
     char first_data[first.size + 1];
@@ -644,4 +644,9 @@ void sv_concat
     memcpy((void*)buf, (void*)first_data, first.size);
     memcpy((void*)(buf + first.size), (void*)second_data, second.size);
     buf[first.size + second.size] = '\0';
+
+    StringView concat = {0};
+    concat.data = buf;
+    concat.size = first.size + second.size;
+    return concat;
 }

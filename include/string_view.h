@@ -212,7 +212,7 @@ uint8_t sv_is_lesser
 // "Hello " + "World"  = "Hello World".
 // will write into buf.
 // the `buf` pointer needs to have enough space for `first.size + second.size + 1`.
-void sv_concat
+StringView sv_concat
 (
     StringView first,
     StringView second,

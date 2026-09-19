@@ -353,6 +353,11 @@ const char *sv_find
         return 0;
     }
 
+    if(sv.size < pattern.size)
+    {
+        return 0;
+    }
+
     for(size_t i = 0; i < sv.size; ++i)
     {
         size_t j = 0;

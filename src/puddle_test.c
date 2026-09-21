@@ -445,7 +445,7 @@ int main
     StringView separate_sv = cstr_sv(":test1:2::third:fourth:five:::sixth_last!;");
     uint32_t   itemcount   = sv_count_by_delim(separate_sv, ':');
     StringView separated_list[itemcount];
-    sv_separate_by_delim(separate_sv, separated_list, ':');
+    sv_separate_by_delim(separate_sv, separated_list, ':', itemcount);
 
     if(itemcount != 6)
     {

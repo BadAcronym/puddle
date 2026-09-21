@@ -573,9 +573,10 @@ void sv_separate_by_delim
 (
     StringView sv,
     StringView *buf,
-    char       delim
+    char       delim,
+    uint64_t   bufsize
 ){
-    uint32_t   index  = 0;
+    uint64_t   index  = 0;
     const char *nextword_start = sv.data;
 
     if(sv.data == 0)
@@ -598,6 +599,12 @@ void sv_separate_by_delim
         for(; i < sv.size && sv.data[i] != delim; ++i)
         {
             ++substr_size;
+        }
+
+        if(index >= bufsize)
+        {
+            PD_ERROR("buffer size exceeded. consider allocating a larger buffer.");
+            return;
         }
 
         buf[index].data = nextword_start;

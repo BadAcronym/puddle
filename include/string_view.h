@@ -203,7 +203,8 @@ void sv_separate_by_delim
 (
     StringView sv,
     StringView *buf,
-    char       delim
+    char       delim,
+    uint64_t   bufsize
 );
 
 // will return `SV_LESSER` (1) if the first sv is alphabetically lesser to the

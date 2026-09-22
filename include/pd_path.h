@@ -8,7 +8,7 @@
     #include <dirent.h>
 #endif
 
-#include "string_view.h"
+#include "pd_string_view.h"
 
 #define PD_TYPE_ERROR     0
 #define PD_TYPE_FILE      1

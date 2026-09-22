@@ -15,7 +15,7 @@ if($build -eq $null -or $build -eq "")
 }
 
 $args_always=@("-DBUILD_WINDOWS",
-"src/win32_pd_path.c", "src/puddle_test.c", "src/string_view.c",
+"src/win32_pd_path.c", "src/puddle_test.c", "src/pd_string_view.c",
 "-Iinclude", "-std=c99",
 "-Wextra", "-Wall", "-Wpedantic", "-Wconversion", "-Wshadow", "-Wsign-compare",
 "-Wtype-limits", "-Wunused",

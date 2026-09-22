@@ -576,7 +576,7 @@ void sv_separate_by_delim
     char       delim,
     uint64_t   bufsize
 ){
-    uint64_t   index  = 0;
+    uint64_t   index           = 0;
     const char *nextword_start = sv.data;
 
     if(sv.data == 0)
@@ -603,7 +603,6 @@ void sv_separate_by_delim
 
         if(index >= bufsize)
         {
-            PD_ERROR("buffer size exceeded. consider allocating a larger buffer.");
             return;
         }
 

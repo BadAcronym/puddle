@@ -21,7 +21,17 @@ ArrayHeader;
 #define pdArrSize(arr) (pdArrHeader(arr)->size)
 #define pdArrCap(arr)  (pdArrHeader(arr)->cap)
 
-#define pdArrFree(arr) free(pdArrHeader(arr))
+#define pdArrFree(arr)                                                                 \
+do                                                                                     \
+{                                                                                      \
+    if(!arr)                                                                           \
+    {                                                                                  \
+        break;                                                                         \
+    }                                                                                  \
+                                                                                       \
+    free(pdArrHeader(arr));                                                            \
+}                                                                                      \
+while(0);                                                                              \
 
 // make sure to pass a pointer that is either null, or a correctly constructed array
 // that has an array header at ptr - 1.

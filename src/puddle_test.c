@@ -40,7 +40,7 @@ int main
     {
         PD_FAIL("pdSVSubstr. expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
                 ARG_SV(substr_test), ARG_SV(substr));
-        PD_DEBUG("%zu vs %zu", substr_test.size, substr.size);
+        PD_DEBUG("%"PRIu64" vs %"PRIu64"", substr_test.size, substr.size);
         ++num_failed;
     }
     else
@@ -52,7 +52,7 @@ int main
     {
         PD_FAIL("pdSVSubstr on a character. expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
                 ARG_SV(sub_test_0), ARG_SV(sub_test_1));
-        PD_DEBUG("%zu vs %zu", substr_test.size, substr.size);
+        PD_DEBUG("%"PRIu64" vs %"PRIu64"", substr_test.size, substr.size);
         ++num_failed;
     }
     else
@@ -178,8 +178,8 @@ int main
     {
         PD_FAIL("pdSVFind with findable pattern, 1.");
         PD_ERROR("returned an invalid pointer. StringView sv valid range: %p - %p.\n"
-                 "Returned pointer was: %p.\nThat's %li away from the start and "
-                 "%li away from the end.\n",
+                 "Returned pointer was: %p.\nThat's %"PRIi64" away from the start and "
+                 "%"PRIi64" away from the end.\n",
                  bigStr.data, bigStr.data + bigStr.size, found, bigStr.data - found,
                  bigStr.data + bigStr.size - found);
         ++num_failed;
@@ -187,7 +187,7 @@ int main
     else if(found != bigStr.data)
     {
         PD_FAIL("pdSVFind with findable pattern, 1.");
-        PD_ERROR("returned the wrong offset. Expected: 0, got: %u\033[0m\n",
+        PD_ERROR("returned the wrong offset. Expected: 0, got: %"PRIu32"\033[0m\n",
                 (uint32_t)(found - bigStr.data));
         ++num_failed;
     }
@@ -207,8 +207,8 @@ int main
     {
         PD_FAIL("pdSVFind with findable pattern, 2.");
         PD_ERROR("returned an invalid pointer. StringView sv valid range: %p - %p.\n"
-                 "Returned pointer was: %p.\nThat's %li away from the start and "
-                 "%li away from the end.\n",
+                 "Returned pointer was: %p.\nThat's %"PRIi64" away from the start and "
+                 "%"PRIi64" away from the end.\n",
                  bigStr.data, bigStr.data + bigStr.size, found, bigStr.data - found,
                  bigStr.data + bigStr.size - found);
         ++num_failed;
@@ -216,7 +216,7 @@ int main
     else if(found != bigStr.data + 19)
     {
         PD_FAIL("pdSVFind with findable pattern, 2.");
-        PD_ERROR("returned the wrong offset. Expected: 19, got: %u\033[0m\n",
+        PD_ERROR("returned the wrong offset. Expected: 19, got: %"PRIu32"\033[0m\n",
                 (uint32_t)(found - bigStr.data));
         ++num_failed;
     }
@@ -236,8 +236,8 @@ int main
     {
         PD_FAIL("pdSVFind with findable pattern, 3.");
         PD_ERROR("returned an invalid pointer. StringView sv valid range: %p - %p.\n"
-                 "Returned pointer was: %p.\nThat's %li away from the start and "
-                 "%li away from the end.\n",
+                 "Returned pointer was: %p.\nThat's %"PRIi64" away from the start and "
+                 "%"PRIi64" away from the end.\n",
                  bigStr.data, bigStr.data + bigStr.size, found, bigStr.data - found,
                  bigStr.data + bigStr.size - found);
         ++num_failed;
@@ -258,8 +258,8 @@ int main
     {
         PD_FAIL("pdSVFind with findable pattern, 4.");
         PD_ERROR("returned an invalid pointer. StringView sv valid range: %p - %p.\n"
-                 "Returned pointer was: %p.\nThat's %li away from the start and "
-                 "%li away from the end.\n",
+                 "Returned pointer was: %p.\nThat's %"PRIi64" away from the start and "
+                 "%"PRIi64" away from the end.\n",
                  bigStr.data, bigStr.data + bigStr.size, found, bigStr.data - found,
                  bigStr.data + bigStr.size - found);
         ++num_failed;
@@ -267,7 +267,7 @@ int main
     else if(found != bigStr.data + 43)
     {
         PD_FAIL("pdSVFind with findable pattern, 4.");
-        PD_ERROR("returned the wrong offset. Expected: 43, got: %u\033[0m\n",
+        PD_ERROR("returned the wrong offset. Expected: 43, got: %"PRIu32"\033[0m\n",
                 (uint32_t)(found - bigStr.data));
         ++num_failed;
     }
@@ -280,7 +280,7 @@ int main
     if(found != bigStr.data + 43)
     {
         PD_FAIL("pdSVFindLast with findable pattern, 1.");
-        PD_ERROR("returned the wrong offset. Expected: 43, got: %u\033[0m\n",
+        PD_ERROR("returned the wrong offset. Expected: 43, got: %"PRIu32"\033[0m\n",
                 (uint32_t)(found - bigStr.data));
         ++num_failed;
     }
@@ -294,7 +294,7 @@ int main
     if(found != duplStr.data + 19)
     {
         PD_FAIL("pdSVFindLast with findable pattern, 2.");
-        PD_ERROR("returned the wrong offset. Expected: 19, got: %u\033[0m\n",
+        PD_ERROR("returned the wrong offset. Expected: 19, got: %"PRIu32"\033[0m\n",
                 (uint32_t)(found - duplStr.data));
     }
     else
@@ -413,7 +413,7 @@ int main
     uint32_t result = pdSVCountByDelim(testPath, ';');
     if(result != 5)
     {
-        PD_FAIL("pdSVCountByDelim in testPath. expected: 5\ngot: %u\n", result);
+        PD_FAIL("pdSVCountByDelim in testPath. expected: 5\ngot: %"PRIu32"\n", result);
         ++num_failed;
     }
     else
@@ -424,7 +424,7 @@ int main
     result = pdSVCountByDelim(testPath2, ':');
     if(result != 3)
     {
-        PD_FAIL("pdSVCountByDelim in testPath2. expected: 3\ngot: %u\n", result);
+        PD_FAIL("pdSVCountByDelim in testPath2. expected: 3\ngot: %"PRIu32"\n", result);
         ++num_failed;
     }
     else
@@ -449,7 +449,8 @@ int main
 
     if(itemcount != 6)
     {
-        PD_FAIL("pdSVCountByDelim in separate_sv. expected: 6\ngot: %u\n", result);
+        PD_FAIL("pdSVCountByDelim in separate_sv. expected: 6\ngot: %"PRIu32"\n",
+                result);
         ++num_failed;
     }
 
@@ -507,8 +508,8 @@ int main
     result = pdSVCountByDelim(testPath_sorted, ':');
     if(result != 4)
     {
-        PD_FAIL("pdSVCountByDelim with testPath_sorted. "
-                "expected: 4\ngot: %u\n", result);
+        PD_FAIL("pdSVCountByDelim with testPath_sorted. expected: 4\ngot: %"
+                PRIu32"\n", result);
         ++num_failed;
     }
     else
@@ -662,8 +663,8 @@ int main
     {
         if(testVals32[i] != arr_uint[i])
         {
-            PD_FAIL("pdArrPush with type uint32_t. expected: %u\ngot: %u\n",
-                    testVals32[i], arr_uint[i]);
+            PD_FAIL("pdArrPush with type uint32_t. expected: %"PRIu32"\ngot: %"PRIu32
+                    "\n", testVals32[i], arr_uint[i]);
             ++num_failed;
             failed = 1;
         }

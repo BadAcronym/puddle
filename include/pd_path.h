@@ -2,6 +2,7 @@
 #define PD_PATH_H
 
 #include <stdint.h>
+#include <inttypes.h>
 
 #ifdef BUILD_LINUX
     #include <sys/stat.h>

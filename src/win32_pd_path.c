@@ -12,7 +12,7 @@ uint8_t pdVerifyPath
     struct _stat pathInfo;
 
     char path_cstr[path.size + 1];
-    sv_cstr(path, path_cstr);
+    pdSVCstr(path, path_cstr);
 
     if(_stat(path_cstr, &pathInfo))
     {
@@ -144,7 +144,7 @@ StringView pdParentPath
     pdExpandPath(path, buf);
     StringView expanded = cstr_sv(buf);
 
-    const char *lastdir = sv_find_last(sep, expanded);
+    const char *lastdir = pdSVFindLast(sep, expanded);
 
     expanded.size -= (size_t)(expanded.data - lastdir);
 

@@ -1,7 +1,20 @@
 #include "pd_string_view.h"
 #include "pd_print_macros.h"
 
-String cstr_str
+void pdSVFree
+(
+    StringView *sv
+){
+    if(sv->data)
+    {
+        free((void*)sv->data);
+    }
+
+    sv->data = 0;
+    sv->size = 0;
+}
+
+String pdCstrStr
 (
     char *cstr
 ){
@@ -23,7 +36,7 @@ String cstr_str
     };
 }
 
-String cstr_str_cpy
+String pdCstrStrCpy
 (
     char *cstr
 ){
@@ -49,7 +62,7 @@ String cstr_str_cpy
     };
 }
 
-StringView cstr_sv
+StringView pdCstrSV
 (
     const char *cstr
 ){
@@ -71,7 +84,7 @@ StringView cstr_sv
     };
 }
 
-StringView cstr_sv_cpy
+StringView pdCstrSVCpy
 (
     const char *cstr,
     char       *buf
@@ -102,7 +115,7 @@ StringView cstr_sv_cpy
     };
 }
 
-StringView sv_cpy
+StringView pdSVCpy
 (
     StringView sv
 ){
@@ -126,7 +139,7 @@ StringView sv_cpy
     };
 }
 
-const char *sv_cstr
+const char *pdSVCstr
 (
     StringView sv,
     char       *buf
@@ -148,7 +161,7 @@ const char *sv_cstr
     return buf;
 }
 
-void str_cstr
+void pdStrCstr
 (
     String str,
     char   *buf
@@ -168,7 +181,7 @@ void str_cstr
     buf[str.size] = '\0';
 }
 
-StringView str_sv_cpy
+StringView pdStrCstrCpy
 (
     String str,
     char   *buf
@@ -191,13 +204,13 @@ StringView str_sv_cpy
     };
 }
 
-StringView sv_substr
+StringView pdSVSubstr
 (
     StringView *sv,
-    size_t     start_pos,
-    size_t     end_pos
+    size_t     startPos,
+    size_t     endPos
 ){
-    if(start_pos > end_pos)
+    if(startPos > endPos)
     {
         PD_ERROR("end_pos cannot be smaller than start_pos.");
         return(StringView)
@@ -207,7 +220,7 @@ StringView sv_substr
         };
     }
 
-    if(start_pos > sv->size)
+    if(startPos > sv->size)
     {
         PD_ERROR("start_pos cannot be larger than sv->size.");
         return(StringView)
@@ -217,16 +230,16 @@ StringView sv_substr
         };
     }
 
-    if(end_pos > sv->size)
+    if(endPos > sv->size)
     {
-        end_pos = sv->size;
+        endPos = sv->size;
     }
 
     StringView result;
-    result.data = sv->data + start_pos;
-    result.size = sv->size - start_pos - (sv->size - end_pos);
+    result.data = sv->data + startPos;
+    result.size = sv->size - startPos - (sv->size - endPos);
 
-    if(start_pos == end_pos)
+    if(startPos == endPos)
     {
         result.size = 1;
     }
@@ -234,7 +247,7 @@ StringView sv_substr
     return result;
 }
 
-void sv_trim
+void pdSVTrim
 (
     StringView *sv,
     size_t     count,
@@ -267,7 +280,7 @@ void sv_trim
     }
 }
 
-uint8_t sv_same
+uint8_t pdSVSame
 (
     StringView first,
     StringView second
@@ -313,7 +326,7 @@ uint8_t sv_same
     return SV_DIFFERENT;
 }
 
-uint8_t sv_is_substr
+uint8_t pdSVIsSubstr
 (
     StringView first,
     StringView second
@@ -343,7 +356,7 @@ uint8_t sv_is_substr
     return SV_DIFFERENT;
 }
 
-const char *sv_find
+const char *pdSVFind
 (
     StringView pattern,
     StringView sv
@@ -378,7 +391,7 @@ const char *sv_find
     return 0;
 }
 
-const char *sv_find_last
+const char *pdSVFindLast
 (
     StringView pattern,
     StringView sv
@@ -410,15 +423,15 @@ const char *sv_find_last
     return current;
 }
 
-StringView sv_find_by_delim
+StringView pdSVFindByDelim
 (
     StringView sv,
     char       delim,
     uint32_t   index
 ){
-    StringView result          = {0};
-    uint32_t   delim_count     = 0;
-    const char *nextword_start = sv.data;
+    StringView result         = {0};
+    uint32_t   delimCount     = 0;
+    const char *nextwordStart = sv.data;
 
     if(sv.data == 0)
     {
@@ -432,30 +445,30 @@ StringView sv_find_by_delim
 
     for(uint64_t i = 0; i < sv.size; ++i)
     {
-        size_t substr_size = 0;
+        size_t substrSize = 0;
 
         if(sv.data[i] == delim)
         {
-            ++delim_count;
+            ++delimCount;
 
             for(; i < sv.size && sv.data[i] == delim; ++i)
             {
             }
 
-            nextword_start = sv.data + i;
+            nextwordStart = sv.data + i;
         }
 
-        if(delim_count == index)
+        if(delimCount == index)
         {
             for(; i < sv.size && sv.data[i] != delim; ++i)
             {
-                ++substr_size;
+                ++substrSize;
             }
 
             return(StringView)
             {
-                .data = nextword_start,
-                .size = substr_size
+                .data = nextwordStart,
+                .size = substrSize
             };
         }
     }
@@ -463,12 +476,12 @@ StringView sv_find_by_delim
     return (StringView){0};
 }
 
-uint32_t sv_count_by_delim
+uint32_t pdSVCountByDelim
 (
     StringView sv,
     char       delim
 ){
-    uint32_t delim_count = 0;
+    uint32_t delimCount = 0;
 
     if(sv.data == 0)
     {
@@ -479,7 +492,7 @@ uint32_t sv_count_by_delim
     {
         if(sv.data[i] == delim)
         {
-            ++delim_count;
+            ++delimCount;
 
             for(; i < sv.size && sv.data[i] == delim; ++i)
             {
@@ -489,133 +502,17 @@ uint32_t sv_count_by_delim
 
     if(sv.size && sv.data[sv.size - 1] != delim && sv.data[0] != delim)
     {
-        return delim_count + 1;
+        return delimCount + 1;
     }
     else if(sv.size && sv.data[sv.size - 1] == delim && sv.data[0] == delim)
     {
-        return delim_count - 1;
+        return delimCount - 1;
     }
 
-    return delim_count;
+    return delimCount;
 }
 
-void sv_sort_by_delim
-(
-    StringView sv,
-    char       delim,
-    char       *buf
-){
-    if(!buf)
-    {
-        PD_ERROR("passed nullptr as buf.");
-        return;
-    }
-
-    uint32_t count = sv_count_by_delim(sv, delim);
-    if(!count)
-    {
-        return;
-    }
-
-    StringView *sv_buffer = malloc(count * sizeof(StringView));
-
-    for(uint32_t i = 0; i < count; ++i)
-    {
-        sv_buffer[i] = sv_find_by_delim(sv, delim, i);
-    }
-
-    for(uint32_t i = 0; i < count - 1; ++i)
-    {
-        uint8_t swapped = 0;
-        for(uint32_t j = 0; j < count - i - 1; ++j)
-        {
-            if(!sv_buffer[j + 1].data)
-            {
-                continue;
-            }
-
-            if(!sv_buffer[j].data || sv_is_lesser(sv_buffer[j + 1], sv_buffer[j]))
-            {
-                StringView tmp   = sv_buffer[j];
-                sv_buffer[j]     = sv_buffer[j + 1];
-                sv_buffer[j + 1] = tmp;
-
-                swapped = 1;
-            }
-        }
-
-        if(!swapped)
-        {
-            break;
-        }
-    }
-
-    size_t offset = 0;
-    for(uint32_t i = 0; i < count; ++i)
-    {
-        for(size_t j = 0; j < sv_buffer[i].size; ++j)
-        {
-            buf[offset + j] = sv_buffer[i].data[j];
-        }
-
-        if(offset + sv_buffer[i].size < sv.size)
-        {
-            buf[offset + sv_buffer[i].size] = delim;
-        }
-        offset += sv_buffer[i].size + 1;
-    }
-
-    buf[sv.size] = '\0';
-    free(sv_buffer);
-}
-
-void sv_separate_by_delim
-(
-    StringView sv,
-    StringView *buf,
-    char       delim,
-    uint64_t   bufsize
-){
-    uint64_t   index           = 0;
-    const char *nextword_start = sv.data;
-
-    if(sv.data == 0)
-    {
-        return;
-    }
-
-    for(uint64_t i = 0; i < sv.size; ++i)
-    {
-        size_t substr_size = 0;
-
-        if(sv.data[i] == delim)
-        {
-            for(; i < sv.size && sv.data[i] == delim; ++i)
-            {
-                ++nextword_start;
-            }
-        }
-
-        for(; i < sv.size && sv.data[i] != delim; ++i)
-        {
-            ++substr_size;
-        }
-
-        if(index >= bufsize)
-        {
-            return;
-        }
-
-        buf[index].data = nextword_start;
-        buf[index].size = substr_size;
-
-        nextword_start += substr_size + 1;
-
-        ++index;
-    }
-}
-
-uint8_t sv_is_lesser
+uint8_t pdSVIsLesser
 (
     StringView first,
     StringView second
@@ -655,7 +552,123 @@ uint8_t sv_is_lesser
     return SV_LESSER;
 }
 
-StringView sv_concat
+void pdSVSortByDelim
+(
+    StringView sv,
+    char       delim,
+    char       *buf
+){
+    if(!buf)
+    {
+        PD_ERROR("passed nullptr as buf.");
+        return;
+    }
+
+    uint32_t count = pdSVCountByDelim(sv, delim);
+    if(!count)
+    {
+        return;
+    }
+
+    StringView *svBuf = malloc(count * sizeof(StringView));
+
+    for(uint32_t i = 0; i < count; ++i)
+    {
+        svBuf[i] = pdSVFindByDelim(sv, delim, i);
+    }
+
+    for(uint32_t i = 0; i < count - 1; ++i)
+    {
+        uint8_t swapped = 0;
+        for(uint32_t j = 0; j < count - i - 1; ++j)
+        {
+            if(!svBuf[j + 1].data)
+            {
+                continue;
+            }
+
+            if(!svBuf[j].data || pdSVIsLesser(svBuf[j + 1], svBuf[j]))
+            {
+                StringView tmp   = svBuf[j];
+                svBuf[j]     = svBuf[j + 1];
+                svBuf[j + 1] = tmp;
+
+                swapped = 1;
+            }
+        }
+
+        if(!swapped)
+        {
+            break;
+        }
+    }
+
+    size_t offset = 0;
+    for(uint32_t i = 0; i < count; ++i)
+    {
+        for(size_t j = 0; j < svBuf[i].size; ++j)
+        {
+            buf[offset + j] = svBuf[i].data[j];
+        }
+
+        if(offset + svBuf[i].size < sv.size)
+        {
+            buf[offset + svBuf[i].size] = delim;
+        }
+        offset += svBuf[i].size + 1;
+    }
+
+    buf[sv.size] = '\0';
+    free(svBuf);
+}
+
+void pdSVSeparateByDelim
+(
+    StringView sv,
+    StringView *buf,
+    char       delim,
+    uint64_t   bufsize
+){
+    uint64_t   index          = 0;
+    const char *nextwordStart = sv.data;
+
+    if(sv.data == 0)
+    {
+        return;
+    }
+
+    for(uint64_t i = 0; i < sv.size; ++i)
+    {
+        size_t substrSize = 0;
+
+        if(sv.data[i] == delim)
+        {
+            for(; i < sv.size && sv.data[i] == delim; ++i)
+            {
+                ++nextwordStart;
+            }
+        }
+
+        for(; i < sv.size && sv.data[i] != delim; ++i)
+        {
+            ++substrSize;
+        }
+
+        if(index >= bufsize)
+        {
+            return;
+        }
+
+        buf[index].data = nextwordStart;
+        buf[index].size = substrSize;
+
+        nextwordStart += substrSize + 1;
+
+        ++index;
+    }
+}
+
+StringView pdSVConcat
 (
     StringView first,
     StringView second,
@@ -672,14 +685,14 @@ StringView sv_concat
         return (StringView){0};
     }
 
-    char first_data[first.size + 1];
-    char second_data[second.size + 1];
+    char firstData[first.size + 1];
+    char secondData[second.size + 1];
 
-    sv_cstr(first, first_data);
-    sv_cstr(second, second_data);
+    pdSVCstr(first, firstData);
+    pdSVCstr(second, secondData);
 
-    memcpy((void*)buf, (void*)first_data, first.size);
-    memcpy((void*)(buf + first.size), (void*)second_data, second.size);
+    memcpy((void*)buf, (void*)firstData, first.size);
+    memcpy((void*)(buf + first.size), (void*)secondData, second.size);
     buf[first.size + second.size] = '\0';
 
     StringView concat = {0};

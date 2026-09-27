@@ -26,7 +26,7 @@
 
 // length-based string.
 // data is not guaranteed to be null-terminated.
-// use `sv_cstr()` if you require access to a cstring.
+// use `pdStrCstr()` if you require access to a cstring.
 // tip: just cast to `StringView` if you require using puddle's sv functions.
 typedef struct s
 {
@@ -37,7 +37,7 @@ String;
 
 // length-based string view (const pointer).
 // data is `not` guaranteed to be null-terminated.
-// use `sv_cstr()` if you require access to a cstring.
+// use `pdSVCstr()` if you require access to a cstring.
 typedef struct sv
 {
     const char *data;
@@ -45,36 +45,41 @@ typedef struct sv
 }
 StringView;
 
+void pdSVFree
+(
+    StringView *sv
+);
+
 // will create a string from a cstring, by passing the pointer given
 // as its data and counting its length.
-String cstr_str
+String pdCstrStr
 (
     char *cstr
 );
 
 // will create a string, but will not just pass a pointer. Will actually
 // copy its contents and allocate to a new pointer.
-String cstr_str_cpy
+String pdCstrStrCpy
 (
     char *cstr
 );
 
 // will create a stringview from a cstring, by passing the pointer given
 // as its data and counting its length.
-StringView cstr_sv
+StringView pdCstrSV
 (
     const char *cstr
 );
 
 // will copy a stringview into another stringview, calling `malloc` to do so.
-StringView sv_cpy
+StringView pdSVCpy
 (
     StringView sv
 );
 
 // will create a stringview.
 // requires a buffer to be passed that can fit the contents.
-StringView cstr_sv_cpy
+StringView pdCstrSVCpy
 (
     const char *cstr,
     char       *buf
@@ -85,39 +90,39 @@ StringView cstr_sv_cpy
 // will use the provided buffer pointer to write the data into.
 // The buffer needs to be at least `sv.size + 1` big.
 // If no pointer is returned, it was unsuccessful.
-const char *sv_cstr
+const char *pdSVCstr
 (
     StringView sv,
     char       *buf
 );
 
-// just like sv_cstr, but for strings :)
-void str_cstr
+// just like pdSvCstr, but for strings :)
+void pdStrCstr
 (
     String str,
     char   *buf
 );
 
-// will create a copied StringView from a String. just like sv_cstr.
-StringView str_sv_cpy
+// will create a copied StringView from a String. just like pdSvCstr.
+StringView pdSVCstrCpy
 (
     String str,
     char   *buf
 );
 
-// will return the trimmed substring as a new stringview.
-// start_pos & end_pos are both positions in the original string.
-StringView sv_substr
+// will return the trimmed substring as a new StringView. `startPos` and `endPos` are
+// both positions in the original string.
+StringView pdSVSubstr
 (
     StringView *sv,
-    size_t     start_pos,
-    size_t     end_pos
+    size_t     startPos,
+    size_t     endPos
 );
 
 // will trim count characters from: `SV_LEFT`, `SV_RIGHT` or `SV_BOTH`.
 // in the case of both, it will first trim `count` from the left,
 // then try to trim `count` from the right.
-void sv_trim
+void pdSVTrim
 (
     StringView *sv,
     size_t     count,
@@ -128,8 +133,8 @@ void sv_trim
 // 0: `SV_DIFFERENT`, if they are different stringviews.
 // 1: `SV_SAME`, if the stringviews have the same content and are the same length.
 // In this case, the strings "test" and "test2" are not the same string. For substring
-// testing, use `sv_is_substr`.
-uint8_t sv_same
+// testing, use `pdSVIsSubstr`.
+uint8_t pdSVSame
 (
     StringView first,
     StringView second
@@ -139,7 +144,7 @@ uint8_t sv_same
 // 0: `SV_DIFFERENT`, if the `first` string is `not` included in the `second` string.
 // 1: `SV_SAME`, if the stringviews have the same content and are the same length.
 // 2: `SV_IS_SUBSTR`, if the `first` string is `fully` included in the `second` string.
-uint8_t sv_is_substr
+uint8_t pdSVIsSubstr
 (
     StringView first,
     StringView second
@@ -147,7 +152,7 @@ uint8_t sv_is_substr
 
 // Will return a pointer to the start of the first occurrence of `pattern` inside `sv`,
 // if it was found. If it wasn't found, the pointer is null.
-const char *sv_find
+const char *pdSVFind
 (
     StringView pattern,
     StringView sv
@@ -155,7 +160,7 @@ const char *sv_find
 
 // Will return a pointer to the start of the last occurrence of `pattern` inside `sv`,
 // if it was found. If it wasn't found, the pointer is null.
-const char *sv_find_last
+const char *pdSVFindLast
 (
     StringView pattern,
     StringView sv
@@ -172,7 +177,7 @@ const char *sv_find_last
 //
 // if no more results can be found (the index is too high), a null StringView will be
 // returned.
-StringView sv_find_by_delim
+StringView pdSVFindByDelim
 (
     StringView sv,
     char       delim,
@@ -180,17 +185,25 @@ StringView sv_find_by_delim
 );
 
 // Will count the amount of substrings that are separated by the given delimiter.
-uint32_t sv_count_by_delim
+uint32_t pdSVCountByDelim
 (
     StringView sv,
     char       delim
+);
+
+// will return `SV_LESSER` (1) if the first sv is alphabetically lesser to the
+// second, `SV_GREATER` (0) if it isn't.
+uint8_t pdSVIsLesser
+(
+    StringView first,
+    StringView second
 );
 
 // Will sort the given StringView in alphabetical order, respecting the delimiter
 // given: `"hello;test;path;123"` -> `"123;hello;path;test"`.
 // Will return the resulting, sorted string into `buf`, which needs to be at least as
 // big as `sv.size + 1`.
-void sv_sort_by_delim
+void pdSVSortByDelim
 (
     StringView sv,
     char       delim,
@@ -199,7 +212,7 @@ void sv_sort_by_delim
 
 // Will separate every substring found in `sv` (separated by `delim`) and place them as
 // entries in `buf[i]`, in the order they appear in the original string.
-void sv_separate_by_delim
+void pdSVSeparateByDelim
 (
     StringView sv,
     StringView *buf,
@@ -207,20 +220,12 @@ void sv_separate_by_delim
     uint64_t   bufsize
 );
 
-// will return `SV_LESSER` (1) if the first sv is alphabetically lesser to the
-// second, `SV_GREATER` (0) if it isn't.
-uint8_t sv_is_lesser
-(
-    StringView first,
-    StringView second
-);
-
 // concatenates `first` and `second` one after the other.
 // `first`  + `second` = `result`.
 // "Hello " + "World"  = "Hello World".
 // will write into buf.
 // the `buf` pointer needs to have enough space for `first.size + second.size + 1`.
-StringView sv_concat
+StringView pdSVConcat
 (
     StringView first,
     StringView second,

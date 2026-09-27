@@ -7,7 +7,7 @@ uint8_t pdVerifyPath
 ){
     struct stat pathInfo;
     char path_cstr[4096];
-    sv_cstr(path, path_cstr);
+    pdSVCstr(path, path_cstr);
 
     if(stat(path_cstr, &pathInfo))
     {
@@ -36,11 +36,11 @@ StringView pdExpandPath
         return (StringView){0};
     }
 
-    StringView dot_sv  = cstr_sv(".");
+    StringView dot_sv  = pdCstrSV(".");
 
-    StringView homevar = cstr_sv("$HOME");
+    StringView homevar = pdCstrSV("$HOME");
     const char *home   = getenv("HOME");
-    StringView home_sv = cstr_sv(home);
+    StringView home_sv = pdCstrSV(home);
 
     if(home && path.size > 0 && path.data[0] == '~')
     {
@@ -63,7 +63,7 @@ StringView pdExpandPath
 
         buf[i + j] = '\0';
     }
-    else if(home && path.size > 4 && sv_find(homevar, path) == path.data)
+    else if(home && path.size > 4 && pdSVFind(homevar, path) == path.data)
     {
         uint32_t i = 0;
         for(; i < home_sv.size; ++i)
@@ -83,10 +83,10 @@ StringView pdExpandPath
         }
         buf[i + j] = '\0';
     }
-    else if(sv_same(path, dot_sv))
+    else if(pdSVSame(path, dot_sv))
     {
         const char *pwd   = getenv("PWD");
-        StringView pwd_sv = cstr_sv(pwd);
+        StringView pwd_sv = pdCstrSV(pwd);
 
         uint32_t i = 0;
         for(; i < pwd_sv.size; ++i)
@@ -115,7 +115,7 @@ StringView pdExpandPath
         buf[i] = '\0';
     }
 
-    return cstr_sv(buf);
+    return pdCstrSV(buf);
 }
 
 StringView pdParentPath
@@ -123,12 +123,12 @@ StringView pdParentPath
     StringView path,
     char       *buf
 ){
-    StringView sep = cstr_sv("/");
+    StringView sep = pdCstrSV("/");
 
     pdExpandPath(path, buf);
-    StringView expanded = cstr_sv(buf);
+    StringView expanded = pdCstrSV(buf);
 
-    const char *lastdir = sv_find_last(sep, expanded);
+    const char *lastdir = pdSVFindLast(sep, expanded);
 
     expanded.size -= (size_t)(expanded.data - lastdir);
 
@@ -152,7 +152,7 @@ StringView pdListFiles
 
     char path[4096] = {0};
 
-    sv_cstr(directory, path);
+    pdSVCstr(directory, path);
 
     if((dir = opendir(path)))
     {
@@ -201,7 +201,7 @@ StringView pdListFiles
         .size = list.size
     };
 
-    sv_sort_by_delim(result, ';', buf);
+    pdSVSortByDelim(result, ';', buf);
 
     result.data = buf;
 

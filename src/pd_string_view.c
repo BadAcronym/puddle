@@ -371,7 +371,7 @@ const char *pdSVFind
         return 0;
     }
 
-    for(size_t i = 0; i < sv.size; ++i)
+    for(size_t i = 0; i < sv.size - pattern.size + 1; ++i)
     {
         size_t j = 0;
         for(; j < pattern.size; ++j)

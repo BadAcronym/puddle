@@ -51,24 +51,33 @@
         fprintf(stdout, "\033[33;1m" __LOCATION__ "\n\033[33;1;7mWARNING: " \
                 FIRST(__VA_ARGS__) "\033[0m\n" REST(__VA_ARGS__))
 
-#define PD_DEBUG(...) \
-        printf(FIRST(__VA_ARGS__) "\n" REST(__VA_ARGS__))
+#ifdef DEBUG
+    #define PD_ASSERT(condition, ...)                               \
+    do                                                              \
+    {                                                               \
+        if(condition)                                               \
+        {                                                           \
+            break;                                                  \
+        }                                                           \
+        fprintf(stderr, "\n\033[31;1m" __LOCATION__                 \
+                "\033[31;1;7m\nASSERTION FAILED: "                  \
+                FIRST(__VA_ARGS__) "\033[0m\n" REST(__VA_ARGS__));  \
+        exit(1);                                                    \
+    }                                                               \
+    while(0);
 
-#define PD_TRACE(...) \
-        printf(FIRST(__VA_ARGS__) "\n" REST(__VA_ARGS__))
+    #define PD_DEBUG(...) \
+            printf(FIRST(__VA_ARGS__) "\n" REST(__VA_ARGS__))
+#else
+    #define PD_ASSERT(...)
+    #define PD_DEBUG(...)
+#endif
 
-#define PD_ASSERT(condition, ...)                               \
-do                                                              \
-{                                                               \
-    if(condition)                                               \
-    {                                                           \
-        break;                                                  \
-    }                                                           \
-    fprintf(stderr, "\n\033[31;1m" __LOCATION__                 \
-            "\033[31;1;7m\nASSERTION FAILED: "                  \
-            FIRST(__VA_ARGS__) "\033[0m\n" REST(__VA_ARGS__));  \
-    exit(1);                                                    \
-}                                                               \
-while(0);
+#ifdef TRACE
+    #define PD_TRACE(...) \
+            printf(FIRST(__VA_ARGS__) "\n" REST(__VA_ARGS__))
+#else
+    #define PD_TRACE(...)
+#endif
 
 #endif

@@ -23,7 +23,7 @@ src/pd_string_view.c \
 
 args_release="-O2"
 
-args_debug="-DDEBUG -g -O0"
+args_debug="-DDEBUG -DPD_PRI_DEBUG -g -O0"
 
 args_asan="$args_debug -DASAN \
 -fsanitize=address,leak,undefined \

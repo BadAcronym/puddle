@@ -72,6 +72,13 @@ uint64_t pdSVReadLine
     String     *line
 );
 
+// will read an entire file into buf and return a StringView with the corresponding
+// size. you will need to free the returned StringView's data pointer yourself.
+StringView pdSVReadFile
+(
+    const char *filepath
+);
+
 // will create a stringview from a cstring, by passing the pointer given
 // as its data and counting its length.
 StringView pdCstrSV

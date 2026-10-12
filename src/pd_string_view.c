@@ -233,6 +233,32 @@ uint64_t pdSVReadLine
     return line->size;
 }
 
+StringView pdSVReadFile
+(
+    const char *filepath
+){
+    FILE *file = fopen(filepath, "r");
+    if(!file)
+    {
+        PD_ERROR("failed to open file: '%s'.", filepath);
+    }
+
+    fseek(file, 0, SEEK_END);
+    uint64_t filesize = (uint64_t)ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    char *buf = malloc(filesize + 1);
+    fread(buf, filesize, 1, file);
+
+    buf[filesize] = 0;
+
+    return (StringView)
+    {
+        .data = buf,
+        .size = filesize
+    };
+}
+
 StringView pdSVSubstr
 (
     StringView *sv,

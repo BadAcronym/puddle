@@ -204,6 +204,35 @@ StringView pdStrCstrCpy
     };
 }
 
+uint64_t pdSVReadLine
+(
+    StringView buf,
+    uint64_t   *index,
+    String     *line
+){
+    line->size = 0;
+
+    if(*index >= buf.size)
+    {
+        return 0;
+    }
+
+    for(uint64_t i = 0; *index < buf.size; ++i)
+    {
+        line->data[i] = buf.data[*index];
+        ++line->size;
+        ++(*index);
+
+        if(line->data[i] == '\0' || line->data[i] == '\n')
+        {
+            line->size -= 1;
+            break;
+        }
+    }
+
+    return line->size;
+}
+
 StringView pdSVSubstr
 (
     StringView *sv,

@@ -64,6 +64,14 @@ String pdCstrStrCpy
     char *cstr
 );
 
+// will read a line from buf and return its size.
+uint64_t pdSVReadLine
+(
+    StringView buf,
+    uint64_t   *index,
+    String     *line
+);
+
 // will create a stringview from a cstring, by passing the pointer given
 // as its data and counting its length.
 StringView pdCstrSV

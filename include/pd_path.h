@@ -1,7 +1,6 @@
 #ifndef PD_PATH_H
 #define PD_PATH_H
 
-#include <stdint.h>
 #include <inttypes.h>
 
 #ifdef BUILD_LINUX
@@ -19,7 +18,7 @@
 // will verify if a given path exists. Will return `PD_TYPE_ERROR`, if it does not
 // exist, `PD_TYPE_FILE` or `PD_TYPE_DIRECTORY` if it does, and `PD_TYPE_OTHER` in
 // any other case.
-uint8_t pdVerifyPath
+u08 pdVerifyPath
 (
     StringView path
 );

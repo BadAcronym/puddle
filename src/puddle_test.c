@@ -1,5 +1,6 @@
 #include "pd_path.h"
 #include "pd_dyn_arr.h"
+#include "pd_int_types.h"
 #include "pd_string_view.h"
 #include "pd_print_macros.h"
 
@@ -9,26 +10,26 @@ int main
 ){
     StringView test        = pdCstrSV("Hello, World!");
     StringView substr      = pdSVSubstr(&test, 7, test.size);
-    StringView substr_test = pdCstrSV("World!");
-    StringView sub_test_0  = pdCstrSV("W");
-    StringView sub_test_1  = pdSVSubstr(&test, 7, 7);
+    StringView substrest = pdCstrSV("World!");
+    StringView subest_0  = pdCstrSV("W");
+    StringView subest_1  = pdSVSubstr(&test, 7, 7);
     StringView test_left   = pdCstrSV("lo, World!");
     StringView test_right  = pdCstrSV("lo, Worl");
     StringView test_both   = pdCstrSV(" W");
     StringView conv_src    = pdCstrSV("The quick lilac fox jumps over the dog.");
-    char conv_test[conv_src.size + 1];
-    pdSVCstr(conv_src, conv_test);
-    StringView conv_test2  = pdCstrSV(conv_test);
+    char convest[conv_src.size + 1];
+    pdSVCstr(conv_src, convest);
+    StringView convest2  = pdCstrSV(convest);
     StringView concat_1    = pdCstrSV("Test ");
     StringView concat_2    = pdCstrSV("concat !");
     StringView concat_r    = pdCstrSV("Test concat !");
 
     int num_failed = 0;
 
-    if(!pdSVSame(conv_src, conv_test2))
+    if(!pdSVSame(conv_src, convest2))
     {
         PD_FAIL("pdSVCstr. expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
-                 ARG_SV(conv_src), ARG_SV(conv_test2));
+                 ARG_SV(conv_src), ARG_SV(convest2));
         ++num_failed;
     }
     else
@@ -36,11 +37,11 @@ int main
         PD_SUCCESS("passed pdSVCstr.");
     }
 
-    if(!pdSVSame(substr, substr_test))
+    if(!pdSVSame(substr, substrest))
     {
         PD_FAIL("pdSVSubstr. expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
-                ARG_SV(substr_test), ARG_SV(substr));
-        PD_DEBUG("%"PRIu64" vs %"PRIu64"", substr_test.size, substr.size);
+                ARG_SV(substrest), ARG_SV(substr));
+        PD_DEBUG("%"PRIu64" vs %"PRIu64"", substrest.size, substr.size);
         ++num_failed;
     }
     else
@@ -48,11 +49,11 @@ int main
         PD_SUCCESS("passed pdSVSubstr.");
     }
 
-    if(!pdSVSame(sub_test_0, sub_test_1))
+    if(!pdSVSame(subest_0, subest_1))
     {
         PD_FAIL("pdSVSubstr on a character. expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
-                ARG_SV(sub_test_0), ARG_SV(sub_test_1));
-        PD_DEBUG("%"PRIu64" vs %"PRIu64"", substr_test.size, substr.size);
+                ARG_SV(subest_0), ARG_SV(subest_1));
+        PD_DEBUG("%"PRIu64" vs %"PRIu64"", substrest.size, substr.size);
         ++num_failed;
     }
     else
@@ -188,7 +189,7 @@ int main
     {
         PD_FAIL("pdSVFind with findable pattern, 1.");
         PD_ERROR("returned the wrong offset. Expected: 0, got: %"PRIu32"\033[0m\n",
-                (uint32_t)(found - bigStr.data));
+                (u32)(found - bigStr.data));
         ++num_failed;
     }
     else
@@ -217,7 +218,7 @@ int main
     {
         PD_FAIL("pdSVFind with findable pattern, 2.");
         PD_ERROR("returned the wrong offset. Expected: 19, got: %"PRIu32"\033[0m\n",
-                (uint32_t)(found - bigStr.data));
+                (u32)(found - bigStr.data));
         ++num_failed;
     }
     else
@@ -268,7 +269,7 @@ int main
     {
         PD_FAIL("pdSVFind with findable pattern, 4.");
         PD_ERROR("returned the wrong offset. Expected: 43, got: %"PRIu32"\033[0m\n",
-                (uint32_t)(found - bigStr.data));
+                (u32)(found - bigStr.data));
         ++num_failed;
     }
     else
@@ -281,7 +282,7 @@ int main
     {
         PD_FAIL("pdSVFindLast with findable pattern, 1.");
         PD_ERROR("returned the wrong offset. Expected: 43, got: %"PRIu32"\033[0m\n",
-                (uint32_t)(found - bigStr.data));
+                (u32)(found - bigStr.data));
         ++num_failed;
     }
     else
@@ -295,7 +296,7 @@ int main
     {
         PD_FAIL("pdSVFindLast with findable pattern, 2.");
         PD_ERROR("returned the wrong offset. Expected: 19, got: %"PRIu32"\033[0m\n",
-                (uint32_t)(found - duplStr.data));
+                (u32)(found - duplStr.data));
     }
     else
     {
@@ -410,7 +411,7 @@ int main
         PD_SUCCESS("passed pdSVFindByDelim with index = 2_2.");
     }
 
-    uint32_t result = pdSVCountByDelim(testPath, ';');
+    u32 result = pdSVCountByDelim(testPath, ';');
     if(result != 5)
     {
         PD_FAIL("pdSVCountByDelim in testPath. expected: 5\ngot: %"PRIu32"\n", result);
@@ -443,7 +444,7 @@ int main
     };
 
     StringView separate_sv = pdCstrSV(":test1:2::third:fourth:five:::sixth_last!;");
-    uint32_t   itemcount   = pdSVCountByDelim(separate_sv, ':');
+    u32   itemcount   = pdSVCountByDelim(separate_sv, ':');
     StringView separated_list[itemcount];
     pdSVSeparateByDelim(separate_sv, separated_list, ':', itemcount);
 
@@ -454,7 +455,7 @@ int main
         ++num_failed;
     }
 
-    uint8_t sep_i = 0;
+    u08 sep_i = 0;
     for(; sep_i < itemcount; ++sep_i)
     {
         if(!pdSVSame(premade[sep_i], separated_list[sep_i]))
@@ -471,14 +472,14 @@ int main
         PD_SUCCESS("passed pdSVSeparateByDelim with separate_sv.");
     }
 
-    StringView testPath_tosort = pdCstrSV("abc:abd:123:aaa");
-    char sorted[testPath_tosort.size + 1];
-    pdSVSortByDelim(testPath_tosort, ':', sorted);
+    StringView testPathosort = pdCstrSV("abc:abd:123:aaa");
+    char sorted[testPathosort.size + 1];
+    pdSVSortByDelim(testPathosort, ':', sorted);
 
     StringView testPath_sorted =
     {
         .data = sorted,
-        .size = testPath_tosort.size
+        .size = testPathosort.size
     };
 
     StringView a = pdCstrSV("..");
@@ -535,16 +536,16 @@ int main
 
     StringView one_dot = pdCstrSV(".");
     StringView two_dot = pdCstrSV("..");
-    StringView one_test;
-    StringView two_test;
-    one_test = pdSVFindByDelim(testPath_real, ';', 0);
-    two_test = pdSVFindByDelim(testPath_real, ';', 1);
+    StringView oneest;
+    StringView twoest;
+    oneest = pdSVFindByDelim(testPath_real, ';', 0);
+    twoest = pdSVFindByDelim(testPath_real, ';', 1);
 
-    if(!pdSVSame(one_test, one_dot))
+    if(!pdSVSame(oneest, one_dot))
     {
         PD_FAIL("pdSVSortByDelim with real path and the '..' identifier."
                 "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"\n",
-                ARG_SV(one_dot), ARG_SV(one_test));
+                ARG_SV(one_dot), ARG_SV(oneest));
         ++num_failed;
     }
     else
@@ -552,11 +553,11 @@ int main
         PD_SUCCESS("passed pdSVSortByDelim with real path and the '.' identifier.");
     }
 
-    if(!pdSVSame(two_test, two_dot))
+    if(!pdSVSame(twoest, two_dot))
     {
         PD_FAIL("pdSVSortByDelim with real path and the '..' identifier."
                 "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"\n",
-                ARG_SV(two_dot), ARG_SV(two_test));
+                ARG_SV(two_dot), ARG_SV(twoest));
         ++num_failed;
     }
     else
@@ -623,17 +624,17 @@ int main
     };
 
     float *arr_float = 0;
-    for(uint32_t i = 0; i < 10; ++i)
+    for(u32 i = 0; i < 10; ++i)
     {
         pdArrPush(arr_float, testValsFloat[i]);
     }
 
-    uint8_t failed = 0;
-    for(uint32_t i = 0; i < pdArrSize(arr_float); ++i)
+    u08 failed = 0;
+    for(u32 i = 0; i < pdArrSize(arr_float); ++i)
     {
         if(testValsFloat[i] != arr_float[i])
         {
-            PD_FAIL("pdArrPush with type uint32_t. expected: %f\ngot: %f\n",
+            PD_FAIL("pdArrPush with type u32. expected: %f\ngot: %f\n",
                     testValsFloat[i], arr_float[i]);
             ++num_failed;
             failed = 1;
@@ -645,35 +646,35 @@ int main
     }
     pdArrFree(arr_float);
 
-    uint32_t testVals32[10] =
+    u32 testVals32[10] =
     {
         65535, 10597, 19, 192856, 19285,
         198, 19285615, 918, 19285, 1509
     };
 
-    pdArr(uint32_t) arr_uint = 0;
-    pdArrReserve(arr_uint, 5);
-    for(uint32_t i = 0; i < 10; ++i)
+    pdArr(u32) arr_u = 0;
+    pdArrReserve(arr_u, 5);
+    for(u32 i = 0; i < 10; ++i)
     {
-        pdArrPush(arr_uint, testVals32[i]);
+        pdArrPush(arr_u, testVals32[i]);
     }
 
     failed = 0;
-    for(uint32_t i = 0; i < pdArrSize(arr_uint); ++i)
+    for(u32 i = 0; i < pdArrSize(arr_u); ++i)
     {
-        if(testVals32[i] != arr_uint[i])
+        if(testVals32[i] != arr_u[i])
         {
-            PD_FAIL("pdArrPush with type uint32_t. expected: %"PRIu32"\ngot: %"PRIu32
-                    "\n", testVals32[i], arr_uint[i]);
+            PD_FAIL("pdArrPush with type u32. expected: %"PRIu32"\ngot: %"PRIu32
+                    "\n", testVals32[i], arr_u[i]);
             ++num_failed;
             failed = 1;
         }
     }
     if(!failed)
     {
-        PD_SUCCESS("passed pdPushArr with uint32_t.");
+        PD_SUCCESS("passed pdPushArr with u32.");
     }
-    pdArrFree(arr_uint);
+    pdArrFree(arr_u);
 
     if(num_failed)
     {

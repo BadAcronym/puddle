@@ -1,11 +1,7 @@
 #ifndef STRING_VIEW_H
 #define STRING_VIEW_H
 
-#include <stddef.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "pd_int_types.h"
 
 #define SV_LEFT  0L
 #define SV_RIGHT 1L
@@ -30,8 +26,8 @@
 // tip: just cast to `StringView` if you require using puddle's sv functions.
 typedef struct s
 {
-    char   *data;
-    size_t size;
+    char *data;
+    size size;
 }
 String;
 
@@ -41,7 +37,7 @@ String;
 typedef struct sv
 {
     const char *data;
-    size_t     size;
+    size       size;
 }
 StringView;
 
@@ -65,10 +61,10 @@ String pdCstrStrCpy
 );
 
 // will read a line from buf and return its size.
-uint64_t pdSVReadLine
+u64 pdSVReadLine
 (
     StringView buf,
-    uint64_t   *index,
+    u64   *index,
     String     *line
 );
 
@@ -130,8 +126,8 @@ StringView pdSVCstrCpy
 StringView pdSVSubstr
 (
     StringView *sv,
-    size_t     startPos,
-    size_t     endPos
+    size     startPos,
+    size     endPos
 );
 
 // will trim count characters from: `SV_LEFT`, `SV_RIGHT` or `SV_BOTH`.
@@ -140,8 +136,8 @@ StringView pdSVSubstr
 void pdSVTrim
 (
     StringView *sv,
-    size_t     count,
-    uint8_t    direction
+    size       count,
+    u08        direction
 );
 
 // Will return:
@@ -149,7 +145,7 @@ void pdSVTrim
 // 1: `SV_SAME`, if the stringviews have the same content and are the same length.
 // In this case, the strings "test" and "test2" are not the same string. For substring
 // testing, use `pdSVIsSubstr`.
-uint8_t pdSVSame
+u08 pdSVSame
 (
     StringView first,
     StringView second
@@ -159,7 +155,7 @@ uint8_t pdSVSame
 // 0: `SV_DIFFERENT`, if the `first` string is `not` included in the `second` string.
 // 1: `SV_SAME`, if the stringviews have the same content and are the same length.
 // 2: `SV_IS_SUBSTR`, if the `first` string is `fully` included in the `second` string.
-uint8_t pdSVIsSubstr
+u08 pdSVIsSubstr
 (
     StringView first,
     StringView second
@@ -196,11 +192,11 @@ StringView pdSVFindByDelim
 (
     StringView sv,
     char       delim,
-    uint32_t   index
+    u32   index
 );
 
 // Will count the amount of substrings that are separated by the given delimiter.
-uint32_t pdSVCountByDelim
+u32 pdSVCountByDelim
 (
     StringView sv,
     char       delim
@@ -208,7 +204,7 @@ uint32_t pdSVCountByDelim
 
 // will return `SV_LESSER` (1) if the first sv is alphabetically lesser to the
 // second, `SV_GREATER` (0) if it isn't.
-uint8_t pdSVIsLesser
+u08 pdSVIsLesser
 (
     StringView first,
     StringView second
@@ -232,7 +228,7 @@ void pdSVSeparateByDelim
     StringView sv,
     StringView *buf,
     char       delim,
-    uint64_t   bufsize
+    u64        bufsize
 );
 
 // concatenates `first` and `second` one after the other.

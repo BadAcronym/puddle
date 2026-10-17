@@ -1,6 +1,8 @@
 #include "pd_string_view.h"
 #include "pd_print_macros.h"
 
+#include <memory.h>
+
 void pdSVFree
 (
     StringView *sv
@@ -24,7 +26,7 @@ String pdCstrStr
         return (String){0};
     }
 
-    uint32_t i = 0;
+    u32 i = 0;
     for(; cstr[i] != '\0'; ++i)
     {
     }
@@ -46,7 +48,7 @@ String pdCstrStrCpy
         return (String){0};
     }
 
-    uint32_t i = 0;
+    u32 i = 0;
     for(; cstr[i] != '\0'; ++i)
     {
     }
@@ -72,7 +74,7 @@ StringView pdCstrSV
         return (StringView){0};
     }
 
-    uint32_t i = 0;
+    u32 i = 0;
     for(; cstr[i] != '\0' && cstr[i] != '\n'; ++i)
     {
     }
@@ -100,7 +102,7 @@ StringView pdCstrSVCpy
         return (StringView){0};
     }
 
-    uint32_t i = 0;
+    u32 i = 0;
     for(; cstr[i] != '\0'; ++i)
     {
     }
@@ -127,7 +129,7 @@ StringView pdSVCpy
 
     char *buf = (char*)malloc(sv.size + 1);
 
-    for(uint32_t i = 0; i < sv.size; ++i)
+    for(u32 i = 0; i < sv.size; ++i)
     {
         buf[i] = sv.data[i];
     }
@@ -192,7 +194,7 @@ StringView pdStrCstrCpy
         return (StringView){0};
     }
 
-    for(uint32_t i = 0; i < str.size; ++i)
+    for(u32 i = 0; i < str.size; ++i)
     {
         buf[i] = str.data[i];
     }
@@ -204,10 +206,10 @@ StringView pdStrCstrCpy
     };
 }
 
-uint64_t pdSVReadLine
+u64 pdSVReadLine
 (
     StringView buf,
-    uint64_t   *index,
+    u64   *index,
     String     *line
 ){
     line->size = 0;
@@ -217,7 +219,7 @@ uint64_t pdSVReadLine
         return 0;
     }
 
-    for(uint64_t i = 0; *index < buf.size; ++i)
+    for(u64 i = 0; *index < buf.size; ++i)
     {
         line->data[i] = buf.data[*index];
         ++line->size;
@@ -244,7 +246,7 @@ StringView pdSVReadFile
     }
 
     fseek(file, 0, SEEK_END);
-    uint64_t filesize = (uint64_t)ftell(file);
+    u64 filesize = (u64)ftell(file);
     fseek(file, 0, SEEK_SET);
 
     char *buf = malloc(filesize + 1);
@@ -262,8 +264,8 @@ StringView pdSVReadFile
 StringView pdSVSubstr
 (
     StringView *sv,
-    size_t     startPos,
-    size_t     endPos
+    size     startPos,
+    size     endPos
 ){
     if(startPos > endPos)
     {
@@ -305,8 +307,8 @@ StringView pdSVSubstr
 void pdSVTrim
 (
     StringView *sv,
-    size_t     count,
-    uint8_t    direction
+    size       count,
+    u08        direction
 ){
     if(direction > SV_BOTH)
     {
@@ -316,7 +318,7 @@ void pdSVTrim
 
     if(direction == SV_LEFT || direction == SV_BOTH)
     {
-        size_t i = count;
+        size i = count;
         if(i > sv->size)
         {
             i = sv->size;
@@ -326,7 +328,7 @@ void pdSVTrim
     }
     if(direction == SV_RIGHT || direction == SV_BOTH)
     {
-        size_t i = count;
+        size i = count;
         if(i > sv->size)
         {
             i = sv->size;
@@ -335,7 +337,7 @@ void pdSVTrim
     }
 }
 
-uint8_t pdSVSame
+u08 pdSVSame
 (
     StringView first,
     StringView second
@@ -365,7 +367,7 @@ uint8_t pdSVSame
         return SV_DIFFERENT;
     }
 
-    size_t i = 0;
+    size i = 0;
     for(; i < first.size && i < second.size; ++i)
     {
         if(first.data[i] != second.data[i])
@@ -381,7 +383,7 @@ uint8_t pdSVSame
     return SV_DIFFERENT;
 }
 
-uint8_t pdSVIsSubstr
+u08 pdSVIsSubstr
 (
     StringView first,
     StringView second
@@ -391,9 +393,9 @@ uint8_t pdSVIsSubstr
         return SV_SAME;
     }
 
-    for(size_t i = 0; i < second.size; ++i)
+    for(size i = 0; i < second.size; ++i)
     {
-        size_t j = 0;
+        size j = 0;
         for(; j < first.size; ++j)
         {
             if(second.data[i + j] != first.data[j])
@@ -426,9 +428,9 @@ const char *pdSVFind
         return 0;
     }
 
-    for(size_t i = 0; i < sv.size - pattern.size + 1; ++i)
+    for(size i = 0; i < sv.size - pattern.size + 1; ++i)
     {
-        size_t j = 0;
+        size j = 0;
         for(; j < pattern.size; ++j)
         {
             if(sv.data[i + j] != pattern.data[j])
@@ -458,9 +460,9 @@ const char *pdSVFindLast
 
     const char *current = 0;
 
-    for(size_t i = 0; i < sv.size; ++i)
+    for(size i = 0; i < sv.size; ++i)
     {
-        size_t j = 0;
+        size j = 0;
         for(; j < pattern.size; ++j)
         {
             if(sv.data[i + j] != pattern.data[j])
@@ -482,10 +484,10 @@ StringView pdSVFindByDelim
 (
     StringView sv,
     char       delim,
-    uint32_t   index
+    u32   index
 ){
     StringView result         = {0};
-    uint32_t   delimCount     = 0;
+    u32   delimCount     = 0;
     const char *nextwordStart = sv.data;
 
     if(sv.data == 0)
@@ -498,9 +500,9 @@ StringView pdSVFindByDelim
         ++index;
     }
 
-    for(uint64_t i = 0; i < sv.size; ++i)
+    for(u64 i = 0; i < sv.size; ++i)
     {
-        size_t substrSize = 0;
+        size substrSize = 0;
 
         if(sv.data[i] == delim)
         {
@@ -531,19 +533,19 @@ StringView pdSVFindByDelim
     return (StringView){0};
 }
 
-uint32_t pdSVCountByDelim
+u32 pdSVCountByDelim
 (
     StringView sv,
     char       delim
 ){
-    uint32_t delimCount = 0;
+    u32 delimCount = 0;
 
     if(sv.data == 0)
     {
         return 0;
     }
 
-    for(uint32_t i = 0; i < sv.size; ++i)
+    for(u32 i = 0; i < sv.size; ++i)
     {
         if(sv.data[i] == delim)
         {
@@ -567,7 +569,7 @@ uint32_t pdSVCountByDelim
     return delimCount;
 }
 
-uint8_t pdSVIsLesser
+u08 pdSVIsLesser
 (
     StringView first,
     StringView second
@@ -583,7 +585,7 @@ uint8_t pdSVIsLesser
         return SV_GREATER;
     }
 
-    for(uint32_t i = 0; i < first.size && second.size; ++i)
+    for(u32 i = 0; i < first.size && second.size; ++i)
     {
         if(first.data[i] < second.data[i])
         {
@@ -619,7 +621,7 @@ void pdSVSortByDelim
         return;
     }
 
-    uint32_t count = pdSVCountByDelim(sv, delim);
+    u32 count = pdSVCountByDelim(sv, delim);
     if(!count)
     {
         return;
@@ -627,15 +629,15 @@ void pdSVSortByDelim
 
     StringView *svBuf = malloc(count * sizeof(StringView));
 
-    for(uint32_t i = 0; i < count; ++i)
+    for(u32 i = 0; i < count; ++i)
     {
         svBuf[i] = pdSVFindByDelim(sv, delim, i);
     }
 
-    for(uint32_t i = 0; i < count - 1; ++i)
+    for(u32 i = 0; i < count - 1; ++i)
     {
-        uint8_t swapped = 0;
-        for(uint32_t j = 0; j < count - i - 1; ++j)
+        u08 swapped = 0;
+        for(u32 j = 0; j < count - i - 1; ++j)
         {
             if(!svBuf[j + 1].data)
             {
@@ -658,10 +660,10 @@ void pdSVSortByDelim
         }
     }
 
-    size_t offset = 0;
-    for(uint32_t i = 0; i < count; ++i)
+    size offset = 0;
+    for(u32 i = 0; i < count; ++i)
     {
-        for(size_t j = 0; j < svBuf[i].size; ++j)
+        for(size j = 0; j < svBuf[i].size; ++j)
         {
             buf[offset + j] = svBuf[i].data[j];
         }
@@ -682,9 +684,9 @@ void pdSVSeparateByDelim
     StringView sv,
     StringView *buf,
     char       delim,
-    uint64_t   bufsize
+    u64        bufsize
 ){
-    uint64_t   index          = 0;
+    u64        index          = 0;
     const char *nextwordStart = sv.data;
 
     if(sv.data == 0)
@@ -692,9 +694,9 @@ void pdSVSeparateByDelim
         return;
     }
 
-    for(uint64_t i = 0; i < sv.size; ++i)
+    for(u64 i = 0; i < sv.size; ++i)
     {
-        size_t substrSize = 0;
+        size substrSize = 0;
 
         if(sv.data[i] == delim)
         {

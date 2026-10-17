@@ -1,7 +1,7 @@
 #include "pd_path.h"
 #include "pd_print_macros.h"
 
-uint8_t pdVerifyPath
+u08 pdVerifyPath
 (
     StringView path
 ){
@@ -44,13 +44,13 @@ StringView pdExpandPath
 
     if(home && path.size > 0 && path.data[0] == '~')
     {
-        uint32_t i = 0;
+        u32 i = 0;
         for(; i < home_sv.size; ++i)
         {
             buf[i] = home[i];
         }
 
-        uint32_t j = 0;
+        u32 j = 0;
         for(; j < path.size && j < 4096 - i; ++j)
         {
             buf[i + j] = path.data[j + 1];
@@ -65,13 +65,13 @@ StringView pdExpandPath
     }
     else if(home && path.size > 4 && pdSVFind(homevar, path) == path.data)
     {
-        uint32_t i = 0;
+        u32 i = 0;
         for(; i < home_sv.size; ++i)
         {
             buf[i] = home[i];
         }
 
-        uint32_t j = 0;
+        u32 j = 0;
         for(; j < path.size && j < 4096 - i - homevar.size; ++j)
         {
             buf[i + j] = path.data[j + homevar.size];
@@ -88,7 +88,7 @@ StringView pdExpandPath
         const char *pwd   = getenv("PWD");
         StringView pwd_sv = pdCstrSV(pwd);
 
-        uint32_t i = 0;
+        u32 i = 0;
         for(; i < pwd_sv.size; ++i)
         {
             buf[i] = pwd[i];
@@ -102,7 +102,7 @@ StringView pdExpandPath
     }
     else
     {
-        uint32_t i = 0;
+        u32 i = 0;
         for(; i < path.size && i < 4096; ++i)
         {
             buf[i] = path.data[i];
@@ -130,9 +130,9 @@ StringView pdParentPath
 
     const char *lastdir = pdSVFindLast(sep, expanded);
 
-    expanded.size -= (size_t)(expanded.data - lastdir);
+    expanded.size -= (size)(expanded.data - lastdir);
 
-    uint8_t code = pdVerifyPath(expanded);
+    u08 code = pdVerifyPath(expanded);
     if(code != PD_TYPE_FILE && code != PD_TYPE_DIRECTORY)
     {
         return (StringView){0};
@@ -148,7 +148,7 @@ StringView pdListFiles
 ){
     DIR           *dir;
     struct dirent *ent;
-    uint32_t      listSize = 0;
+    u32      listSize = 0;
 
     char path[4096] = {0};
 
@@ -158,7 +158,7 @@ StringView pdListFiles
     {
         while((ent = readdir(dir)))
         {
-            uint8_t length = 0;
+            u08 length = 0;
             for(; length < 255 && ent->d_name[length] != '\0'; ++length)
             {
             }
@@ -176,14 +176,14 @@ StringView pdListFiles
     String list = {0};
     list.data   = listBuffer;
     list.size   = 0;
-    uint32_t offset = 0;
+    u32 offset = 0;
 
     free((void*)dir);
     dir = opendir(path);
 
     while((ent = readdir(dir)))
     {
-        uint16_t curr_length = 0;
+        u16 curr_length = 0;
         for(; curr_length < 4096 && ent->d_name[curr_length] != '\0'; ++curr_length)
         {
             list.data[offset + curr_length] = ent->d_name[curr_length];

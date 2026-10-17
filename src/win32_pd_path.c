@@ -1,11 +1,12 @@
 #include "pd_path.h"
+#include "pd_int_types.h"
 #include "pd_print_macros.h"
 
 #include <sys/stat.h>
 #include <Windows.h>
 #include <direct.h>
 
-uint8_t pdVerifyPath
+u08 pdVerifyPath
 (
     StringView path
 ){
@@ -59,13 +60,13 @@ StringView pdExpandPath
 
     if(home && path.size > 0 && path.data[0] == '~')
     {
-        uint32_t i = 0;
+        u32 i = 0;
         for(; i < home_sv.size; ++i)
         {
             buf[i] = home[i];
         }
 
-        uint32_t j = 0;
+        u32 j = 0;
         for(; j < path.size && j < 4096 - i; ++j)
         {
             buf[i + j] = path.data[j + 1];
@@ -79,13 +80,13 @@ StringView pdExpandPath
     }
     else if(home && path.size > 4 && sv_find(homevar, path) == path.data)
     {
-        uint32_t i = 0;
+        u32 i = 0;
         for(; i < home_sv.size; ++i)
         {
             buf[i] = home[i];
         }
 
-        uint32_t j = 0;
+        u32 j = 0;
         for(; j < path.size && j < 4096 - i - homevar.size; ++j)
         {
             buf[i + j] = path.data[j + homevar.size];
@@ -104,7 +105,7 @@ StringView pdExpandPath
 
         StringView cwd_sv = cstr_sv(cwd);
 
-        uint32_t i = 0;
+        u32 i = 0;
         for(; i < cwd_sv.size; ++i)
         {
             buf[i] = cwd[i];
@@ -118,7 +119,7 @@ StringView pdExpandPath
     }
     else
     {
-        uint32_t i = 0;
+        u32 i = 0;
         for(; i < path.size && i < 4096; ++i)
         {
             buf[i] = path.data[i];
@@ -146,9 +147,9 @@ StringView pdParentPath
 
     const char *lastdir = pdSVFindLast(sep, expanded);
 
-    expanded.size -= (size_t)(expanded.data - lastdir);
+    expanded.size -= (size)(expanded.data - lastdir);
 
-    uint8_t code = pdVerifyPath(expanded);
+    u08 code = pdVerifyPath(expanded);
     if(code != PD_TYPE_FILE && code != PD_TYPE_DIRECTORY)
     {
         return (StringView){0};
@@ -166,7 +167,7 @@ StringView pdListFiles
     HANDLE           foundHandle;
 
     char *winPath = malloc(directory.size + 3);
-    for(uint16_t i = 0; i < directory.size; ++i)
+    for(u16 i = 0; i < directory.size; ++i)
     {
         winPath[i] = directory.data[i];
     }
@@ -183,7 +184,7 @@ StringView pdListFiles
 
     while(FindNextFileA(foundHandle, &fileData))
     {
-        uint8_t length = 0;
+        u08 length = 0;
         for(; length < 255 && fileData.cFileName[length] != '\0'; ++length)
         {
         }
@@ -192,11 +193,11 @@ StringView pdListFiles
     FindClose(foundHandle);
     foundHandle = FindFirstFileA(winPath, &fileData);
 
-    uint32_t offset = 0;
+    u32 offset = 0;
 
     while(FindNextFileA(foundHandle, &fileData))
     {
-        uint8_t length = 0;
+        u08 length = 0;
         for(; length < 255 && fileData.cFileName[length] != '\0'; ++length)
         {
             buf[offset + length] = fileData.cFileName[length];

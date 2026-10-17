@@ -1,16 +1,14 @@
 #ifndef PD_DYNARR_H
 #define PD_DYNARR_H
 
-#include <stddef.h>
-#include <stdint.h>
-#include <stdio.h>
+#include "pd_int_types.h"
 
 #define PD_ARR_INIT_SIZE 32
 
 typedef struct ArrayHeader
 {
-    size_t size;
-    size_t cap;
+    size size;
+    size cap;
 }
 ArrayHeader;
 
@@ -44,7 +42,7 @@ do                                                                              
     }                                                                                  \
                                                                                        \
     ArrayHeader *header = 0;                                                           \
-    uint8_t     init    = 0;                                                           \
+    u08         init    = 0;                                                           \
     if(arr)                                                                            \
     {                                                                                  \
         header = pdArrHeader(arr);                                                     \
@@ -54,7 +52,7 @@ do                                                                              
         init = 1;                                                                      \
     }                                                                                  \
                                                                                        \
-    size_t alloc = (requested);                                                        \
+    size alloc = (requested);                                                        \
     if(requested <= 0)                                                                 \
     {                                                                                  \
         alloc = PD_ARR_INIT_SIZE;                                                      \
@@ -101,7 +99,7 @@ do                                                                              
         break;                                                                         \
     }                                                                                  \
                                                                                        \
-    size_t moveSize = (pdArrSize(arr) - (index) - 1) * sizeof(*arr);                   \
+    size moveSize = (pdArrSize(arr) - (index) - 1) * sizeof(*arr);                   \
     memmove(&arr[(index)], &arr[(index) + 1], moveSize);                               \
     --pdArrSize(arr);                                                                  \
 }                                                                                      \

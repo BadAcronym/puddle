@@ -1,8 +1,6 @@
 #ifndef PUDDLE_INT_TYPES_H
 #define PUDDLE_INT_TYPES_H
 
-// #include <stdint.h>
-
 typedef __UINT8_TYPE__  u08;
 typedef __UINT16_TYPE__ u16;
 typedef __UINT32_TYPE__ u32;

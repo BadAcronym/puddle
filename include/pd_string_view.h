@@ -64,7 +64,7 @@ String pdCstrStrCpy
 u64 pdSVReadLine
 (
     StringView buf,
-    u64   *index,
+    u64        *index,
     String     *line
 );
 
@@ -126,8 +126,8 @@ StringView pdSVCstrCpy
 StringView pdSVSubstr
 (
     StringView *sv,
-    size     startPos,
-    size     endPos
+    size       startPos,
+    size       endPos
 );
 
 // will trim count characters from: `SV_LEFT`, `SV_RIGHT` or `SV_BOTH`.

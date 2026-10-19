@@ -209,7 +209,7 @@ StringView pdStrCstrCpy
 u64 pdSVReadLine
 (
     StringView buf,
-    u64   *index,
+    u64        *index,
     String     *line
 ){
     line->size = 0;
@@ -264,8 +264,8 @@ StringView pdSVReadFile
 StringView pdSVSubstr
 (
     StringView *sv,
-    size     startPos,
-    size     endPos
+    size       startPos,
+    size       endPos
 ){
     if(startPos > endPos)
     {
@@ -484,7 +484,7 @@ StringView pdSVFindByDelim
 (
     StringView sv,
     char       delim,
-    u32   index
+    u32        index
 ){
     StringView result         = {0};
     u32   delimCount     = 0;

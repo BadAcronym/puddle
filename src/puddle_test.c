@@ -8,21 +8,21 @@ int main
 (
     void
 ){
-    StringView test        = pdCstrSV("Hello, World!");
-    StringView substr      = pdSVSubstr(&test, 7, test.size);
-    StringView substrest = pdCstrSV("World!");
-    StringView subest_0  = pdCstrSV("W");
-    StringView subest_1  = pdSVSubstr(&test, 7, 7);
-    StringView test_left   = pdCstrSV("lo, World!");
-    StringView test_right  = pdCstrSV("lo, Worl");
-    StringView test_both   = pdCstrSV(" W");
-    StringView conv_src    = pdCstrSV("The quick lilac fox jumps over the dog.");
+    StringView test       = pdCstrSV("Hello, World!");
+    StringView substr     = pdSVSubstr(&test, 7, test.size);
+    StringView substrest  = pdCstrSV("World!");
+    StringView subest_0   = pdCstrSV("W");
+    StringView subest_1   = pdSVSubstr(&test, 7, 7);
+    StringView test_left  = pdCstrSV("lo, World!");
+    StringView test_right = pdCstrSV("lo, Worl");
+    StringView test_both  = pdCstrSV(" W");
+    StringView conv_src   = pdCstrSV("The quick lilac fox jumps over the dog.");
     char convest[conv_src.size + 1];
     pdSVCstr(conv_src, convest);
-    StringView convest2  = pdCstrSV(convest);
-    StringView concat_1    = pdCstrSV("Test ");
-    StringView concat_2    = pdCstrSV("concat !");
-    StringView concat_r    = pdCstrSV("Test concat !");
+    StringView convest2   = pdCstrSV(convest);
+    StringView concat_1   = pdCstrSV("Test ");
+    StringView concat_2   = pdCstrSV("concat !");
+    StringView concat_r   = pdCstrSV("Test concat !");
 
     int num_failed = 0;
 

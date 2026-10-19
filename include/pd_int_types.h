@@ -13,4 +13,12 @@ typedef __INT64_TYPE__  i64;
 
 typedef __SIZE_TYPE__   size;
 
+// directly from stdbool.h
+#if __STDC_VERSION__ < 202311l
+    #define bool  _Bool
+    #define true  1
+    #define false 0
+#endif
+#define __bool_true_false_are_defined true
+
 #endif

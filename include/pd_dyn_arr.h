@@ -3,6 +3,8 @@
 
 #include "pd_int_types.h"
 
+#include <memory.h>
+
 #define PD_ARR_INIT_SIZE 32
 
 typedef struct ArrayHeader

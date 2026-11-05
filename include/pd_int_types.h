@@ -13,6 +13,9 @@ typedef __INT64_TYPE__  i64;
 
 typedef __SIZE_TYPE__   size;
 
+typedef float           f32;
+typedef double          f64;
+
 #define U08MAX (255)
 #define U16MAX (65535)
 #define U32MAX (4294967295U)
@@ -26,6 +29,11 @@ typedef __SIZE_TYPE__   size;
 #define I16MAX (32767)
 #define I32MAX (2147483647)
 #define I64MAX (__INT64_C(9223372036854775807))
+
+#define F32MIN (-3.402823466e+38f)
+#define F64MIN (-1.7976931348623157e+308)
+#define F32MAX (3.402823466e+38f)
+#define F64MAX (1.7976931348623157e+308)
 
 // directly from stdbool.h
 #if __STDC_VERSION__ < 202311l

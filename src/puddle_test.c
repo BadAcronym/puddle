@@ -10,51 +10,51 @@ int main
 ){
     StringView test       = pdCstrSV("Hello, World!");
     StringView substr     = pdSVSubstr(&test, 7, test.size);
-    StringView substrest  = pdCstrSV("World!");
-    StringView subest_0   = pdCstrSV("W");
-    StringView subest_1   = pdSVSubstr(&test, 7, 7);
-    StringView test_left  = pdCstrSV("lo, World!");
-    StringView test_right = pdCstrSV("lo, Worl");
-    StringView test_both  = pdCstrSV(" W");
-    StringView conv_src   = pdCstrSV("The quick lilac fox jumps over the dog.");
-    char convest[conv_src.size + 1];
-    pdSVCstr(conv_src, convest);
-    StringView convest2   = pdCstrSV(convest);
-    StringView concat_1   = pdCstrSV("Test ");
-    StringView concat_2   = pdCstrSV("concat !");
-    StringView concat_r   = pdCstrSV("Test concat !");
+    StringView substrTest = pdCstrSV("World!");
+    StringView subest0    = pdCstrSV("W");
+    StringView subest1    = pdSVSubstr(&test, 7, 7);
+    StringView testLeft   = pdCstrSV("lo, World!");
+    StringView testRight  = pdCstrSV("lo, Worl");
+    StringView testBoth   = pdCstrSV(" W");
+    StringView convSrc    = pdCstrSV("The quick lilac fox jumps over the dog.");
+    char convTest[convSrc.size + 1];
+    pdSVCstr(convSrc, convTest);
+    StringView convTest2  = pdCstrSV(convTest);
+    StringView concat1    = pdCstrSV("Test ");
+    StringView concat2    = pdCstrSV("concat !");
+    StringView concatR    = pdCstrSV("Test concat !");
 
-    int num_failed = 0;
+    int numFailed = 0;
 
-    if(!pdSVSame(conv_src, convest2))
+    if(!pdSVSame(convSrc, convTest2))
     {
         PD_FAIL("pdSVCstr. expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
-                 ARG_SV(conv_src), ARG_SV(convest2));
-        ++num_failed;
+                 ARG_SV(convSrc), ARG_SV(convTest2));
+        ++numFailed;
     }
     else
     {
         PD_SUCCESS("passed pdSVCstr.");
     }
 
-    if(!pdSVSame(substr, substrest))
+    if(!pdSVSame(substr, substrTest))
     {
         PD_FAIL("pdSVSubstr. expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
-                ARG_SV(substrest), ARG_SV(substr));
+                ARG_SV(substrTest), ARG_SV(substr));
         PD_DEBUG("%"PRIu64" vs %"PRIu64"", substrest.size, substr.size);
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
         PD_SUCCESS("passed pdSVSubstr.");
     }
 
-    if(!pdSVSame(subest_0, subest_1))
+    if(!pdSVSame(subest0, subest1))
     {
         PD_FAIL("pdSVSubstr on a character. expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
-                ARG_SV(subest_0), ARG_SV(subest_1));
+                ARG_SV(subest0), ARG_SV(subest1));
         PD_DEBUG("%"PRIu64" vs %"PRIu64"", substrest.size, substr.size);
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -62,11 +62,11 @@ int main
     }
 
     pdSVTrim(&test, 3, SV_LEFT);
-    if(!pdSVSame(test, test_left))
+    if(!pdSVSame(test, testLeft))
     {
         PD_FAIL("pdSVTrim with SV_LEFT. expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
-                ARG_SV(test_left), ARG_SV(test));
-        ++num_failed;
+                ARG_SV(testLeft), ARG_SV(test));
+        ++numFailed;
     }
     else
     {
@@ -74,11 +74,11 @@ int main
     }
 
     pdSVTrim(&test, 2, SV_RIGHT);
-    if(!pdSVSame(test, test_right))
+    if(!pdSVSame(test, testRight))
     {
         PD_FAIL("pdSVTrim with SV_RIGHT. expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
-                ARG_SV(test_right), ARG_SV(test));
-        ++num_failed;
+                ARG_SV(testRight), ARG_SV(test));
+        ++numFailed;
     }
     else
     {
@@ -86,25 +86,25 @@ int main
     }
 
     pdSVTrim(&test, 3, SV_BOTH);
-    if(!pdSVSame(test, test_both))
+    if(!pdSVSame(test, testBoth))
     {
         PD_FAIL("pdSVTrim with SV_BOTH. expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
-                ARG_SV(test_both), ARG_SV(test));
-        ++num_failed;
+                ARG_SV(testBoth), ARG_SV(test));
+        ++numFailed;
     }
     else
     {
         PD_SUCCESS("passed pdSVTrim with SV_BOTH.");
     }
 
-    char concatenated[concat_1.size + concat_2.size + 1];
-    pdSVConcat(concat_1, concat_2, concatenated);
+    char concatenated[concat1.size + concat2.size + 1];
+    pdSVConcat(concat1, concat2, concatenated);
     StringView test_concat = pdCstrSV(concatenated);
-    if(!pdSVSame(concat_r, test_concat))
+    if(!pdSVSame(concatR, test_concat))
     {
         PD_FAIL("pdSVConcat. expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
-                ARG_SV(concat_r), ARG_SV(test_concat));
-        ++num_failed;
+                ARG_SV(concatR), ARG_SV(test_concat));
+        ++numFailed;
     }
     else
     {
@@ -121,7 +121,7 @@ int main
     if(pdSVIsSubstr(small1, bigStr))
     {
         PD_FAIL("pdSVIsSubstr with SV_DIFFERENT.");
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -131,7 +131,7 @@ int main
     if(!pdSVIsSubstr(small0, bigStr))
     {
         PD_FAIL("pdSVIsSubstr with SV_IS_SUBSTR, 1.");
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -141,7 +141,7 @@ int main
     if(!pdSVIsSubstr(small2, bigStr))
     {
         PD_FAIL("pdSVIsSubstr with SV_IS_SUBSTR, 2.");
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -151,7 +151,7 @@ int main
     if(!pdSVIsSubstr(small3, bigStr))
     {
         PD_FAIL("pdSVIsSubstr with SV_IS_SUBSTR, 3.");
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -161,7 +161,7 @@ int main
     if(pdSVFind(small1, bigStr))
     {
         PD_FAIL("pdSVFind with non-findable pattern.");
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -173,7 +173,7 @@ int main
     {
         PD_FAIL("pdSVFind with findable pattern, 1.");
         PD_ERROR("failed to find pattern entirely.");
-        ++num_failed;
+        ++numFailed;
     }
     if(found < bigStr.data || found > bigStr.data + bigStr.size - small0.size)
     {
@@ -183,14 +183,14 @@ int main
                  "%"PRIi64" away from the end.\n",
                  bigStr.data, bigStr.data + bigStr.size, found, bigStr.data - found,
                  bigStr.data + bigStr.size - found);
-        ++num_failed;
+        ++numFailed;
     }
     else if(found != bigStr.data)
     {
         PD_FAIL("pdSVFind with findable pattern, 1.");
         PD_ERROR("returned the wrong offset. Expected: 0, got: %"PRIu32"\033[0m\n",
                 (u32)(found - bigStr.data));
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -202,7 +202,7 @@ int main
     {
         PD_FAIL("pdSVFind with findable pattern, 2.");
         PD_ERROR("failed to find pattern entirely.");
-        ++num_failed;
+        ++numFailed;
     }
     if(found < bigStr.data || found > bigStr.data + bigStr.size - small2.size)
     {
@@ -212,14 +212,14 @@ int main
                  "%"PRIi64" away from the end.\n",
                  bigStr.data, bigStr.data + bigStr.size, found, bigStr.data - found,
                  bigStr.data + bigStr.size - found);
-        ++num_failed;
+        ++numFailed;
     }
     else if(found != bigStr.data + 19)
     {
         PD_FAIL("pdSVFind with findable pattern, 2.");
         PD_ERROR("returned the wrong offset. Expected: 19, got: %"PRIu32"\033[0m\n",
                 (u32)(found - bigStr.data));
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -231,7 +231,7 @@ int main
     {
         PD_FAIL("pdSVFind with findable pattern, 3.");
         PD_ERROR("failed to find pattern entirely.");
-        ++num_failed;
+        ++numFailed;
     }
     if(found < bigStr.data || found > bigStr.data + bigStr.size - small3.size)
     {
@@ -241,7 +241,7 @@ int main
                  "%"PRIi64" away from the end.\n",
                  bigStr.data, bigStr.data + bigStr.size, found, bigStr.data - found,
                  bigStr.data + bigStr.size - found);
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -253,7 +253,7 @@ int main
     {
         PD_FAIL("pdSVFind with findable pattern, 4.");
         PD_ERROR("failed to find pattern entirely.");
-        ++num_failed;
+        ++numFailed;
     }
     if(found < bigStr.data || found > bigStr.data + bigStr.size - small4.size)
     {
@@ -263,14 +263,14 @@ int main
                  "%"PRIi64" away from the end.\n",
                  bigStr.data, bigStr.data + bigStr.size, found, bigStr.data - found,
                  bigStr.data + bigStr.size - found);
-        ++num_failed;
+        ++numFailed;
     }
     else if(found != bigStr.data + 43)
     {
         PD_FAIL("pdSVFind with findable pattern, 4.");
         PD_ERROR("returned the wrong offset. Expected: 43, got: %"PRIu32"\033[0m\n",
                 (u32)(found - bigStr.data));
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -283,7 +283,7 @@ int main
         PD_FAIL("pdSVFindLast with findable pattern, 1.");
         PD_ERROR("returned the wrong offset. Expected: 43, got: %"PRIu32"\033[0m\n",
                 (u32)(found - bigStr.data));
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -311,7 +311,7 @@ int main
     {
         PD_FAIL("pdSVFindByDelim with index = 0. expected: \""PRI_SV"\"\ngot: \""
                 PRI_SV"\"\n", ARG_SV(expected0), ARG_SV(testFile0));
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -324,7 +324,7 @@ int main
     {
         PD_FAIL("pdSVFindByDelim with index = 1. expected: \""PRI_SV"\"\ngot: \""
                 PRI_SV"\"\n", ARG_SV(expected1), ARG_SV(testFile1));
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -337,7 +337,7 @@ int main
     {
         PD_FAIL("pdSVFindByDelim with index = 2. expected: \""PRI_SV"\"\ngot: \""
                 PRI_SV"\"\n", ARG_SV(expected2), ARG_SV(testFile2));
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -350,7 +350,7 @@ int main
     {
         PD_FAIL("pdSVFindByDelim with index = 3. expected: \""PRI_SV"\"\ngot: \""
                 PRI_SV"\"\n", ARG_SV(expected3), ARG_SV(testFile3));
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -363,7 +363,7 @@ int main
     {
         PD_FAIL("pdSVFindByDelim with index = 4. expected: \""PRI_SV"\"\ngot: \""
                 PRI_SV"\"\n", ARG_SV(expected4), ARG_SV(testFile4));
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -378,7 +378,7 @@ int main
     {
         PD_FAIL("pdSVFindByDelim with index = 2_0. expected: \""PRI_SV"\"\ngot: \""
                 PRI_SV"\"\n", ARG_SV(expected2_0), ARG_SV(testFile2_0));
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -391,7 +391,7 @@ int main
     {
         PD_FAIL("pdSVFindByDelim with index = 2_1. expected: \""PRI_SV"\"\ngot: \""
                 PRI_SV"\"\n", ARG_SV(expected2_1), ARG_SV(testFile2_1));
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -404,7 +404,7 @@ int main
     {
         PD_FAIL("pdSVFindByDelim with index = 2_2. expected: \""PRI_SV"\"\ngot: \""
                 PRI_SV"\"\n", ARG_SV(expected2_2), ARG_SV(testFile2_2));
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -415,7 +415,7 @@ int main
     if(result != 5)
     {
         PD_FAIL("pdSVCountByDelim in testPath. expected: 5\ngot: %"PRIu32"\n", result);
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -426,7 +426,7 @@ int main
     if(result != 3)
     {
         PD_FAIL("pdSVCountByDelim in testPath2. expected: 3\ngot: %"PRIu32"\n", result);
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -452,7 +452,7 @@ int main
     {
         PD_FAIL("pdSVCountByDelim in separate_sv. expected: 6\ngot: %"PRIu32"\n",
                 result);
-        ++num_failed;
+        ++numFailed;
     }
 
     u08 sep_i = 0;
@@ -462,7 +462,7 @@ int main
         {
             PD_FAIL("pdSVCountByDelim in separate_sv. expected: "PRI_SV"\ngot: "
                     PRI_SV"\n", ARG_SV(premade[sep_i]), ARG_SV(separated_list[sep_i]));
-            ++num_failed;
+            ++numFailed;
             break;
         }
     }
@@ -487,7 +487,7 @@ int main
     if(pdSVIsLesser(a, b))
     {
         PD_FAIL("pdSVIsLesser with \"..\" vs \".\". expected: 0\ngot: 1\n");
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -499,7 +499,7 @@ int main
     if(pdSVIsLesser(b1, a1))
     {
         PD_FAIL("pdSVIsLesser with \"123\" vs \"abc\". expected: 0\ngot: 1\n");
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -511,7 +511,7 @@ int main
     {
         PD_FAIL("pdSVCountByDelim with testPath_sorted. expected: 4\ngot: %"
                 PRIu32"\n", result);
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -546,7 +546,7 @@ int main
         PD_FAIL("pdSVSortByDelim with real path and the '..' identifier."
                 "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"\n",
                 ARG_SV(one_dot), ARG_SV(oneest));
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -558,7 +558,7 @@ int main
         PD_FAIL("pdSVSortByDelim with real path and the '..' identifier."
                 "expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"\n",
                 ARG_SV(two_dot), ARG_SV(twoest));
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -571,7 +571,7 @@ int main
     {
         PD_FAIL("pdSVFindByDelim with index = 0. expected: \""PRI_SV"\"\ngot: \""
                 PRI_SV"\"\n", ARG_SV(expected_sort0), ARG_SV(testFile_sort0));
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -584,7 +584,7 @@ int main
     {
         PD_FAIL("pdSVFindByDelim with index = 1. expected: \""PRI_SV"\"\ngot: \""
                 PRI_SV"\"\n", ARG_SV(expected_sort1), ARG_SV(testFile_sort1));
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -597,7 +597,7 @@ int main
     {
         PD_FAIL("pdSVFindByDelim with index = 2. expected: \""PRI_SV"\"\ngot: \""
                 PRI_SV"\"\n", ARG_SV(expected_sort2), ARG_SV(testFile_sort2));
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
@@ -610,63 +610,63 @@ int main
     {
         PD_FAIL("pdSVFindByDelim with index = 3. expected: \""PRI_SV"\"\ngot: \""
                 PRI_SV"\"\n", ARG_SV(expected_sort3), ARG_SV(testFile_sort3));
-        ++num_failed;
+        ++numFailed;
     }
     else
     {
         PD_SUCCESS("passed pdSVFindByDelim with index = 3.");
     }
 
-    float testValsFloat[10] =
+    f32 testValsF32[10] =
     {
         0.1f, 0.22f, 0.333f, 0.4444f, 0.5f,
         69.120f, 111001.12f, 199.99999f, 2.13f, 3.149175f
     };
 
-    float *arr_float = 0;
+    f32 *arrF32 = 0;
     for(u32 i = 0; i < 10; ++i)
     {
-        pdArrPush(arr_float, testValsFloat[i]);
+        pdArrPush(arrF32, testValsF32[i]);
     }
 
     u08 failed = 0;
-    for(u32 i = 0; i < pdArrSize(arr_float); ++i)
+    for(u32 i = 0; i < pdArrSize(arrF32); ++i)
     {
-        if(testValsFloat[i] != arr_float[i])
+        if(testValsF32[i] != arrF32[i])
         {
             PD_FAIL("pdArrPush with type u32. expected: %f\ngot: %f\n",
-                    testValsFloat[i], arr_float[i]);
-            ++num_failed;
+                    testValsF32[i], arrF32[i]);
+            ++numFailed;
             failed = 1;
         }
     }
     if(!failed)
     {
-        PD_SUCCESS("passed pdPushArr with float.");
+        PD_SUCCESS("passed pdPushArr with f32.");
     }
-    pdArrFree(arr_float);
+    pdArrFree(arrF32);
 
-    u32 testVals32[10] =
+    u32 testValsU32[10] =
     {
         65535, 10597, 19, 192856, 19285,
         198, 19285615, 918, 19285, 1509
     };
 
-    pdArr(u32) arr_u = 0;
-    pdArrReserve(arr_u, 5);
+    pdArr(u32) arrU32 = 0;
+    pdArrReserve(arrU32, 5);
     for(u32 i = 0; i < 10; ++i)
     {
-        pdArrPush(arr_u, testVals32[i]);
+        pdArrPush(arrU32, testValsU32[i]);
     }
 
     failed = 0;
-    for(u32 i = 0; i < pdArrSize(arr_u); ++i)
+    for(u32 i = 0; i < pdArrSize(arrU32); ++i)
     {
-        if(testVals32[i] != arr_u[i])
+        if(testValsU32[i] != arrU32[i])
         {
             PD_FAIL("pdArrPush with type u32. expected: %"PRIu32"\ngot: %"PRIu32
-                    "\n", testVals32[i], arr_u[i]);
-            ++num_failed;
+                    "\n", testValsU32[i], arrU32[i]);
+            ++numFailed;
             failed = 1;
         }
     }
@@ -674,15 +674,15 @@ int main
     {
         PD_SUCCESS("passed pdPushArr with u32.");
     }
-    pdArrFree(arr_u);
+    pdArrFree(arrU32);
 
-    if(num_failed)
+    if(numFailed)
     {
-        PD_ERROR("failed %i unit tests.", num_failed);
+        PD_ERROR("failed %i unit tests.", numFailed);
     }
 
     char buf[4096 * 12];
     pdListFiles(pdCstrSV("."), buf);
 
-    return num_failed;
+    return numFailed;
 }

@@ -24,7 +24,7 @@
 // data is not guaranteed to be null-terminated.
 // use `pdStrCstr()` if you require access to a cstring.
 // tip: just cast to `StringView` if you require using puddle's sv functions.
-typedef struct s
+typedef struct STR
 {
     char *data;
     size size;
@@ -33,14 +33,15 @@ String;
 
 // length-based string view (const pointer).
 // data is `not` guaranteed to be null-terminated.
-// use `pdSVCstr()` if you require access to a cstring.
-typedef struct sv
+// use `pdSVCstr(SV)` if you require access to a cstring.
+typedef struct SV
 {
     const char *data;
     size       size;
 }
 StringView;
 
+// does what is says on the tin. frees the buffer of the stringview that was passed.
 void pdSVFree
 (
     StringView *sv

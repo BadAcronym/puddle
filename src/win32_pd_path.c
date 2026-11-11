@@ -43,9 +43,9 @@ StringView pdExpandPath
         return (StringView){0};
     }
 
-    StringView dot_sv  = cstr_sv(".");
+    StringView dot_sv  = pdCstrSV(".");
 
-    StringView homevar = cstr_sv("$HOME");
+    StringView homevar = pdCstrSV("$HOME");
     const char *home   = getenv("HOME");
     if(!home)
     {
@@ -56,7 +56,7 @@ StringView pdExpandPath
             return(StringView){0};
         }
     }
-    StringView home_sv = cstr_sv(home);
+    StringView home_sv = pdCstrSV(home);
 
     if(home && path.size > 0 && path.data[0] == '~')
     {
@@ -78,7 +78,7 @@ StringView pdExpandPath
         }
         buf[i + j] = '\0';
     }
-    else if(home && path.size > 4 && sv_find(homevar, path) == path.data)
+    else if(home && path.size > 4 && pdSVFind(homevar, path) == path.data)
     {
         u32 i = 0;
         for(; i < home_sv.size; ++i)
@@ -98,12 +98,12 @@ StringView pdExpandPath
         }
         buf[i + j] = '\0';
     }
-    else if(sv_same(path, dot_sv))
+    else if(pdSVSame(path, dot_sv))
     {
         char cwd[4096];
         _getcwd(cwd, 4096);
 
-        StringView cwd_sv = cstr_sv(cwd);
+        StringView cwd_sv = pdCstrSV(cwd);
 
         u32 i = 0;
         for(; i < cwd_sv.size; ++i)
@@ -132,7 +132,7 @@ StringView pdExpandPath
         buf[i] = '\0';
     }
 
-    return cstr_sv(buf);
+    return pdCstrSV(buf);
 }
 
 StringView pdParentPath
@@ -140,10 +140,10 @@ StringView pdParentPath
     StringView path,
     char       *buf
 ){
-    StringView sep = cstr_sv("\\");
+    StringView sep = pdCstrSV("\\");
 
     pdExpandPath(path, buf);
-    StringView expanded = cstr_sv(buf);
+    StringView expanded = pdCstrSV(buf);
 
     const char *lastdir = pdSVFindLast(sep, expanded);
 
@@ -210,5 +210,5 @@ StringView pdListFiles
 
     FindClose(foundHandle);
     free(winPath);
-    return cstr_sv(buf);
+    return pdCstrSV(buf);
 }

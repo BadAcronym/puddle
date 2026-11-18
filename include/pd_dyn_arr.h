@@ -5,7 +5,7 @@
 
 #include <memory.h>
 
-#define PD_ARR_INIT_SIZE 32
+#define PD_ARR_INIT_SIZE 16
 
 typedef struct ArrayHeader
 {
@@ -87,7 +87,7 @@ do                                                                              
 }                                                                                      \
 while(0)
 
-#define pdArrRemove(arr, index)                                                        \
+#define pdArrRemove(arr, index, value)                                                 \
 do                                                                                     \
 {                                                                                      \
     if(!arr || !pdArrSize(arr) || (index) > pdArrSize(arr) - 1)                        \
@@ -97,11 +97,11 @@ do                                                                              
                                                                                        \
     if(index == pdArrSize(arr) - 1)                                                    \
     {                                                                                  \
-        arr[index] = 0;                                                                \
+        arr[index] = value;                                                            \
         break;                                                                         \
     }                                                                                  \
                                                                                        \
-    size moveSize = (pdArrSize(arr) - (index) - 1) * sizeof(*arr);                   \
+    size moveSize = (pdArrSize(arr) - (index) - 1) * sizeof(*arr);                     \
     memmove(&arr[(index)], &arr[(index) + 1], moveSize);                               \
     --pdArrSize(arr);                                                                  \
 }                                                                                      \

@@ -28,6 +28,7 @@ typedef struct STR
 {
     char *data;
     size size;
+    bool mallocd;
 }
 String;
 
@@ -38,6 +39,7 @@ typedef struct SV
 {
     const char *data;
     size       size;
+    bool       mallocd;
 }
 StringView;
 

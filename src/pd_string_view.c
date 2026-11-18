@@ -7,7 +7,12 @@ void pdSVFree
 (
     StringView *sv
 ){
-    if(sv->data)
+    if(!sv)
+    {
+        return;
+    }
+
+    if(sv->mallocd && sv->data)
     {
         free((void*)sv->data);
     }
@@ -59,8 +64,9 @@ String pdCstrStrCpy
 
     return(String)
     {
-        .data = buf,
-        .size = i
+        .data    = buf,
+        .size    = i,
+        .mallocd = true
     };
 }
 
@@ -136,8 +142,9 @@ StringView pdSVCpy
 
     return(StringView)
     {
-        .data = buf,
-        .size = sv.size
+        .data    = buf,
+        .size    = sv.size,
+        .mallocd = true
     };
 }
 
@@ -256,8 +263,9 @@ StringView pdSVReadFile
 
     return (StringView)
     {
-        .data = buf,
-        .size = filesize
+        .data    = buf,
+        .size    = filesize,
+        .mallocd = true
     };
 }
 

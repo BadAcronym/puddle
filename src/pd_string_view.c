@@ -17,8 +17,9 @@ void pdSVFree
         free((void*)sv->data);
     }
 
-    sv->data = 0;
-    sv->size = 0;
+    sv->data    = 0;
+    sv->size    = 0;
+    sv->mallocd = false;
 }
 
 String pdCstrStr

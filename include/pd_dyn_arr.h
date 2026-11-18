@@ -98,6 +98,7 @@ do                                                                              
     if(index == pdArrSize(arr) - 1)                                                    \
     {                                                                                  \
         arr[index] = value;                                                            \
+        --pdArrSize(arr);                                                              \
         break;                                                                         \
     }                                                                                  \
                                                                                        \

@@ -5,7 +5,7 @@
 
 #include <memory.h>
 
-#define PD_ARR_INIT_SIZE 16
+#define PD_ARR_INIT_SIZE 32
 
 typedef struct ArrayHeader
 {
@@ -38,7 +38,7 @@ while(0);                                                                       
 #define pdArrReserve(arr, requested)                                                   \
 do                                                                                     \
 {                                                                                      \
-    if(arr && (requested) < pdArrCap(arr))                                             \
+    if(arr && (requested) <= pdArrCap(arr))                                            \
     {                                                                                  \
         break;                                                                         \
     }                                                                                  \
@@ -54,13 +54,18 @@ do                                                                              
         init = 1;                                                                      \
     }                                                                                  \
                                                                                        \
-    size alloc = (requested);                                                        \
+    size alloc = (requested);                                                          \
     if(requested <= 0)                                                                 \
     {                                                                                  \
         alloc = PD_ARR_INIT_SIZE;                                                      \
     }                                                                                  \
                                                                                        \
     header = realloc(header, alloc * sizeof(*arr) + sizeof(ArrayHeader));              \
+    if(!header)                                                                        \
+    {                                                                                  \
+        break;                                                                         \
+    }                                                                                  \
+                                                                                       \
     header->cap = alloc;                                                               \
     if(init)                                                                           \
     {                                                                                  \

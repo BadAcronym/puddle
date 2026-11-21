@@ -10,9 +10,9 @@
 #define SV_GREATER 0L
 #define SV_LESSER  1L
 
-#define SV_DIFFERENT     0L
-#define SV_SAME          1L
-#define SV_IS_SUBSTR     2L
+#define SV_DIFFERENT 0L
+#define SV_SAME      1L
+#define SV_IS_SUBSTR 2L
 
 // macros for `printf()` formatting and printing.
 // use like this, with `result` & `expected` both being StringViews:

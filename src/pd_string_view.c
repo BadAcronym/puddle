@@ -351,45 +351,15 @@ u08 pdSVSame
     StringView first,
     StringView second
 ){
-    if(!first.data)
-    {
-        PD_WARN("passed nullptr as first.data.");
-        if(second.data)
-        {
-            return SV_DIFFERENT;
-        }
-        return 0;
-    }
-    else if(!second.data)
-    {
-        PD_WARN("passed nullptr as second.data.");
-        return SV_DIFFERENT;
-    }
+    PD_ASSERT(first.data,  "passed nullptr as first.data.");
+    PD_ASSERT(second.data, "passed nullptr as second.data.");
 
-    if((first.size == second.size && first.data == second.data) ||
-       (!first.size && !second.size)
-    ){
-        return SV_SAME;
-    }
-    else if(first.size == 0 || second.size == 0)
+    if(first.size != second.size)
     {
         return SV_DIFFERENT;
     }
 
-    size i = 0;
-    for(; i < first.size && i < second.size; ++i)
-    {
-        if(first.data[i] != second.data[i])
-        {
-            return SV_DIFFERENT;
-        }
-    }
-
-    if(i == second.size && i == first.size)
-    {
-        return SV_SAME;
-    }
-    return SV_DIFFERENT;
+    return !memcmp(first.data, second.data, first.size);
 }
 
 u08 pdSVIsSubstr

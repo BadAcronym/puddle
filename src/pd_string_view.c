@@ -128,18 +128,11 @@ StringView pdSVCpy
 (
     StringView sv
 ){
-    if(!sv.data)
-    {
-        PD_ERROR("passed nullptr as sv.data.");
-        return (StringView){0};
-    }
+    PD_ASSERT(sv.data, "passed nullptr as sv.data.");
 
     char *buf = (char*)malloc(sv.size + 1);
 
-    for(u32 i = 0; i < sv.size; ++i)
-    {
-        buf[i] = sv.data[i];
-    }
+    memcpy(buf, sv.data, sv.size);
 
     return(StringView)
     {

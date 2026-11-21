@@ -16,7 +16,7 @@ if($build -eq $null -or $build -eq "")
 
 $args_always=@("-DBUILD_WINDOWS",
 "src/win32_pd_path.c", "src/puddle_test.c", "src/pd_string_view.c",
-"-Iinclude", "-std=c99",
+"-Iinclude", "-std=gnu99",
 "-Wextra", "-Wall", "-Wpedantic", "-Wconversion", "-Wshadow", "-Wsign-compare",
 "-Wtype-limits", "-Wunused",
 "-Wno-unsafe-buffer-usage", "-Wno-declaration-after-statement", "-Wno-vla",
@@ -27,7 +27,7 @@ $args_release=@("-O2")
 $args_debug=@("-DDEBUG", "-gcodeview", "-O0")
 $args_debug_cl=@("/DDEBUG", "/Zi", "/Od")
 
-$args_asan=$args_debug_cl+@("-oa.exe", "/clang:-std=c99", "/DASAN",
+$args_asan=$args_debug_cl+@("-oa.exe", "/clang:-std=gnu99", "/DASAN",
 "/fsanitize=address", "/MD",
 "/link", "/SUBSYSTEM:CONSOLE")
 

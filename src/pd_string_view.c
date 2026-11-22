@@ -7,12 +7,12 @@ void pdSVFree
 (
     StringView *sv
 ){
-    if(!sv)
+    if(!sv || !sv->mallocd)
     {
         return;
     }
 
-    if(sv->mallocd && sv->data)
+    if(sv->data)
     {
         free((void*)sv->data);
     }

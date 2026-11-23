@@ -102,5 +102,10 @@ fi
 
 echo -e "\n"
 
+if [[ $2 = "--compile-only" ]] || [[ $3 = "--compile-only" ]]
+then
+    exit 0
+fi
+
 chmod +x ./bin/$build/puddletest
 ./bin/$build/puddletest

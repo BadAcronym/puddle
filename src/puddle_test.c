@@ -41,7 +41,7 @@ int main
     {
         PD_FAIL("pdSVSubstr. expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
                 ARG_SV(substrTest), ARG_SV(substr));
-        PD_DEBUG("%"PRIu64" vs %"PRIu64"", substrest.size, substr.size);
+        PD_DEBUG("%"PRIu64" vs %"PRIu64"", substrTest.size, substr.size);
         ++numFailed;
     }
     else
@@ -53,7 +53,7 @@ int main
     {
         PD_FAIL("pdSVSubstr on a character. expected: \""PRI_SV"\"\ngot: \""PRI_SV"\"",
                 ARG_SV(subest0), ARG_SV(subest1));
-        PD_DEBUG("%"PRIu64" vs %"PRIu64"", substrest.size, substr.size);
+        PD_DEBUG("%"PRIu64" vs %"PRIu64"", substrTest.size, substr.size);
         ++numFailed;
     }
     else

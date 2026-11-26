@@ -226,7 +226,7 @@ u64 pdSVReadLine
         ++line->size;
         ++(*index);
 
-        if(line->data[i] == '\0' || line->data[i] == '\n')
+        if(line->data[i] == '\0' || line->data[i] == '\n' || line->data[i] == 0x0A)
         {
             line->size -= 1;
             break;

@@ -3,6 +3,8 @@
 
 #include "pd_int_types.h"
 
+// for malloc/free
+#include <stdlib.h>
 #include <memory.h>
 
 #define PD_ARR_INIT_SIZE 32

@@ -64,11 +64,13 @@ String pdCstrStrCpy
 );
 
 // will read a line from buf and return its size.
+// will never read more than `cap` bytes into a line.
 u64 pdSVReadLine
 (
     StringView buf,
     u64        *index,
-    String     *line
+    String     *line,
+    u64        cap
 );
 
 // will read an entire file into buf and return a StringView with the corresponding

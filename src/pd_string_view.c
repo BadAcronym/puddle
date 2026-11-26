@@ -1,6 +1,8 @@
 #include "pd_string_view.h"
 #include "pd_print_macros.h"
 
+#include <inttypes.h>
+
 #include <memory.h>
 
 void pdSVFree
@@ -211,7 +213,8 @@ u64 pdSVReadLine
 (
     StringView buf,
     u64        *index,
-    String     *line
+    String     *line,
+    u64        cap
 ){
     line->size = 0;
 
@@ -222,11 +225,18 @@ u64 pdSVReadLine
 
     for(u64 i = 0; *index < buf.size; ++i)
     {
+        if(i >= cap)
+        {
+            PD_WARN("line buffer size %"PRIu64" was too small for line with length >= %"
+                    PRIu64, cap, i);
+            return line->size;
+        }
+
         line->data[i] = buf.data[*index];
         ++line->size;
         ++(*index);
 
-        if(line->data[i] == '\0' || line->data[i] == '\n' || line->data[i] == 0x0A)
+        if(line->data[i] == '\0' || line->data[i] == '\n' || line->data[i] == 0xa)
         {
             line->size -= 1;
             break;

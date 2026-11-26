@@ -25,6 +25,8 @@ args_release="-O2"
 
 args_debug="-DDEBUG -DPD_PRI_DEBUG -g -O0"
 
+args_trace="$args_debug -DPD_PRI_TRACE"
+
 args_asan="$args_debug -DASAN \
 -fsanitize=address,leak,undefined \
 -fno-omit-frame-pointer \

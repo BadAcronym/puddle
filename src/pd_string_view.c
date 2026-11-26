@@ -7,12 +7,12 @@ void pdSVFree
 (
     StringView *sv
 ){
-    if(!sv || !sv->mallocd)
+    if(!sv)
     {
         return;
     }
 
-    if(sv->data)
+    if(sv->mallocd && sv->data)
     {
         free((void*)sv->data);
     }
@@ -244,6 +244,7 @@ StringView pdSVReadFile
     if(!file)
     {
         PD_ERROR("failed to open file: '%s'.", filepath);
+        return (StringView){0};
     }
 
     fseek(file, 0, SEEK_END);
